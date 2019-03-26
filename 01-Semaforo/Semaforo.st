@@ -19,11 +19,11 @@ createMorph
 		yourself! !
 
 
-!LuzAmarilla class methodsFor: 'as yet unclassified' stamp: 'AS 3/25/2019 20:53:01'!
+!LuzAmarilla class methodsFor: 'as yet unclassified' stamp: 'AS 3/25/2019 21:03:15'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	morph := (EllipseMorph basicNew instVarAt: 1 put: nil; instVarAt: 2 put: #(); instVarAt: 3 put: (MorphicTranslation basicNew instVarAt: 1 put: 0.0; instVarAt: 2 put: 0.0; yourself); instVarAt: 4 put: false; instVarAt: 5 put: nil; instVarAt: 6 put: nil; instVarAt: 7 put: 50@40; instVarAt: 8 put: (Color r: 0.000 g: 0.000 b: 0.000); instVarAt: 9 put: 1; instVarAt: 10 put: (Color r: 0.500 g: 0.500 b: 0.500); yourself).! !
+	morph := nil.! !
 
 !LuzAmarilla class methodsFor: 'as yet unclassified' stamp: 'AS 3/25/2019 20:45:33'!
 titilar
@@ -56,11 +56,11 @@ createMorph
 		yourself! !
 
 
-!LuzRoja class methodsFor: 'as yet unclassified' stamp: 'AS 3/25/2019 20:53:01'!
+!LuzRoja class methodsFor: 'as yet unclassified' stamp: 'AS 3/25/2019 21:03:15'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	morph := (EllipseMorph basicNew instVarAt: 1 put: nil; instVarAt: 2 put: #(); instVarAt: 3 put: (MorphicTranslation basicNew instVarAt: 1 put: 0.0; instVarAt: 2 put: 0.0; yourself); instVarAt: 4 put: false; instVarAt: 5 put: nil; instVarAt: 6 put: nil; instVarAt: 7 put: 50@40; instVarAt: 8 put: (Color r: 0.000 g: 0.000 b: 0.000); instVarAt: 9 put: 1; instVarAt: 10 put: (Color r: 0.500 g: 0.500 b: 0.500); yourself).! !
+	morph := nil.! !
 
 
 !classDefinition: #LuzVerde category: #Semaforo!
@@ -84,11 +84,11 @@ createMorph
 		yourself! !
 
 
-!LuzVerde class methodsFor: 'as yet unclassified' stamp: 'AS 3/25/2019 20:53:01'!
+!LuzVerde class methodsFor: 'as yet unclassified' stamp: 'AS 3/25/2019 21:03:15'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
-	morph := (EllipseMorph basicNew instVarAt: 1 put: nil; instVarAt: 2 put: #(); instVarAt: 3 put: (MorphicTranslation basicNew instVarAt: 1 put: 0.0; instVarAt: 2 put: 0.0; yourself); instVarAt: 4 put: false; instVarAt: 5 put: nil; instVarAt: 6 put: nil; instVarAt: 7 put: 50@40; instVarAt: 8 put: (Color r: 0.000 g: 0.000 b: 0.000); instVarAt: 9 put: 1; instVarAt: 10 put: (Color r: 0.500 g: 0.500 b: 0.500); yourself).! !
+	morph := nil.! !
 
 
 !classDefinition: #Semaforo category: #Semaforo!
@@ -119,7 +119,7 @@ apagar
 	LuzAmarilla color: Color black.
 	LuzVerde color: Color black.! !
 
-!Semaforo class methodsFor: 'as yet unclassified' stamp: 'AS 3/25/2019 20:53:01'!
+!Semaforo class methodsFor: 'as yet unclassified' stamp: 'AS 3/25/2019 21:03:15'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
