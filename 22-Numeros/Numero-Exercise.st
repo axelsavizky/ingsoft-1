@@ -313,8 +313,10 @@ Object subclass: #Numero
 
 	self subclassResponsibility ! !
 
-!Numero methodsFor: 'arithmetic operations' stamp: 'AMS 4/11/2019 21:39:03'!
-addToAFraction: aFractionAdder! !
+!Numero methodsFor: 'arithmetic operations' stamp: 'AMS 4/13/2019 16:14:51'!
+addToAFraction: aFractionAdder
+
+	self subclassResponsibility ! !
 
 !Numero methodsFor: 'arithmetic operations' stamp: 'AMS 4/11/2019 21:19:26'!
 addToAnInteger:  anIntegerAdder
@@ -331,8 +333,15 @@ negated
 	
 	^self * (Entero with: -1)! !
 
-!Numero methodsFor: 'arithmetic operations' stamp: 'AMS 4/11/2019 21:45:20'!
-substractToAnInteger: anIntegerSubtrahend! !
+!Numero methodsFor: 'arithmetic operations' stamp: 'AMS 4/13/2019 16:21:24'!
+subtractToAFraction: aFractionSubtrahend
+
+	self subclassResponsibility ! !
+
+!Numero methodsFor: 'arithmetic operations' stamp: 'AMS 4/13/2019 16:21:30'!
+subtractToAnInteger: anIntegerSubtrahend
+
+	self subclassResponsibility! !
 
 
 !Numero methodsFor: 'testing' stamp: 'NR 9/23/2018 23:36:49'!
@@ -385,10 +394,10 @@ Numero subclass: #Entero
 	^anAdder addToAnInteger: self
 	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'AMS 4/11/2019 21:47:36'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'AMS 4/13/2019 16:20:26'!
 - aSubtrahend 
 	
-	^aSubtrahend substractToAnInteger: self	! !
+	^aSubtrahend subtractToAnInteger: self	! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'BA 4/11/2019 18:13:00'!
 / aDivisor 
@@ -429,8 +438,13 @@ greatestCommonDivisorWith: anEntero
 	
 	^self class with: (value gcd: anEntero integerValue)! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'AMS 4/11/2019 21:46:23'!
-substractToAnInteger: anIntegerSubtrahend
+!Entero methodsFor: 'arithmetic operations' stamp: 'AMS 4/13/2019 16:33:30'!
+subtractToAFraction: aFractionSubtrahend
+
+	^(aFractionSubtrahend numerator - (self value * aFractionSubtrahend denominator)) / aFractionSubtrahend denominator! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'AMS 4/13/2019 16:20:37'!
+subtractToAnInteger: anIntegerSubtrahend
 
 	^ self class with: anIntegerSubtrahend integerValue - value.! !
 
@@ -519,17 +533,10 @@ Numero subclass: #Fraccion
 	
 	^anAdder addToAFraction: self ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'BA 4/11/2019 19:58:39'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'AMS 4/13/2019 16:28:13'!
 - aSubtrahend 
 
-	| newNumerator newDenominator |
-	(aSubtrahend isKindOf: Entero) ifTrue: [^(self numerator - (aSubtrahend value * self denominator)) / self denominator].
-
-
-	newNumerator := (numerator * aSubtrahend denominator) - (denominator * aSubtrahend numerator).
-	newDenominator := denominator * aSubtrahend denominator.
-	
-	^newNumerator / newDenominator 
+	^aSubtrahend subtractToAFraction: self  
 ! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'BA 4/11/2019 19:51:42'!
@@ -551,8 +558,17 @@ addToAnInteger: anIntegerAdder
 
 	^(self denominator * anIntegerAdder value + self numerator) / self denominator! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'AMS 4/11/2019 21:56:39'!
-substractToAnInteger: anIntegerSubtrahend
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'AMS 4/13/2019 16:19:57'!
+subtractToAFraction: aFractionSubtrahend
+
+	| newNumerator newDenominator |
+	newNumerator := (aFractionSubtrahend numerator * denominator) - (aFractionSubtrahend denominator * numerator).
+	newDenominator := aFractionSubtrahend denominator * denominator.
+	
+	^newNumerator / newDenominator ! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'AMS 4/13/2019 16:19:36'!
+subtractToAnInteger: anIntegerSubtrahend
 
 	^(self denominator * anIntegerSubtrahend - self numerator) / self denominator! !
 
