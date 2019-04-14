@@ -409,10 +409,9 @@ Numero subclass: #Entero
 	
 	^aSubtrahend subtractToAnInteger: self	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'BA 4/11/2019 18:13:00'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'BA 4/14/2019 16:41:09'!
 / aDivisor 
-	aDivisor class = Fraccion ifTrue: [^(self value * (aDivisor denominator / aDivisor numerator))].
-	^Fraccion with: self over: aDivisor! !
+	^aDivisor divideAnIntegerDividend: self.! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
@@ -428,6 +427,15 @@ addToAFraction: AFractionAdder
 addToAnInteger: anIntegerAdder
 
 	^self class with: anIntegerAdder integerValue + value.! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'BA 4/14/2019 16:41:39'!
+divideAFraccionDividend: aDividend
+	^(aDividend * (Fraccion with: (Entero with: 1) over: self))
+! !
+
+!Entero methodsFor: 'arithmetic operations' stamp: 'BA 4/14/2019 16:25:36'!
+divideAnIntegerDividend: aDividend
+	^Fraccion with: aDividend over: self! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HAW 9/24/2018 08:47:50'!
 fibonacci
@@ -469,15 +477,22 @@ subtractToAnInteger: anIntegerSubtrahend
 	^ self class with: anIntegerSubtrahend integerValue - value.! !
 
 
-!Entero methodsFor: 'comparing' stamp: 'BA 4/11/2019 18:53:23'!
+!Entero methodsFor: 'comparing' stamp: 'BA 4/14/2019 15:49:52'!
 = anObject
-	anObject class = Fraccion ifTrue: [^(anObject numerator / anObject denominator) class = Fraccion and: (anObject numerator / anObject denominator) = self value].
-	^(anObject isKindOf: self class) and: [ value = anObject integerValue ]! !
+	^anObject isEqualToAnInteger: self. ! !
 
 !Entero methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:17'!
 hash
 
 	^value hash! !
+
+!Entero methodsFor: 'comparing' stamp: 'BA 4/13/2019 18:31:19'!
+isEqualToAFraccion: aFraccion
+	^ aFraccion = self.! !
+
+!Entero methodsFor: 'comparing' stamp: 'BA 4/14/2019 15:50:02'!
+isEqualToAnInteger: anInteger
+	^(value = anInteger integerValue)! !
 
 
 !Entero methodsFor: 'initialization' stamp: 'HernanWilkinson 5/7/2016 20:09'!
@@ -558,10 +573,10 @@ Numero subclass: #Fraccion
 	^aSubtrahend subtractToAFraction: self  
 ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'BA 4/11/2019 19:51:42'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'BA 4/14/2019 16:40:51'!
 / aDivisor 
-	aDivisor class = Entero ifTrue: [^(self numerator / self denominator) * (Fraccion with: (Entero with: 1) over: aDivisor)].
-	^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)! !
+	^aDivisor divideAFraccionDividend: self 
+! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'AMS 4/13/2019 16:53:32'!
 addToAFraction: aFractionAdder
@@ -576,6 +591,15 @@ addToAFraction: aFractionAdder
 addToAnInteger: anIntegerAdder
 
 	^self denominator * anIntegerAdder + self numerator / self denominator! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'BA 4/14/2019 16:31:27'!
+divideAFraccionDividend: aDividend
+	^(aDividend numerator * self denominator) / (aDividend denominator * self numerator)! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'BA 4/14/2019 16:26:11'!
+divideAnIntegerDividend: aDividend
+	^(aDividend * (self denominator / self numerator)).
+	! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'AMS 4/13/2019 16:52:36'!
 multiplyToAFraction: aFractionMultiplier
@@ -602,16 +626,24 @@ subtractToAnInteger: anIntegerSubtrahend
 	^self denominator * anIntegerSubtrahend - self numerator / self denominator! !
 
 
-!Fraccion methodsFor: 'comparing' stamp: 'BA 4/11/2019 19:04:23'!
+!Fraccion methodsFor: 'comparing' stamp: 'BA 4/14/2019 15:49:42'!
 = anObject
-	
-	anObject class = Entero ifTrue: [^ anObject = self].
-	^(anObject isKindOf: self class) and: [ (numerator * anObject denominator) = (denominator * anObject numerator) ]! !
+	^anObject isEqualToAFraccion: self.! !
 
 !Fraccion methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:50'!
 hash
 
 	^(numerator hash / denominator hash) hash! !
+
+!Fraccion methodsFor: 'comparing' stamp: 'BA 4/14/2019 15:35:40'!
+isEqualToAFraccion: aFraccion.
+	^(numerator * aFraccion denominator) = (denominator * aFraccion numerator)! !
+
+!Fraccion methodsFor: 'comparing' stamp: 'BA 4/14/2019 15:49:31'!
+isEqualToAnInteger: anInteger.
+	^self = (Fraccion with: anInteger over: (Entero with: 1)).
+	
+! !
 
 
 !Fraccion methodsFor: 'accessing' stamp: 'HernanWilkinson 5/7/2016 21:56'!
