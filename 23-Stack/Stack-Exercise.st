@@ -152,6 +152,23 @@ Object subclass: #Element
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
+!Element methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:36:07'!
+elementValue
+
+	self subclassResponsibility ! !
+
+
+!Element methodsFor: 'removing' stamp: 'AS 4/17/2019 01:39:44'!
+popFromStack: aStack
+
+	self subclassResponsibility ! !
+
+
+!Element methodsFor: 'testing' stamp: 'AS 4/17/2019 01:31:15'!
+isEmpty
+
+	self subclassResponsibility ! !
+
 
 !classDefinition: #EmptyElement category: #'Stack-Exercise'!
 Element subclass: #EmptyElement
@@ -159,6 +176,23 @@ Element subclass: #EmptyElement
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+!EmptyElement methodsFor: 'testing' stamp: 'AS 4/17/2019 01:31:49'!
+isEmpty
+
+	^true! !
+
+
+!EmptyElement methodsFor: 'removing' stamp: 'AS 4/17/2019 01:40:17'!
+popFromStack: aStack
+
+	^self error: OOStack stackEmptyErrorDescription ! !
+
+
+!EmptyElement methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:36:58'!
+elementValue
+
+	^self error: OOStack stackEmptyErrorDescription ! !
 
 
 !classDefinition: #NonEmptyElement category: #'Stack-Exercise'!
@@ -174,6 +208,25 @@ elementValue
 	"Usamos elementValue en vez de value para que no haya problemas con el mensaje value implementado en Object - Axel (copiado de Hernan)"
 	^value! !
 
+
+!NonEmptyElement methodsFor: 'testing' stamp: 'AS 4/17/2019 01:32:14'!
+isEmpty
+
+	^false! !
+
+
+!NonEmptyElement methodsFor: 'removing' stamp: 'AS 4/17/2019 01:41:03'!
+popFromStack: aStack
+
+	aStack removeLastElement.
+	^value! !
+
+
+!NonEmptyElement methodsFor: 'initialization' stamp: 'AS 4/17/2019 01:33:38'!
+initializeWith: elementValue
+
+	value := elementValue! !
+
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
 Object subclass: #OOStack
@@ -182,38 +235,44 @@ Object subclass: #OOStack
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'testing' stamp: 'AS 4/17/2019 00:57:32'!
+!OOStack methodsFor: 'testing' stamp: 'AS 4/17/2019 01:31:00'!
 isEmpty
-	^elements isEmpty! !
+
+	^elements last isEmpty! !
 
 
-!OOStack methodsFor: 'initialization' stamp: 'AS 4/15/2019 23:01:12'!
+!OOStack methodsFor: 'initialization' stamp: 'AS 4/17/2019 01:25:13'!
 initialize
 
-	elements := OrderedCollection new! !
+	"Inicializamos la OrderedCollection con un elemento vacio. Este elemento va a pertenecer siempre al stack"
+	elements := OrderedCollection with: EmptyElement new! !
 
 
-!OOStack methodsFor: 'adding' stamp: 'AS 4/15/2019 21:20:52'!
+!OOStack methodsFor: 'adding' stamp: 'AS 4/17/2019 01:34:27'!
 push: anElement 
-	elements add: anElement ! !
+	elements add: (NonEmptyElement new initializeWith: anElement)! !
 
 
-!OOStack methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:03:17'!
+!OOStack methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:35:17'!
 size
 
-	^elements size! !
+	"Como el stack siempre va a tener al elemento vacio, su tamaño es el de la OrderedCollection - 1"
+	^elements size - 1! !
 
-!OOStack methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:14:42'!
+!OOStack methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:37:18'!
 top
 
-	elements isEmpty ifTrue: [^self error: self class stackEmptyErrorDescription ].
-	^ elements last! !
+	^elements last elementValue ! !
 
 
-!OOStack methodsFor: 'removing' stamp: 'AS 4/17/2019 01:13:50'!
+!OOStack methodsFor: 'removing' stamp: 'AS 4/17/2019 01:42:59'!
 pop
 	
-	self isEmpty ifTrue: [^self error: self class stackEmptyErrorDescription ].
+	^elements last popFromStack: self! !
+
+!OOStack methodsFor: 'removing' stamp: 'AS 4/17/2019 01:41:33'!
+removeLastElement
+	
 	^elements removeLast! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
