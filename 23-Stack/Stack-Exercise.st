@@ -183,10 +183,10 @@ isEmpty
 	^true! !
 
 
-!EmptyElement methodsFor: 'removing' stamp: 'AS 4/17/2019 01:40:17'!
+!EmptyElement methodsFor: 'removing' stamp: 'AS 4/17/2019 14:17:53'!
 popFromStack: aStack
 
-	^self error: OOStack stackEmptyErrorDescription ! !
+	^self error: aStack class stackEmptyErrorDescription ! !
 
 
 !EmptyElement methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:36:58'!
@@ -265,10 +265,15 @@ top
 	^elements last elementValue ! !
 
 
-!OOStack methodsFor: 'removing' stamp: 'AS 4/17/2019 01:42:59'!
+!OOStack methodsFor: 'removing' stamp: 'AS 4/17/2019 14:20:53'!
 pop
 	
-	^elements last popFromStack: self! !
+	^elements last popFromStack: self
+	
+	"Otra opcion seria:
+	lastElement := elements last elementValue. (esto en el empty da un error asi que no seguiria ejecutando)
+	elements removeLast.
+	^lastElement"! !
 
 !OOStack methodsFor: 'removing' stamp: 'AS 4/17/2019 01:41:33'!
 removeLastElement
