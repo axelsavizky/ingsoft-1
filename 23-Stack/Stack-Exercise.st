@@ -145,140 +145,52 @@ TestCase subclass: #SentenceFinderByPrefixTest
 	category: 'Stack-Exercise'!
 
 
-!classDefinition: #Element category: #'Stack-Exercise'!
-Object subclass: #Element
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Stack-Exercise'!
-
-!Element methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:36:07'!
-elementValue
-
-	self subclassResponsibility ! !
-
-
-!Element methodsFor: 'removing' stamp: 'AS 4/17/2019 01:39:44'!
-popFromStack: aStack
-
-	self subclassResponsibility ! !
-
-
-!Element methodsFor: 'testing' stamp: 'AS 4/17/2019 01:31:15'!
-isEmpty
-
-	self subclassResponsibility ! !
-
-
-!classDefinition: #EmptyElement category: #'Stack-Exercise'!
-Element subclass: #EmptyElement
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Stack-Exercise'!
-
-!EmptyElement methodsFor: 'testing' stamp: 'AS 4/17/2019 01:31:49'!
-isEmpty
-
-	^true! !
-
-
-!EmptyElement methodsFor: 'removing' stamp: 'AS 4/17/2019 14:17:53'!
-popFromStack: aStack
-
-	^self error: aStack class stackEmptyErrorDescription ! !
-
-
-!EmptyElement methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:36:58'!
-elementValue
-
-	^self error: OOStack stackEmptyErrorDescription ! !
-
-
-!classDefinition: #NonEmptyElement category: #'Stack-Exercise'!
-Element subclass: #NonEmptyElement
-	instanceVariableNames: 'value'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Stack-Exercise'!
-
-!NonEmptyElement methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:19:46'!
-elementValue
-
-	"Usamos elementValue en vez de value para que no haya problemas con el mensaje value implementado en Object - Axel (copiado de Hernan)"
-	^value! !
-
-
-!NonEmptyElement methodsFor: 'testing' stamp: 'AS 4/17/2019 01:32:14'!
-isEmpty
-
-	^false! !
-
-
-!NonEmptyElement methodsFor: 'removing' stamp: 'AS 4/17/2019 01:41:03'!
-popFromStack: aStack
-
-	aStack removeLastElement.
-	^value! !
-
-
-!NonEmptyElement methodsFor: 'initialization' stamp: 'AS 4/17/2019 01:33:38'!
-initializeWith: elementValue
-
-	value := elementValue! !
-
-
 !classDefinition: #OOStack category: #'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: 'elements'
+	instanceVariableNames: 'top'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!OOStack methodsFor: 'testing' stamp: 'AS 4/17/2019 01:31:00'!
+!OOStack methodsFor: 'testing' stamp: 'AS 4/18/2019 23:25:08'!
 isEmpty
 
-	^elements last isEmpty! !
+	^top isEmpty! !
 
 
-!OOStack methodsFor: 'initialization' stamp: 'AS 4/17/2019 01:25:13'!
+!OOStack methodsFor: 'initialization' stamp: 'AS 4/18/2019 23:24:55'!
 initialize
 
-	"Inicializamos la OrderedCollection con un elemento vacio. Este elemento va a pertenecer siempre al stack"
-	elements := OrderedCollection with: EmptyElement new! !
+	"Inicializamos el stack con un elemento vacio. Este elemento va a pertenecer siempre al stack"
+	top := StackBaseElement new! !
 
 
-!OOStack methodsFor: 'adding' stamp: 'AS 4/17/2019 01:34:27'!
+!OOStack methodsFor: 'adding' stamp: 'AS 4/18/2019 23:30:13'!
 push: anElement 
-	elements add: (NonEmptyElement new initializeWith: anElement)! !
+	
+	top := StackTopElement new initializeWith: anElement over: top! !
 
 
-!OOStack methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:35:17'!
+!OOStack methodsFor: 'accessing' stamp: 'AS 4/18/2019 23:29:29'!
 size
 
-	"Como el stack siempre va a tener al elemento vacio, su tamaño es el de la OrderedCollection - 1"
-	^elements size - 1! !
+	^top deepSize! !
 
-!OOStack methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:37:18'!
+!OOStack methodsFor: 'accessing' stamp: 'AS 4/18/2019 23:29:17'!
 top
 
-	^elements last elementValue ! !
+	^top elementValue ! !
 
 
-!OOStack methodsFor: 'removing' stamp: 'AS 4/17/2019 14:20:53'!
+!OOStack methodsFor: 'removing' stamp: 'AS 4/18/2019 23:28:23'!
 pop
 	
-	^elements last popFromStack: self
+	| currentTop|
 	
-	"Otra opcion seria:
-	lastElement := elements last elementValue. (esto en el empty da un error asi que no seguiria ejecutando)
-	elements removeLast.
-	^lastElement"! !
-
-!OOStack methodsFor: 'removing' stamp: 'AS 4/17/2019 01:41:33'!
-removeLastElement
+	currentTop := top elementValue. 
+	top := top previous.
 	
-	^elements removeLast! !
+	^currentTop! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -299,3 +211,88 @@ Object subclass: #SentenceFinderByPrefix
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+
+!classDefinition: #StackElement category: #'Stack-Exercise'!
+Object subclass: #StackElement
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!StackElement methodsFor: 'accessing' stamp: 'AS 4/18/2019 23:22:16'!
+deepSize
+
+	self subclassResponsibility ! !
+
+!StackElement methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:36:07'!
+elementValue
+
+	self subclassResponsibility ! !
+
+
+!StackElement methodsFor: 'testing' stamp: 'AS 4/17/2019 01:31:15'!
+isEmpty
+
+	self subclassResponsibility ! !
+
+
+!classDefinition: #StackBaseElement category: #'Stack-Exercise'!
+StackElement subclass: #StackBaseElement
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!StackBaseElement methodsFor: 'testing' stamp: 'AS 4/18/2019 23:23:27'!
+isEmpty
+
+	^true! !
+
+
+!StackBaseElement methodsFor: 'accessing' stamp: 'AS 4/18/2019 23:22:28'!
+deepSize
+
+	^0! !
+
+!StackBaseElement methodsFor: 'accessing' stamp: 'AS 4/18/2019 23:21:13'!
+elementValue
+
+	self error: OOStack stackEmptyErrorDescription ! !
+
+
+!classDefinition: #StackTopElement category: #'Stack-Exercise'!
+StackElement subclass: #StackTopElement
+	instanceVariableNames: 'value previous'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!StackTopElement methodsFor: 'accessing' stamp: 'AS 4/18/2019 23:23:06'!
+deepSize
+
+	^1 + previous deepSize! !
+
+!StackTopElement methodsFor: 'accessing' stamp: 'AS 4/17/2019 01:19:46'!
+elementValue
+
+	"Usamos elementValue en vez de value para que no haya problemas con el mensaje value implementado en Object - Axel (copiado de Hernan)"
+	^value! !
+
+!StackTopElement methodsFor: 'accessing' stamp: 'AS 4/18/2019 23:24:17'!
+previous
+
+	^previous! !
+
+
+!StackTopElement methodsFor: 'testing' stamp: 'AS 4/17/2019 01:32:14'!
+isEmpty
+
+	^false! !
+
+
+!StackTopElement methodsFor: 'initialization' stamp: 'AS 4/18/2019 23:30:39'!
+initializeWith: aValue over: aStackTopElement
+
+	previous := aStackTopElement.
+	value := aValue! !
