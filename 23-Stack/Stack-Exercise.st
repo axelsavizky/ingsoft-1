@@ -203,14 +203,79 @@ stackEmptyErrorDescription
 	
 	^ 'Stack is empty'! !
 
-
 
 !classDefinition: #SentenceFinderByPrefix category: #'Stack-Exercise'!
 Object subclass: #SentenceFinderByPrefix
-	instanceVariableNames: ''
+	instanceVariableNames: 'stack'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+!SentenceFinderByPrefix methodsFor: 'initialization' stamp: 'AS 4/20/2019 16:14:04'!
+initializeWith: aStack
+
+	stack := aStack! !
+
+
+!SentenceFinderByPrefix methodsFor: 'private' stamp: 'AS 4/20/2019 17:04:49'!
+copyElementsIntoACollectionFrom: aStack
+
+	| elements |
+	
+	elements := self getTheElementsFrom: aStack.
+	self restore: elements to: aStack.
+	
+	^elements! !
+
+!SentenceFinderByPrefix methodsFor: 'private' stamp: 'AS 4/20/2019 17:05:05'!
+getTheElementsFrom: aStack
+
+	| elements |
+
+	elements := OrderedCollection new.
+	
+	aStack isEmpty whileFalse: [ | elementFromStack |
+		elementFromStack := stack pop.
+		elements addFirst: elementFromStack].
+	
+	^elements! !
+
+!SentenceFinderByPrefix methodsFor: 'private' stamp: 'AS 4/20/2019 17:04:02'!
+restore: elements to: aStack
+
+	elements do: [:element | aStack push: element].! !
+
+
+!SentenceFinderByPrefix methodsFor: 'finding' stamp: 'AS 4/20/2019 16:59:52'!
+find: aPrefix
+	
+	| elementsFromStack |
+
+	"El prefijo no puede ser vacio"
+	aPrefix isEmpty ifTrue: [^self error: self prefixEmptyErrorDescription ].
+	
+	"El prefijo no puede tener espacios"
+	(aPrefix select: [ :char | char = $ ]) isEmpty ifFalse: [^self error: self prefixHasSpaceErrorDescription ].
+	
+	elementsFromStack := self copyElementsIntoACollectionFrom: stack.
+	
+	^elementsFromStack select: [:elementFromStack | elementFromStack beginsWith: aPrefix] asBag! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'SentenceFinderByPrefix class' category: #'Stack-Exercise'!
+SentenceFinderByPrefix class
+	instanceVariableNames: ''!
+
+!SentenceFinderByPrefix class methodsFor: 'error descriptions' stamp: 'AS 4/20/2019 16:21:16'!
+prefixEmptyErrorDescription
+
+	^'Prefix is empty'! !
+
+!SentenceFinderByPrefix class methodsFor: 'error descriptions' stamp: 'AS 4/20/2019 16:21:49'!
+prefixHasSpaceErrorDescription
+
+	^'Prefix has at least one space'! !
 
 
 !classDefinition: #StackElement category: #'Stack-Exercise'!
