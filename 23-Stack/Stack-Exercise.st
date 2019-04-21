@@ -195,8 +195,8 @@ test06FindAPrefixDoesNotChangeNonEmptyStack
 	aSentenceFinderByPrefixWithANonEmptyStack find: 'Winter'.
 	self assert: aNonEmptyStack equals: aSentenceFinderByPrefixWithANonEmptyStack stack! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 18:08:44'!
-test07CanNotFindWhenThePrefixContainsASpace
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 18:12:57'!
+test07CanNotFindWhenThePrefixContainsASpaceAndTheStackIsEmpty
 	
 	self
 		should: [ aSentenceFinderByPrefixWithAnEmptyStack find: 'Wint er' ]
@@ -206,8 +206,30 @@ test07CanNotFindWhenThePrefixContainsASpace
 
 ! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 18:08:53'!
-test08CanNotFindWhenThePrefixIsEmpty
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 18:13:54'!
+test08CanNotFindWhenThePrefixContainsASpaceAndTheStackIsNonEmpty
+	
+	self
+		should: [ aSentenceFinderByPrefixWithANonEmptyStack find: 'Wint er' ]
+		raise: Error - MessageNotUnderstood 
+		withExceptionDo: [ :anError |
+		self assert: anError messageText equals: SentenceFinderByPrefix prefixHasSpaceErrorDescription ].
+
+! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 18:14:10'!
+test09CanNotFindWhenThePrefixIsEmptyAndTheStackIsEmpty
+	
+	self
+		should: [ aSentenceFinderByPrefixWithAnEmptyStack find: '' ]
+		raise: Error - MessageNotUnderstood 
+		withExceptionDo: [ :anError |
+		self assert: anError messageText equals: SentenceFinderByPrefix prefixEmptyErrorDescription ].
+
+! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 18:14:24'!
+test10CanNotFindWhenThePrefixIsEmptyAndTheStackIsNonEmpty
 	
 	self
 		should: [ aSentenceFinderByPrefixWithANonEmptyStack find: '' ]
@@ -217,8 +239,8 @@ test08CanNotFindWhenThePrefixIsEmpty
 
 ! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 18:09:07'!
-test09CreateASentenceFinderByPrefixDoesNotChangeEmptyStack
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 18:14:56'!
+test11CreateASentenceFinderByPrefixDoesNotChangeEmptyStack
 
 	| aSentenceFinderByPrefix |
 	
@@ -226,8 +248,8 @@ test09CreateASentenceFinderByPrefixDoesNotChangeEmptyStack
 	
 	self assert: anEmptyStack equals: aSentenceFinderByPrefix stack ! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 18:09:19'!
-test10CreateASentenceFinderByPrefixDoesNotChangeNonEmptyStack
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 18:15:08'!
+test12CreateASentenceFinderByPrefixDoesNotChangeNonEmptyStack
 
 	| aSentenceFinderByPrefix |
 	
