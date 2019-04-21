@@ -139,128 +139,127 @@ test10CanNotTopWhenThereAreNoObjectsInTheStack
 
 !classDefinition: #SentenceFinderByPrefixTest category: #'Stack-Exercise'!
 TestCase subclass: #SentenceFinderByPrefixTest
-	instanceVariableNames: ''
+	instanceVariableNames: 'emptyStack nonEmptyStack winterIsComing winterIsHere winterIsBeautiful'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'BA 4/20/2019 21:03:40'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 00:55:36'!
 test01FindASentenceThatHasThePrefix
-	| aSentencesStack firstSentenceToAdd sentenceFinderByPrefix prefixToFind |
+	| aSentenceFinderByPrefix |
 	
-	aSentencesStack := OOStack new.
-	firstSentenceToAdd := 'TheBox is in the table'.
-	
-	aSentencesStack push: firstSentenceToAdd.
-	sentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: aSentencesStack.
+	aSentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: nonEmptyStack.
 
-	prefixToFind := 'TheBox'.
-	self assert: (sentenceFinderByPrefix find: prefixToFind) = (Bag with: firstSentenceToAdd).
+	self assert: (aSentenceFinderByPrefix find: 'win') equals: (Bag with: winterIsBeautiful).
 ! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'BA 4/20/2019 21:05:00'!
-test02FindTwoSentencesThatHaveThePrefix
-	| aSentencesStack firstSentenceToAdd secondSentenceToAdd thirdSentenceToAdd sentenceFinderByPrefix prefixToFind |
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 00:55:32'!
+test02FindManySentencesThatHaveThePrefix
+	| aSentenceFinderByPrefix |
 	
-	aSentencesStack := OOStack new.
-	firstSentenceToAdd := 'Winter is Comming'.
-	secondSentenceToAdd := 'winter is beautiful'.
-	thirdSentenceToAdd := 'Winter is here'.
-	
-	aSentencesStack push: firstSentenceToAdd.
-	aSentencesStack push: secondSentenceToAdd.
-	aSentencesStack push: thirdSentenceToAdd.
-	sentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: aSentencesStack.
+	aSentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: nonEmptyStack.
 
-	prefixToFind := 'Winter'.
-	self assert: (sentenceFinderByPrefix find: prefixToFind) = (Bag with: firstSentenceToAdd with: thirdSentenceToAdd).
+	self assert: (aSentenceFinderByPrefix find: 'Win') equals: (Bag with: winterIsComing with: winterIsComing with: winterIsHere).
 ! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'BA 4/20/2019 21:08:00'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 00:55:25'!
 test03NotFindSentencesThatHaveThePrefix
-	| aSentencesStack firstSentenceToAdd secondSentenceToAdd sentenceFinderByPrefix prefixToFind |
+	| aSentenceFinderByPrefix |
 	
-	aSentencesStack := OOStack new.
-	firstSentenceToAdd := 'The dog is in the house'.
-	secondSentenceToAdd := 'winter is Comming'.
-	
-	aSentencesStack push: firstSentenceToAdd.
-	aSentencesStack push: secondSentenceToAdd.
-	sentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: aSentencesStack.
+	aSentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: nonEmptyStack.
 
-	prefixToFind := 'Winter'.
-	self assert: (sentenceFinderByPrefix find: prefixToFind) = Bag new.
+	self assert: (aSentenceFinderByPrefix find: 'summer') equals: Bag new.
 ! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'BA 4/20/2019 21:08:37'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 00:55:20'!
 test04NotFindSentencesInEmptyStack
-	| aSentencesStack sentenceFinderByPrefix prefixToFind |
+	| aSentenceFinderByPrefix |
 	
-	aSentencesStack := OOStack new.
-	sentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: aSentencesStack.
+	aSentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: emptyStack .
 
-	prefixToFind := 'Winter'.
-	self assert: (sentenceFinderByPrefix find: prefixToFind) = Bag new.
+	self assert: (aSentenceFinderByPrefix find: 'Winter') = Bag new.
 ! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'BA 4/20/2019 20:55:30'!
-test05SentenceFinderDoesNotChangeEmptyStack
-	| aSentencesStack sentenceFinderByPrefix prefixToFind |
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 00:55:15'!
+test05FindAPrefixDoesNotChangeEmptyStack
+	| aSentenceFinderByPrefix |
 	
-	aSentencesStack := OOStack new.
-	sentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: aSentencesStack.
+	aSentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: emptyStack .
 
-	prefixToFind := 'Winter'.
-	sentenceFinderByPrefix find: prefixToFind.
-	self assert: aSentencesStack = sentenceFinderByPrefix stack
+	aSentenceFinderByPrefix find: 'Winter'.
+	self assert: emptyStack equals: aSentenceFinderByPrefix stack
 ! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'BA 4/20/2019 20:56:01'!
-test06SentenceFinderDoesNotChangeNonEmptyStack
-	| aSentencesStack sentenceFinderByPrefix prefixToFind |
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 00:55:09'!
+test06FindAPrefixDoesNotChangeNonEmptyStack
+	| aSentenceFinderByPrefix |
 	
-	aSentencesStack := OOStack new.
-	aSentencesStack push: 'The cat is under the bed'.
-	aSentencesStack push: 'The dog is beautiful'.
-	aSentencesStack push: 'The tv'.
-	sentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: aSentencesStack.
+	aSentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: nonEmptyStack.
 
-	prefixToFind := 'The'.
-	sentenceFinderByPrefix find: prefixToFind.
-	self assert: aSentencesStack = sentenceFinderByPrefix stack
-! !
+	aSentenceFinderByPrefix find: 'Winter'.
+	self assert: nonEmptyStack equals: aSentenceFinderByPrefix stack! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'BA 4/20/2019 21:18:16'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 00:55:02'!
 test07CanNotFindWhenThePrefixContainsASpace
-	| aSentencesStack sentenceFinderByPrefix prefixToFind |
+	| aSentenceFinderByPrefix |
 	
-	aSentencesStack := OOStack new.
-	sentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: aSentencesStack.
-	prefixToFind := 'Wint er'.
+	aSentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: emptyStack .
 
 	self
-		should: [ sentenceFinderByPrefix find: prefixToFind ]
+		should: [ aSentenceFinderByPrefix find: 'Wint er' ]
 		raise: Error - MessageNotUnderstood 
 		withExceptionDo: [ :anError |
-		self assert: anError messageText = SentenceFinderByPrefix prefixHasSpaceErrorDescription ].
+		self assert: anError messageText equals: SentenceFinderByPrefix prefixHasSpaceErrorDescription ].
 
 ! !
 
-!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'BA 4/20/2019 21:18:07'!
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 00:54:51'!
 test08CanNotFindWhenThePrefixIsEmpty
-	| aSentencesStack sentenceFinderByPrefix prefixToFind |
+	| aSentenceFinderByPrefix |
 	
-	aSentencesStack := OOStack new.
-	sentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: aSentencesStack.
-	prefixToFind := ''.
+	aSentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: emptyStack .
 
 	self
-		should: [ sentenceFinderByPrefix find: prefixToFind ]
+		should: [ aSentenceFinderByPrefix find: '' ]
 		raise: Error - MessageNotUnderstood 
 		withExceptionDo: [ :anError |
-		self assert: anError messageText = SentenceFinderByPrefix prefixEmptyErrorDescription ].
+		self assert: anError messageText equals: SentenceFinderByPrefix prefixEmptyErrorDescription ].
 
 ! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 00:54:22'!
+test09CreateASentenceFinderByPrefixDoesNotChangeEmptyStack
+
+	| aSentenceFinderByPrefix |
+	
+	aSentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: emptyStack.
+	
+	self assert: emptyStack equals: aSentenceFinderByPrefix stack ! !
+
+!SentenceFinderByPrefixTest methodsFor: 'test' stamp: 'AS 4/21/2019 00:54:39'!
+test10CreateASentenceFinderByPrefixDoesNotChangeNonEmptyStack
+
+	| aSentenceFinderByPrefix |
+	
+	aSentenceFinderByPrefix := SentenceFinderByPrefix new initializeWith: nonEmptyStack .
+	
+	self assert: nonEmptyStack equals: aSentenceFinderByPrefix stack ! !
+
+
+!SentenceFinderByPrefixTest methodsFor: 'setup' stamp: 'AS 4/21/2019 00:44:59'!
+setUp
+
+	emptyStack := OOStack new.
+	nonEmptyStack := OOStack new.
+	
+	winterIsComing := 'Winter is coming'.
+	winterIsHere := 'Winter is here'.
+	winterIsBeautiful := 'winter is beautiful'.
+	
+	nonEmptyStack push: winterIsComing.
+	nonEmptyStack push: winterIsHere.
+	nonEmptyStack push: winterIsBeautiful.
+	nonEmptyStack push: winterIsComing.! !
 
 
 !classDefinition: #OOStack category: #'Stack-Exercise'!
