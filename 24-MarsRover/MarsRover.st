@@ -1,72 +1,67 @@
-!classDefinition: #XXXTest category: #MarsRover!
-TestCase subclass: #XXXTest
+!classDefinition: #MarsRoverTest category: #MarsRover!
+TestCase subclass: #MarsRoverTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'MarsRover'!
 
-!XXXTest methodsFor: 'tests' stamp: 'AMS 5/9/2019 01:17:56'!
-test01
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 21:53:33'!
+test01KeepPositionAndHeadingWhenExecuteEmptyCommand
 
 	| marsRover |
 	
 	marsRover := MarsRover initializeAt: 0@0 headingTo: #North.
 	marsRover execute: ''.
 	
-	self assert: 0 equals: marsRover x.
-	self assert: 0 equals: marsRover y.
+	self assert: 0@0 equals: marsRover isAt.
 	self assert: #North equals: marsRover headingTo.! !
 
-!XXXTest methodsFor: 'tests' stamp: 'AMS 5/9/2019 01:17:52'!
-test02
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 21:57:26'!
+test02AdvanceOnePositionToNorthAndKeepHeadingWhenExecutesMoveForwardCommandHeadingToNorth
 
 	| marsRover |
 	
 	marsRover := MarsRover initializeAt: 0@0 headingTo: #North.
 	marsRover execute: 'f'.
 	
-	self assert: 0 equals: marsRover x.
-	self assert: 1 equals: marsRover y.
+	self assert: 0@1 equals: marsRover isAt.
 	self assert: #North equals: marsRover headingTo.! !
 
-!XXXTest methodsFor: 'tests' stamp: 'AMS 5/9/2019 01:18:07'!
-test03
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 21:57:36'!
+test03AdvanceOnePositionToSouthAndKeepHeadingWhenExecutesMoveBackwardCommandHeadingToNorth
 
 	| marsRover |
 	
 	marsRover := MarsRover initializeAt: 0@0 headingTo: #North.
 	marsRover execute: 'b'.
 	
-	self assert: 0 equals: marsRover x.
-	self assert: -1 equals: marsRover y.
+	self assert: 0@-1 equals: marsRover isAt.
 	self assert: #North equals: marsRover headingTo.! !
 
-!XXXTest methodsFor: 'tests' stamp: 'AMS 5/9/2019 01:18:16'!
-test04
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 21:58:59'!
+test04KeepPositionAndHeadsToWestWhenExecuteTurnLeftCommandHeadingToNorth
 
 	| marsRover |
 	
 	marsRover := MarsRover initializeAt: 0@0 headingTo: #North.
 	marsRover execute: 'l'.
 	
-	self assert: 0 equals: marsRover x.
-	self assert: 0 equals: marsRover y.
+	self assert: 0@0 equals: marsRover isAt.
 	self assert: #West equals: marsRover headingTo.! !
 
-!XXXTest methodsFor: 'tests' stamp: 'AMS 5/9/2019 01:18:24'!
-test05
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 21:59:17'!
+test05KeepPositionAndHeadsToEastWhenExecuteTurnRightCommandHeadingToNorth
 
 	| marsRover |
 	
 	marsRover := MarsRover initializeAt: 0@0 headingTo: #North.
 	marsRover execute: 'r'.
 	
-	self assert: 0 equals: marsRover x.
-	self assert: 0 equals: marsRover y.
+	self assert: 0@0 equals: marsRover isAt.
 	self assert: #East equals: marsRover headingTo.! !
 
-!XXXTest methodsFor: 'tests' stamp: 'AMS 5/9/2019 01:18:34'!
-test06
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 22:00:55'!
+test06ShouldRaiseErrorWhenExecutesInvalidCommand
 
 	| marsRover |
 	
@@ -74,67 +69,113 @@ test06
 	
 	self should: [marsRover execute: 'x']
 		raise: Error - MessageNotUnderstood 
-		withMessageText: MarsRover invalidCommandDescription .! !
+		withMessageText: MarsRover invalidCommandDescription .
+	self assert: 0@0 equals: marsRover isAt.
+	self assert: #North equals: marsRover headingTo ! !
 
-!XXXTest methodsFor: 'tests' stamp: 'AMS 5/9/2019 01:19:35'!
-test07
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 22:01:38'!
+test07AdvanceTwoPositionsToNorthAndKeepHeadingWhenExecutesTwoMoveForwardCommandsHeadingToNorth
 
 	| marsRover |
 	
 	marsRover := MarsRover initializeAt: 0@0 headingTo: #North.
 	marsRover execute: 'ff'.
 	
-	self assert: 0 equals: marsRover x.
-	self assert: 2 equals: marsRover y.
+	self assert: 0@2 equals: marsRover isAt.
 	self assert: #North equals: marsRover headingTo.! !
 
-!XXXTest methodsFor: 'tests' stamp: 'AMS 5/9/2019 01:26:53'!
-test08
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 22:02:21'!
+test08AdvanceOnePositionToWestAndKeepHeadingWhenExecutesMoveForwardHeadingToWest
 
 	| marsRover |
 	
 	marsRover := MarsRover initializeAt: 0@0 headingTo: #West.
 	marsRover execute: 'f'.
 	
-	self assert: -1 equals: marsRover x.
-	self assert: 0 equals: marsRover y.
+	self assert: -1@0 equals: marsRover isAt.
 	self assert: #West equals: marsRover headingTo.! !
 
-!XXXTest methodsFor: 'tests' stamp: 'AMS 5/9/2019 21:11:26'!
-test09
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 22:02:42'!
+test09AdvanceOnePositionToEastAndKeepHeadingWhenExecutesMoveBackwardCommandHeadingToWest
 
 	| marsRover |
 	
 	marsRover := MarsRover initializeAt: 0@0 headingTo: #West.
 	marsRover execute: 'b'.
 	
-	self assert: 1 equals: marsRover x.
-	self assert: 0 equals: marsRover y.
+	self assert: 1@0 equals: marsRover isAt.
 	self assert: #West equals: marsRover headingTo.! !
 
-!XXXTest methodsFor: 'tests' stamp: 'AMS 5/9/2019 01:27:17'!
-test10
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 22:03:12'!
+test10KeepPositionAndHeadsToSouthWhenExecuteTurnLeftCommandHeadingToWest
 
 	| marsRover |
 	
 	marsRover := MarsRover initializeAt: 0@0 headingTo: #West.
 	marsRover execute: 'l'.
 	
-	self assert: 0 equals: marsRover x.
-	self assert: 0 equals: marsRover y.
+	self assert: 0@0 equals: marsRover isAt.
 	self assert: #South equals: marsRover headingTo.! !
 
-!XXXTest methodsFor: 'tests' stamp: 'AMS 5/9/2019 01:28:05'!
-test11
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 22:03:33'!
+test11KeepPositionAndHeadsToNorthWhenExecuteTurnRightCommandHeadingToWest
 
 	| marsRover |
 	
 	marsRover := MarsRover initializeAt: 0@0 headingTo: #West.
 	marsRover execute: 'r'.
 	
-	self assert: 0 equals: marsRover x.
-	self assert: 0 equals: marsRover y.
+	self assert: 0@0 equals: marsRover isAt.
 	self assert: #North equals: marsRover headingTo.! !
+
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 22:03:52'!
+test12KeepPositionAndHeadingWhenTurnLeftFourTimes
+
+	| marsRover |
+	
+	marsRover := MarsRover initializeAt: 0@0 headingTo: #North.
+	marsRover execute: 'l'.
+	marsRover execute: 'l'.
+	marsRover execute: 'l'.
+	marsRover execute: 'l'.
+	
+	self assert: 0@0 equals: marsRover isAt.
+	self assert: #North equals: marsRover headingTo.! !
+
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 22:05:16'!
+test13AdvanceOnePositionAndHeadsToEastWhenExecutesMoveForwardAndTurnRightCommandHeadingToNorth
+
+	| marsRover |
+	
+	marsRover := MarsRover initializeAt: 0@0 headingTo: #North.
+	marsRover execute: 'fr'.
+	
+	self assert: 0@1 equals: marsRover isAt.
+	self assert: #East equals: marsRover headingTo.! !
+
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 22:05:37'!
+test14DontExecuteTheRemainingCommandsWhenInvalidCommandAppears
+
+	| marsRover |
+	
+	marsRover := MarsRover initializeAt: 0@0 headingTo: #North.
+	
+	self should: [marsRover execute: 'frwlb']
+		raise: Error - MessageNotUnderstood 
+		withMessageText: MarsRover invalidCommandDescription .	
+	self assert: 0@1 equals: marsRover isAt.
+	self assert: #East equals: marsRover headingTo.! !
+
+!MarsRoverTest methodsFor: 'tests' stamp: 'AMS 5/12/2019 22:06:31'!
+test15ExecutesAllCommandsWhenAreMoreThanTwoAndAreAllValid
+
+	| marsRover |
+	
+	marsRover := MarsRover initializeAt: 0@0 headingTo: #North.
+	marsRover execute: 'frfrblf'.
+		
+	self assert: 2@2 equals: marsRover isAt.
+	self assert: #East equals: marsRover headingTo.! !
 
 
 !classDefinition: #MarsRover category: #MarsRover!
@@ -144,7 +185,7 @@ Object subclass: #MarsRover
 	poolDictionaries: ''
 	category: 'MarsRover'!
 
-!MarsRover methodsFor: 'executing' stamp: 'AMS 5/9/2019 01:47:52'!
+!MarsRover methodsFor: 'executing' stamp: 'AMS 5/12/2019 22:13:15'!
 execute: commands 
 	commands do: [:aCommand | 
 		((self isValid: aCommand) not) ifTrue: [self raiseInvalidCommand ].
@@ -164,13 +205,10 @@ isValid: aCommand
 headingTo
 	^heading class cardinalPoint ! !
 
-!MarsRover methodsFor: 'accessing' stamp: 'AMS 5/6/2019 20:48:06'!
-x
-	^position x! !
+!MarsRover methodsFor: 'accessing' stamp: 'AMS 5/12/2019 21:45:02'!
+isAt
 
-!MarsRover methodsFor: 'accessing' stamp: 'AMS 5/6/2019 20:48:01'!
-y
-	^position y! !
+	^position! !
 
 
 !MarsRover methodsFor: 'initialization' stamp: 'AMS 5/9/2019 01:41:35'!
