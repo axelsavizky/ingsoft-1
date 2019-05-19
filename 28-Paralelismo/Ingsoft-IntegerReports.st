@@ -155,25 +155,16 @@ IntegerReport subclass: #CombinedIntegerPropertiesReport
 	poolDictionaries: ''
 	category: 'Ingsoft-IntegerReports'!
 
-!CombinedIntegerPropertiesReport methodsFor: 'reporting' stamp: 'AMS 5/17/2019 00:46:42'!
+!CombinedIntegerPropertiesReport methodsFor: 'reporting' stamp: 'AMS 5/19/2019 20:54:35'!
 value
 
-	| basicPropertiesLines complexPropertiesLines lines semaphore |
+	| anIntegerReportProxy |
 	
-	lines := OrderedCollection new.
-	semaphore := Semaphore new.
-	[basicPropertiesLines := (BasicIntegerPropertiesReport for: integerToAnalize) value.
-		semaphore signal] fork.
-	[complexPropertiesLines := (ComplexIntegerPropertiesReport for: integerToAnalize) value.
-		semaphore signal] fork.
+	anIntegerReportProxy := IntegerReportProxy 
+	for: (BasicIntegerPropertiesReport for: integerToAnalize) 
+	and: (ComplexIntegerPropertiesReport for: integerToAnalize).
 
-	semaphore wait;wait.
-	
-	lines 
-		addAll: basicPropertiesLines;
-		addAll: complexPropertiesLines.
-		
-	^lines! !
+	^anIntegerReportProxy value! !
 
 
 !classDefinition: #CompleteIntegerReport category: #'Ingsoft-IntegerReports'!
@@ -183,25 +174,16 @@ IntegerReport subclass: #CompleteIntegerReport
 	poolDictionaries: ''
 	category: 'Ingsoft-IntegerReports'!
 
-!CompleteIntegerReport methodsFor: 'reporting' stamp: 'AMS 5/17/2019 00:48:09'!
+!CompleteIntegerReport methodsFor: 'reporting' stamp: 'AMS 5/19/2019 20:54:26'!
 value
 
-	| combinedPropertiesLines differentBasesLines lines semaphore |
+	| anIntegerReportProxy |
 	
-	lines := OrderedCollection new.
-	semaphore := Semaphore new.	
-	[combinedPropertiesLines := (CombinedIntegerPropertiesReport for: integerToAnalize) value.
-		semaphore signal] fork.
-	[differentBasesLines := (IntegerOnDifferentBasesReport for: integerToAnalize) value.
-		semaphore signal] fork.	
-	
-	semaphore wait;wait.
-	
-	lines
-		addAll: combinedPropertiesLines;
-		addAll: differentBasesLines.
-		
-	^lines! !
+	anIntegerReportProxy := IntegerReportProxy 
+		for: (CombinedIntegerPropertiesReport for: integerToAnalize) 
+		and: (IntegerOnDifferentBasesReport for: integerToAnalize).
+
+	^anIntegerReportProxy value! !
 
 
 !classDefinition: #IntegerOnDifferentBasesReport category: #'Ingsoft-IntegerReports'!
@@ -290,3 +272,51 @@ value
 		addLineTo: lines title: 'Sqrt' with: [ integerToAnalize sqrt ].
 		
 	^lines! !
+
+
+!classDefinition: #IntegerReportProxy category: #'Ingsoft-IntegerReports'!
+Object subclass: #IntegerReportProxy
+	instanceVariableNames: 'firstIntegerReport secondIntegerReport'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ingsoft-IntegerReports'!
+
+!IntegerReportProxy methodsFor: 'initialization' stamp: 'AMS 5/19/2019 20:39:19'!
+initializeFor: aFirstIntegerReport and: aSecondIntegerReport
+
+	firstIntegerReport := aFirstIntegerReport.
+	secondIntegerReport := aSecondIntegerReport ! !
+
+
+!IntegerReportProxy methodsFor: 'value' stamp: 'AMS 5/19/2019 20:43:44'!
+value
+
+	| lines semaphore firstReport secondReport |
+	
+	semaphore := Semaphore new.
+	lines := OrderedCollection new.
+	
+	[firstReport := firstIntegerReport value.
+		semaphore signal] fork.
+	
+	[secondReport := secondIntegerReport value.
+		semaphore signal] fork.
+	
+	semaphore wait; wait.
+	
+	lines
+		addAll: firstReport;
+		addAll: secondReport.
+		
+	^lines! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'IntegerReportProxy class' category: #'Ingsoft-IntegerReports'!
+IntegerReportProxy class
+	instanceVariableNames: ''!
+
+!IntegerReportProxy class methodsFor: 'instance creation' stamp: 'AMS 5/19/2019 20:36:37'!
+for: aFirstClosure and: aSecondClosure
+
+	^self new initializeFor: aFirstClosure and: aSecondClosure ! !
