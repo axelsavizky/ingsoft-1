@@ -288,7 +288,18 @@ initializeFor: aFirstIntegerReport and: aSecondIntegerReport
 	secondIntegerReport := aSecondIntegerReport ! !
 
 
-!IntegerReportProxy methodsFor: 'value' stamp: 'AMS 5/19/2019 20:43:44'!
+!IntegerReportProxy methodsFor: 'value - private' stamp: 'AMS 5/19/2019 21:09:35'!
+evaluate: anIntegerReport signaling: aSemaphore
+
+	| report |
+
+	report := anIntegerReport value.
+	aSemaphore signal.
+	
+	^report! !
+
+
+!IntegerReportProxy methodsFor: 'value' stamp: 'AMS 5/19/2019 21:10:31'!
 value
 
 	| lines semaphore firstReport secondReport |
@@ -296,11 +307,8 @@ value
 	semaphore := Semaphore new.
 	lines := OrderedCollection new.
 	
-	[firstReport := firstIntegerReport value.
-		semaphore signal] fork.
-	
-	[secondReport := secondIntegerReport value.
-		semaphore signal] fork.
+	[firstReport := self evaluate: firstIntegerReport signaling: semaphore] fork.
+	[secondReport := self evaluate: secondIntegerReport signaling: semaphore ] fork.
 	
 	semaphore wait; wait.
 	
