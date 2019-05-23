@@ -257,9 +257,9 @@ test15
 	self assert: #O equals: terniLapilli currentTurn.
 	self deny: terniLapilli hasFinished.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/21/2019 20:33:14'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/23/2019 19:58:26'!
 test16
-	
+	"X gana en forma horizontal 1"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -276,9 +276,9 @@ test16
 	self assert: terniLapilli hasFinished.
 	self assert: #X equals: terniLapilli winner.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/21/2019 20:34:26'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/23/2019 19:58:18'!
 test17
-	
+	"X gana en forma horizontal 2"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -295,9 +295,9 @@ test17
 	self assert: terniLapilli hasFinished.
 	self assert: #X equals: terniLapilli winner.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/21/2019 21:30:38'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/23/2019 19:58:00'!
 test18
-	
+	"X gana en forma vertical"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -314,9 +314,9 @@ test18
 	self assert: terniLapilli hasFinished.
 	self assert: #X equals: terniLapilli winner.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/21/2019 20:38:11'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/23/2019 19:58:05'!
 test19
-	
+	"X gana en forma diagonal 1"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -333,9 +333,9 @@ test19
 	self assert: terniLapilli hasFinished.
 	self assert: #X equals: terniLapilli winner.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/21/2019 21:31:22'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/23/2019 19:58:10'!
 test20
-	
+	"X gana en forma diagonal 2"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -351,6 +351,132 @@ test20
 	self assert: #O equals: terniLapilli currentTurn.
 	self assert: terniLapilli hasFinished.
 	self assert: #X equals: terniLapilli winner.! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/23/2019 19:57:41'!
+test21
+	"O gana en forma horizontal 1"
+	| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli putXAt: 1@0.
+	terniLapilli putOAt: 0@0.
+	terniLapilli putXAt: 2@0.
+	terniLapilli putOAt: 0@1.
+	terniLapilli putXAt: 2@2.
+	terniLapilli putOAt: 0@2.	
+	
+	self assert: (OrderedCollection with: 1@0 with: 2@0 with: 2@2) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@0 with: 0@1 with: 0@2) equals: terniLapilli playsOfO.
+	self assert: #X equals: terniLapilli currentTurn.
+	self assert: terniLapilli hasFinished.
+	self assert: #O equals: terniLapilli winner.! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/23/2019 19:57:46'!
+test22
+	"O gana en forma vertical 1"
+	| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli putXAt: 0@2. 
+	terniLapilli putOAt: 0@1.
+	terniLapilli putXAt: 2@0.
+	terniLapilli putOAt: 1@1.
+	terniLapilli putXAt: 2@2.
+	terniLapilli putOAt: 2@1.	
+	
+	self assert: (OrderedCollection with: 0@2 with: 2@0 with: 2@2) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@1 with: 1@1 with: 2@1) equals: terniLapilli playsOfO.
+	self assert: #X equals: terniLapilli currentTurn.
+	self assert: terniLapilli hasFinished.
+	self assert: #O equals: terniLapilli winner.! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/23/2019 20:00:41'!
+test23
+	"O gana en forma diagonal 1"
+	| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli putXAt: 0@2.
+	terniLapilli putOAt: 0@0.
+	terniLapilli putXAt: 2@1.
+	terniLapilli putOAt: 1@1.
+	terniLapilli putXAt: 2@0.
+	terniLapilli putOAt: 2@2.	
+	
+	self assert: (OrderedCollection with: 0@2 with: 2@1 with: 2@0) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@0 with: 1@1 with: 2@2) equals: terniLapilli playsOfO.
+	self assert: #X equals: terniLapilli currentTurn.
+	self assert: terniLapilli hasFinished.
+	self assert: #O equals: terniLapilli winner.! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/23/2019 20:03:36'!
+test24
+	"O gana en forma diagonal 2"
+	| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli putXAt: 0@0.
+	terniLapilli putOAt: 0@2.
+	terniLapilli putXAt: 2@1.
+	terniLapilli putOAt: 1@1.
+	terniLapilli putXAt: 2@2.
+	terniLapilli putOAt: 2@0.	
+	
+	self assert: (OrderedCollection with: 0@0 with: 2@1 with: 2@2) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@2 with: 1@1 with: 2@0) equals: terniLapilli playsOfO.
+	self assert: #X equals: terniLapilli currentTurn.
+	self assert: terniLapilli hasFinished.
+	self assert: #O equals: terniLapilli winner.! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/23/2019 19:57:24'!
+test300
+	"se controla que si ningun jugador gano, al pedir winner a la instancia se lanze una excepcion"
+	"| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli putXAt: 0@0.
+	terniLapilli putOAt: 0@1.
+	terniLapilli putXAt: 0@2.
+	terniLapilli putOAt: 1@2.
+	terniLapilli putXAt: 1@0.
+	terniLapilli putOAt: 2@2.	
+	
+	self should: [terniLapilli winner.] 
+		raise: Error - MessageNotUnderstood 
+		withMessageText: TerniLapilli nobodyWinErrorDescription.
+
+	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 1@0) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@1 with: 1@2 with: 2@2) equals: terniLapilli playsOfO.
+	self assert: #X equals: terniLapilli currentTurn.
+	self deny: terniLapilli hasFinished."! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/23/2019 19:57:28'!
+test400
+	"se controla que no haya mas de 3 X"
+	"| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli putXAt: 0@0.
+	terniLapilli putOAt: 0@1.
+	terniLapilli putXAt: 0@2.
+	terniLapilli putOAt: 1@2.
+	terniLapilli putXAt: 1@0.
+	terniLapilli putOAt: 2@2.	
+	
+	self should: [terniLapilli putXAt: 2@0.] 
+		raise: Error - MessageNotUnderstood 
+		withMessageText: TerniLapilli moreThanThreeTokensErrorDescription.
+
+	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 1@0) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@1 with: 1@2 with: 2@2) equals: terniLapilli playsOfO.
+	self assert: #X equals: terniLapilli currentTurn.
+	self deny: terniLapilli hasFinished."! !
 
 !TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/20/2019 21:17:57'!
 test500
@@ -383,6 +509,32 @@ raiseNotYourTurnException
 
 	^self error: self class notYourTurnErrorDescription ! !
 
+
+!TerniLapilli methodsFor: 'testing - private' stamp: 'BA 5/23/2019 20:01:46'!
+hasWonO
+	^playsOfO size = 3 and: [self hasWonOByHorizontalLine or: [self hasWonOByVerticalLine or: [self hasWonOByDiagonalLine]]]
+	
+	"^playsOfX size = 3 and: [self hasWonXByHorizontalLine or: [self hasWonXByVerticalLine or: [self hasWonXByDiagonalLine]]]"! !
+
+!TerniLapilli methodsFor: 'testing - private' stamp: 'BA 5/23/2019 20:01:20'!
+hasWonOByDiagonalLine
+
+	| aDiagonalSequence anotherDiagonalSequence |
+	
+	aDiagonalSequence := OrderedCollection with: 0@0 with: 1@1 with: 2@2.
+	anotherDiagonalSequence := OrderedCollection with: 0@2 with: 1@1 with: 2@0.
+
+	^(playsOfO difference: aDiagonalSequence) isEmpty or: [(playsOfO difference: anotherDiagonalSequence ) isEmpty]! !
+
+!TerniLapilli methodsFor: 'testing - private' stamp: 'BA 5/23/2019 19:44:45'!
+hasWonOByHorizontalLine
+
+	^(((playsOfO at: 1) x = (playsOfO at: 2) x) and: [(playsOfO at: 2) x = (playsOfO at: 3) x])! !
+
+!TerniLapilli methodsFor: 'testing - private' stamp: 'BA 5/23/2019 19:43:20'!
+hasWonOByVerticalLine
+	
+	^((playsOfO at: 1) y = (playsOfO at: 2) y) and: [(playsOfO at: 2) y = (playsOfO at: 3) y]! !
 
 !TerniLapilli methodsFor: 'testing - private' stamp: 'AMS 5/21/2019 20:39:07'!
 hasWonX
@@ -432,7 +584,7 @@ isValid: aPosition
 	^(aPosition x < 0) or: (aPosition x > 2) or: (aPosition y < 0) or: (aPosition y > 2)! !
 
 
-!TerniLapilli methodsFor: 'playing' stamp: 'AMS 5/20/2019 20:20:17'!
+!TerniLapilli methodsFor: 'playing' stamp: 'BA 5/23/2019 19:39:28'!
 putOAt: aPosition
 
 	(#O = currentTurn) ifFalse: [^self raiseNotYourTurnException].
@@ -440,9 +592,12 @@ putOAt: aPosition
 	(playsOfX includes: aPosition) ifTrue: [^self raiseNonEmptyPositionException].
 	(playsOfO includes: aPosition) ifTrue: [^self raiseNonEmptyPositionException].
 
-	
 	playsOfO add: aPosition.
-	currentTurn := #X! !
+	currentTurn := #X.
+	self hasWonO ifTrue: [
+		hasFinished := true.
+		winner := #O
+	]! !
 
 !TerniLapilli methodsFor: 'playing' stamp: 'AMS 5/21/2019 20:32:19'!
 putXAt: aPosition
@@ -490,6 +645,16 @@ TerniLapilli class
 invalidPositionErrorDescription
 	
 	^'invalid position'! !
+
+!TerniLapilli class methodsFor: 'exceptions' stamp: 'BA 5/23/2019 18:56:59'!
+moreThanThreeTokensErrorDescription
+
+	^''! !
+
+!TerniLapilli class methodsFor: 'exceptions' stamp: 'BA 5/23/2019 19:13:55'!
+nobodyWinErrorDescription
+	
+	^'nobody won until now.'! !
 
 !TerniLapilli class methodsFor: 'exceptions' stamp: 'AMS 5/20/2019 18:22:54'!
 nonEmptyPositionErrorDescription
