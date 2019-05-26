@@ -5,8 +5,8 @@ TestCase subclass: #TerniLapilliTest
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:15:47'!
-test01
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:45:34'!
+test01XStartsPuttingATokenAtMiddle
 	
 	| terniLapilli |
 
@@ -19,9 +19,9 @@ test01
 	self assert: #O equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:15:58'!
-test02
-	
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:50:11'!
+test02XStartsPuttingATokenAtACorner
+	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -33,8 +33,8 @@ test02
 	self assert: #O equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:16:03'!
-test03
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:45:57'!
+test03XCantPlayTwiceInARow
 	
 	| terniLapilli |
 
@@ -51,8 +51,8 @@ test03
 	self assert: #O equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:16:09'!
-test04
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:46:12'!
+test04OPlaysAfterX
 	
 	| terniLapilli |
 
@@ -66,9 +66,9 @@ test04
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:16:14'!
-test05
-	
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:50:21'!
+test05OPlaysAfterXInDifferentPosition
+	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -81,8 +81,8 @@ test05
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:16:27'!
-test06
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:48:02'!
+test06OCantStartPlaying
 	
 	| terniLapilli |
 
@@ -97,8 +97,8 @@ test06
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:16:41'!
-test07
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:48:08'!
+test07OCantPlayOnAPositionOccupiedByX
 	
 	| terniLapilli |
 
@@ -116,9 +116,9 @@ test07
 	self deny: terniLapilli someoneWon.
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:16:47'!
-test08
-	
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:50:26'!
+test08OCantPlayOnAnotherPositionOccupiedByX
+	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -135,8 +135,8 @@ test08
 	self deny: terniLapilli someoneWon.
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:16:53'!
-test09
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:48:26'!
+test09XPlaysAfterO
 	
 	| terniLapilli |
 
@@ -152,8 +152,8 @@ test09
 	self deny: terniLapilli someoneWon.
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:16:58'!
-test10
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:48:35'!
+test10XCantPlayOnAPositionOccupiedByHimself
 	
 	| terniLapilli |
 
@@ -171,8 +171,8 @@ test10
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:17:03'!
-test11
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:48:44'!
+test11XCantPlayOnAPositionOccupiedByO
 	
 	| terniLapilli |
 
@@ -190,8 +190,8 @@ test11
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:17:15'!
-test12
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:48:52'!
+test12OCantPlayOnAPositionOccupiedByHimself
 	
 	| terniLapilli |
 
@@ -211,8 +211,8 @@ test12
 	self deny: terniLapilli someoneWon.
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:17:48'!
-test13
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:48:58'!
+test13XCantPlayOnAnInvalidPosition
 	
 	| terniLapilli |
 
@@ -228,9 +228,9 @@ test13
 	self deny: terniLapilli someoneWon.
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:17:55'!
-test14
-	
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:50:39'!
+test14XCantPlayOnAnotherInvalidPosition
+	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -244,8 +244,8 @@ test14
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:18:00'!
-test15
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:49:15'!
+test15OCantPlayOnAnInvalidPosition
 	
 	| terniLapilli |
 
@@ -263,9 +263,9 @@ test15
 	self deny: terniLapilli someoneWon.
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:13:19'!
-test16
-	"X gana en forma vertical 1"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:49:24'!
+test16XWonWithALeftVerticalLine
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -283,9 +283,9 @@ test16
 	self deny: terniLapilli hasWonO.
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:13:35'!
-test17
-	"X gana en forma vertical 2"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:49:36'!
+test17XWonWithAMiddleVerticalLine
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -302,9 +302,9 @@ test17
 	self assert: terniLapilli hasWonX.
 	self deny: terniLapilli hasWonO.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:13:43'!
-test18
-	"X gana en forma horizontal"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:50:49'!
+test18XWonWithAnHorizontalLine
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -321,9 +321,9 @@ test18
 	self assert: terniLapilli hasWonX.
 	self deny: terniLapilli hasWonO.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:25:34'!
-test19
-	"X gana en forma diagonal 1"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:50:59'!
+test19XWonWithADiagonalLine
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -340,9 +340,9 @@ test19
 	self assert: terniLapilli hasWonX.
 	self deny: terniLapilli hasWonO.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:25:39'!
-test20
-	"X gana en forma diagonal 2"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:51:07'!
+test20XWonWithAnotherDiagonalLine
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -359,9 +359,9 @@ test20
 	self assert: terniLapilli hasWonX.
 	self deny: terniLapilli hasWonO.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:13:51'!
-test21
-	"O gana en forma vertical 1"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:51:16'!
+test21OWonWithAVerticalLine
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -380,9 +380,9 @@ test21
 	self deny: terniLapilli hasWonX.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:14:11'!
-test22
-	"O gana en forma horizontal 1"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:51:31'!
+test22OWonWithAnHorizontalLine
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -400,9 +400,9 @@ test22
 	self assert: terniLapilli hasWonO.
 	self deny: terniLapilli hasWonX.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:26:23'!
-test23
-	"O gana en forma diagonal 1"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:51:40'!
+test23OWonWithADiagonalLine
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -420,9 +420,9 @@ test23
 	self assert: terniLapilli hasWonO.
 	self deny: terniLapilli hasWonX.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 18:26:28'!
-test24
-	"O gana en forma diagonal 2"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:51:48'!
+test24OWonWithAnotherDiagonalLine
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -440,9 +440,9 @@ test24
 	self assert: terniLapilli hasWonO.
 	self deny: terniLapilli hasWonX.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:43:29'!
-test25
-	"X no puede poner un token si ya puso 3 tokens"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:51:57'!
+test25XCantPutATokenIfHeAlreadyPut3Tokens
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -463,9 +463,9 @@ test25
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:53:11'!
-test26
-	"O no puede poner un token si X ya gano"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:52:07'!
+test26OCantPutATokenIfXAlreadyWon
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -485,9 +485,9 @@ test26
 	self assert: terniLapilli hasWonX.
 	self deny: terniLapilli hasWonO.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:53:03'!
-test27
-	"X no puede deslizar si solo puso 1 token"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:52:15'!
+test27XCantSlideIfHeOnlyPutOneToken
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -504,9 +504,9 @@ test27
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:52:58'!
-test28
-	"X no puede deslizar si solo puso 2 tokens"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:52:22'!
+test28XCantSlideIfHeOnlyPutTwoTokens
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -526,9 +526,9 @@ test28
 	self deny: terniLapilli hasWonO.
 	self deny: terniLapilli hasWonX.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:52:53'!
-test29
-	"O no puede deslizar si solo puso 1 token"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:52:29'!
+test29OCantSlideIfHeOnlyPutOneToken
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -546,9 +546,9 @@ test29
 	self assert: #O equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:52:46'!
-test30
-	"O no puede deslizar si solo puso 2 tokens"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:52:35'!
+test30OCantSlideIfHeOnlyPutTwoTokens
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -568,9 +568,9 @@ test30
 	self assert: #O equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 16:43:16'!
-test31
-	"Como X y O terminaron de poner las 3 fichas y ninguno gano, X puede deslizar hacia la derecha mientras sea valido"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:52:47'!
+test31XCanSlideToThRightWhenHeAlreadyPut3Tokens
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -588,9 +588,9 @@ test31
 	self assert: #O equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:52:28'!
-test32
-	"Como X y O terminaron de poner las 3 fichas y ninguno gano, X puede deslizar hacia arriba mientras sea valido"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:52:52'!
+test32XCanSlideUpWheHeAlreadyPut3Tokens
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -608,9 +608,9 @@ test32
 	self assert: #O equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:52:13'!
-test33
-	"Como X y O terminaron de poner las 3 fichas y ninguno gano, X puede deslizar hacia abajo mientras sea valido"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:53:01'!
+test33XCanSlideDownWhenHeAlreadyPut3Tokens
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -628,9 +628,9 @@ test33
 	self assert: #O equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/25/2019 22:51:58'!
-test34
-	"Como X y O terminaron de poner las 3 fichas y ninguno gano, X puede deslizar hacia la izquierda mientras sea valido"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:53:11'!
+test34XCanSlideToTheLeftWhenHeAlreadyPut3Tokens
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -648,9 +648,9 @@ test34
 	self assert: #O equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 16:07:42'!
-test35
-	"Como X y O terminaron de poner las 3 fichas y ninguno gano, O puede deslizar hacia la derecha mientras sea valido"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:53:20'!
+test35OCanSlideToThRightWhenHeAlreadyPut3Tokens
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -669,9 +669,9 @@ test35
 	self assert: #X equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 16:06:27'!
-test36
-	"Como X y O terminaron de poner las 3 fichas y ninguno gano, O puede deslizar hacia arriba mientras sea valido"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:53:28'!
+test36OCanSlideUpWheHeAlreadyPut3Tokens
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -690,9 +690,9 @@ test36
 	self assert: #X equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 16:07:04'!
-test37
-	"Como X y O terminaron de poner las 3 fichas y ninguno gano, O puede deslizar hacia la izquierda mientras sea valido"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:53:38'!
+test37OCanSlideToTheLeftWhenHeAlreadyPut3Tokens
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -711,9 +711,9 @@ test37
 	self assert: #X equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 19:06:25'!
-test371
-	"Como X y O terminaron de poner las 3 fichas y ninguno gano, O puede deslizar hacia abajo mientras sea valido"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:53:59'!
+test38OCanSlideDownWhenHeAlreadyPut3Tokens
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -732,9 +732,9 @@ test371
 	self assert: #X equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 16:10:53'!
-test38
-	"Si O gano, X no puede deslizar"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:54:11'!
+test39XCantSlideWhenOHasWon
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -756,9 +756,9 @@ test38
 	self deny: terniLapilli hasWonX.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 16:46:10'!
-test39
-	"Si X gano, O no puede deslizar"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:54:20'!
+test40OCantSlideWhenXHasWon
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -781,9 +781,9 @@ test39
 	self deny: terniLapilli hasWonO.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 16:48:33'!
-test40
-	"Si no es el turno de X, X no puede deslizar"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:54:28'!
+test41XCantSlideWhenItsNotHisTurn
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -806,9 +806,9 @@ test40
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 16:50:35'!
-test41
-	"Si no es el turno de O, O no puede deslizar"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:54:41'!
+test42OCantSlideWhenItsNotHisTurn
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -832,9 +832,9 @@ test41
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 16:56:11'!
-test42
-	"X no puede deslizar a una posicion ocupada por O"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:54:52'!
+test43XCantSlideToAPositionOccupiedByO
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -856,9 +856,9 @@ test42
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 16:57:57'!
-test43
-	"X no puede deslizar a una posicion ocupada por X"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:55:01'!
+test44XCantSlideToAPositionOccupiedByHimself
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -880,9 +880,9 @@ test43
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 16:59:57'!
-test44
-	"O no puede deslizar a una posicion ocupada por X"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:55:15'!
+test45OCantSlideToAPositionOccupiedByX
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -905,9 +905,9 @@ test44
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 17:00:42'!
-test45
-	"O no puede deslizar a una posicion ocupada por O"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:55:29'!
+test46OCantSlideToAPositionOccupiedByHimself
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -930,9 +930,9 @@ test45
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 17:05:50'!
-test46
-	"X no puede deslizar desde una posicion vacia"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:57:21'!
+test47XCantSlideFromAnEmptyPosition
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -954,9 +954,9 @@ test46
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 17:10:49'!
-test47
-	"O no puede deslizar desde una posicion vacia"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:57:31'!
+test48OCantSlideFromAnEmptyPosition
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -979,9 +979,9 @@ test47
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 17:19:52'!
-test48
-	"X no puede deslizar desde una posicion de O"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:57:40'!
+test49XCantSlideFromAPositionOccupiedByO
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -1003,9 +1003,9 @@ test48
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 17:21:25'!
-test49
-	"O no puede deslizar desde una posicion de X"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:57:50'!
+test50OCantSlideFromAPositionOccupiedByX
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -1028,9 +1028,9 @@ test49
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 17:36:14'!
-test50
-	"X no se puede deslizar a una posicion invalida, es decir, salida del tablero 1"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:58:00'!
+test51XCantSlideToAnInvalidPosition
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -1052,9 +1052,9 @@ test50
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 17:36:29'!
-test51
-	"X no se puede deslizar a una posicion invalida, es decir, salida del tablero 2"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 20:01:18'!
+test52XCantSlideToAnotherInvalidPosition
+	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -1076,9 +1076,9 @@ test51
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 17:38:22'!
-test52
-	"O no se puede deslizar a una posicion invalida, es decir, salida del tablero 1"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:58:22'!
+test53OCantSlideToAnInvalidPosition
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -1101,9 +1101,9 @@ test52
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 17:39:23'!
-test53
-	"O no se puede deslizar a una posicion invalida, es decir, salida del tablero 2"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 20:01:23'!
+test54OCantSlideToAnotherInvalidPosition
+	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -1126,9 +1126,9 @@ test53
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 18:24:11'!
-test54
-	"O no puede poner un token si cada uno ya puso tres tokens"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:59:20'!
+test55OCantPutATokenIfHeAlreadyPutTokens
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -1151,9 +1151,9 @@ test54
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 18:29:35'!
-test55
-	"X no puede deslizar un token en diagonal"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 19:59:57'!
+test56XCantSlideToAPositionMoreThan1Length
+
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -1167,7 +1167,7 @@ test55
 	
 	self should: [terniLapilli slideXFrom: 0@0 to: 1@1.] 
 	raise: Error - MessageNotUnderstood
-	withMessageText: TerniLapilli cantSlideDiagonallyErrorDescription.
+	withMessageText: TerniLapilli cantSlideToMoreThan1LengthOfSourceErrorDescription .
 
 	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 1@0) equals: terniLapilli playsOfX.
 	self assert: (OrderedCollection with: 0@1 with: 1@2 with: 2@2) equals: terniLapilli playsOfO.
@@ -1175,34 +1175,9 @@ test55
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 18:56:41'!
-test56
-	"O no puede deslizar un token en diagonal"
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
-	terniLapilli slideXFrom: 1@0 to: 2@0.
-	
-	self should: [terniLapilli slideOFrom: 2@2 to: 1@1.] 
-	raise: Error - MessageNotUnderstood
-	withMessageText: TerniLapilli cantSlideDiagonallyErrorDescription.
-
-	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 2@0) equals: terniLapilli playsOfX.
-	self assert: (OrderedCollection with: 0@1 with: 1@2 with: 2@2) equals: terniLapilli playsOfO.
-	self assert: #O equals: terniLapilli currentTurn.
-	self deny: terniLapilli someoneWon.
-	! !
-
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 19:29:50'!
-test57
-	"X no puede deslizar un token a longitud 2 del origen"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 20:01:31'!
+test57XCantSlideToAnotherPositionMoreThan1Length
+	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -1224,9 +1199,34 @@ test57
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 19:31:53'!
-test58
-	"O no puede deslizar un token a longitud 2 del origen"
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 20:00:44'!
+test58OCantSlideToAPositionMoreThan1Length
+
+	| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli putXAt: 0@0.
+	terniLapilli putOAt: 0@1.
+	terniLapilli putXAt: 0@2.
+	terniLapilli putOAt: 1@2.
+	terniLapilli putXAt: 1@0.
+	terniLapilli putOAt: 2@2.
+	terniLapilli slideXFrom: 1@0 to: 2@0.
+	
+	self should: [terniLapilli slideOFrom: 2@2 to: 1@1.] 
+	raise: Error - MessageNotUnderstood
+	withMessageText: TerniLapilli cantSlideToMoreThan1LengthOfSourceErrorDescription .
+
+	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 2@0) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@1 with: 1@2 with: 2@2) equals: terniLapilli playsOfO.
+	self assert: #O equals: terniLapilli currentTurn.
+	self deny: terniLapilli someoneWon.
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 20:01:34'!
+test59OCantSlideToAnotherPositionMoreThan1Length
+	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
 	| terniLapilli |
 
 	terniLapilli := TerniLapilli new.
@@ -1256,11 +1256,6 @@ Object subclass: #TerniLapilli
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
-
-!TerniLapilli methodsFor: 'exceptions' stamp: 'BA 5/26/2019 18:29:57'!
-raiseCantSlideDiagonallyException
-
-	^self error: self class cantSlideDiagonallyErrorDescription ! !
 
 !TerniLapilli methodsFor: 'exceptions' stamp: 'BA 5/25/2019 21:06:07'!
 raiseCantSlideException
@@ -1384,20 +1379,7 @@ initialize
 	playsOfO := OrderedCollection new.! !
 
 
-!TerniLapilli methodsFor: 'playing - private' stamp: 'BA 5/26/2019 18:53:57'!
-aPosition: aPosition isDiagonalTo: anotherPosition
-
-	| upRightDiagonalPosition upLeftDiagonalPosition downRightDiagonalPosition downLeftDiagonalPosition | 
-	
-	upRightDiagonalPosition := (aPosition x+1)@(aPosition y+1).
-	upLeftDiagonalPosition := (aPosition x-1)@(aPosition y+1).
-	downRightDiagonalPosition := (aPosition x+1)@(aPosition y-1).
-	downLeftDiagonalPosition := (aPosition x-1)@(aPosition y-1).
-
-	^(upRightDiagonalPosition = anotherPosition) or: (upLeftDiagonalPosition = anotherPosition) or: (downRightDiagonalPosition = anotherPosition) or:
-	(downLeftDiagonalPosition = anotherPosition).! !
-
-!TerniLapilli methodsFor: 'playing - private' stamp: 'BA 5/26/2019 19:29:06'!
+!TerniLapilli methodsFor: 'playing - private' stamp: 'AMS 5/26/2019 19:43:52'!
 aPosition: aPosition isMoreThan1LengthOf: anotherPosition
 	
 	| xDifference yDifference |
@@ -1405,7 +1387,7 @@ aPosition: aPosition isMoreThan1LengthOf: anotherPosition
 	xDifference := anotherPosition x - aPosition x.
 	yDifference := anotherPosition y - aPosition y.
 	
-	^(xDifference abs > 1) or: (yDifference abs > 1)! !
+	^xDifference abs + yDifference abs > 1! !
 
 !TerniLapilli methodsFor: 'playing - private' stamp: 'BA 5/26/2019 17:35:09'!
 isInvalidPosition: aPosition
@@ -1413,7 +1395,7 @@ isInvalidPosition: aPosition
 	^(aPosition x < 0) or: (aPosition x > 2) or: (aPosition y < 0) or: (aPosition y > 2)! !
 
 
-!TerniLapilli methodsFor: 'sliding' stamp: 'BA 5/26/2019 19:32:13'!
+!TerniLapilli methodsFor: 'sliding' stamp: 'AMS 5/26/2019 19:42:34'!
 slideOFrom: aPosition to: aPositionToSlide 
 	
 	(#O = currentTurn) ifFalse: [^self raiseNotYourTurnException].
@@ -1424,14 +1406,13 @@ slideOFrom: aPosition to: aPositionToSlide
 	((playsOfX includes: aPosition) or: [playsOfO includes: aPosition]) ifFalse: [^self raiseEmptySourcePointException].
 	(playsOfO includes: aPosition) ifFalse: [^self raiseSourcePointIsXException].
 	(self isInvalidPosition: aPositionToSlide) ifTrue: [^self raiseInvalidPositionException].
-	(self aPosition: aPosition isDiagonalTo: aPositionToSlide) ifTrue: [^self raiseCantSlideDiagonallyException].
 	(self aPosition: aPosition isMoreThan1LengthOf: aPositionToSlide) ifTrue: [^self raiseCantSlideToMoreThan1LengthOfSourceException].
 	
 	playsOfO remove: aPosition.
 	playsOfO add: aPositionToSlide.
 	currentTurn := #X.! !
 
-!TerniLapilli methodsFor: 'sliding' stamp: 'BA 5/26/2019 19:16:20'!
+!TerniLapilli methodsFor: 'sliding' stamp: 'AMS 5/26/2019 19:42:24'!
 slideXFrom: aPosition to: aPositionToSlide 
 	
 	(#X = currentTurn) ifFalse: [^self raiseNotYourTurnException].
@@ -1442,7 +1423,6 @@ slideXFrom: aPosition to: aPositionToSlide
 	((playsOfX includes: aPosition) or: [playsOfO includes: aPosition]) ifFalse: [^self raiseEmptySourcePointException].
 	(playsOfX includes: aPosition) ifFalse: [^self raiseSourcePointIsOException].
 	(self isInvalidPosition: aPositionToSlide) ifTrue: [^self raiseInvalidPositionException].
-	(self aPosition: aPosition isDiagonalTo: aPositionToSlide) ifTrue: [^self raiseCantSlideDiagonallyException].
 	(self aPosition: aPosition isMoreThan1LengthOf: aPositionToSlide) ifTrue: [^self raiseCantSlideToMoreThan1LengthOfSourceException].
 
 	playsOfX remove: aPosition.
@@ -1450,7 +1430,7 @@ slideXFrom: aPosition to: aPositionToSlide
 	currentTurn := #O.! !
 
 
-!TerniLapilli methodsFor: 'puting' stamp: 'BA 5/26/2019 18:25:27'!
+!TerniLapilli methodsFor: 'putting' stamp: 'BA 5/26/2019 18:25:27'!
 putOAt: aPosition
 
 	(#O = currentTurn) ifFalse: [^self raiseNotYourTurnException].
@@ -1463,7 +1443,7 @@ putOAt: aPosition
 	playsOfO add: aPosition.
 	currentTurn := #X.! !
 
-!TerniLapilli methodsFor: 'puting' stamp: 'BA 5/26/2019 17:35:42'!
+!TerniLapilli methodsFor: 'putting' stamp: 'BA 5/26/2019 17:35:42'!
 putXAt: aPosition
 
 	(#X = currentTurn) ifFalse: [^self raiseNotYourTurnException].
@@ -1496,11 +1476,6 @@ playsOfX
 !classDefinition: 'TerniLapilli class' category: #TerniLapilli!
 TerniLapilli class
 	instanceVariableNames: ''!
-
-!TerniLapilli class methodsFor: 'exceptions' stamp: 'BA 5/26/2019 18:29:26'!
-cantSlideDiagonallyErrorDescription
-
-	^'you cant slide diagonally'! !
 
 !TerniLapilli class methodsFor: 'exceptions' stamp: 'BA 5/25/2019 21:02:10'!
 cantSlideErrorDescription
