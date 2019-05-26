@@ -1252,7 +1252,7 @@ test59OCantSlideToAnotherPositionMoreThan1Length
 
 !classDefinition: #TerniLapilli category: #TerniLapilli!
 Object subclass: #TerniLapilli
-	instanceVariableNames: 'currentTurn playsOfX playsOfO'
+	instanceVariableNames: 'state playsOfX playsOfO'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
@@ -1371,10 +1371,10 @@ someoneWon
 	^self hasWonO or: [self hasWonX]! !
 
 
-!TerniLapilli methodsFor: 'initialization' stamp: 'BA 5/25/2019 17:19:30'!
+!TerniLapilli methodsFor: 'initialization' stamp: 'AMS 5/26/2019 20:19:37'!
 initialize
 
-	currentTurn := #X.
+	state := PuttingXState for: self.
 	playsOfX := OrderedCollection new.
 	playsOfO := OrderedCollection new.! !
 
@@ -1395,45 +1395,81 @@ isInvalidPosition: aPosition
 	^(aPosition x < 0) or: (aPosition x > 2) or: (aPosition y < 0) or: (aPosition y > 2)! !
 
 
-!TerniLapilli methodsFor: 'sliding' stamp: 'AMS 5/26/2019 19:42:34'!
-slideOFrom: aPosition to: aPositionToSlide 
-	
-	(#O = currentTurn) ifFalse: [^self raiseNotYourTurnException].
-	(playsOfO size < 3) ifTrue: [^self raiseCantSlideException].
+!TerniLapilli methodsFor: 'sliding - private' stamp: 'AMS 5/26/2019 20:43:32'!
+slideOWhenIsPuttingO
+
+	^self raiseCantSlideException ! !
+
+!TerniLapilli methodsFor: 'sliding - private' stamp: 'AMS 5/26/2019 20:43:44'!
+slideOWhenIsPuttingX
+
+	^self raiseCantSlideException ! !
+
+!TerniLapilli methodsFor: 'sliding - private' stamp: 'AMS 5/26/2019 20:45:06'!
+slideOWhenIsSlidingOFrom: aSourcePosition to: aDestinationPosition
+
 	(self hasWonX) ifTrue: [^self raiseCantSlideIfSomeoneWonException].
-	(playsOfX includes: aPositionToSlide) ifTrue: [^self raiseNonEmptyPositionException].
-	(playsOfO includes: aPositionToSlide) ifTrue: [^self raiseNonEmptyPositionException].
-	((playsOfX includes: aPosition) or: [playsOfO includes: aPosition]) ifFalse: [^self raiseEmptySourcePointException].
-	(playsOfO includes: aPosition) ifFalse: [^self raiseSourcePointIsXException].
-	(self isInvalidPosition: aPositionToSlide) ifTrue: [^self raiseInvalidPositionException].
-	(self aPosition: aPosition isMoreThan1LengthOf: aPositionToSlide) ifTrue: [^self raiseCantSlideToMoreThan1LengthOfSourceException].
+	(playsOfX includes: aDestinationPosition) ifTrue: [^self raiseNonEmptyPositionException].
+	(playsOfO includes: aDestinationPosition) ifTrue: [^self raiseNonEmptyPositionException].
+	((playsOfX includes: aSourcePosition) or: [playsOfO includes: aSourcePosition]) ifFalse: [^self raiseEmptySourcePointException].
+	(playsOfO includes: aSourcePosition) ifFalse: [^self raiseSourcePointIsXException].
+	(self isInvalidPosition: aDestinationPosition) ifTrue: [^self raiseInvalidPositionException].
+	(self aPosition: aSourcePosition isMoreThan1LengthOf: aDestinationPosition) ifTrue: [^self raiseCantSlideToMoreThan1LengthOfSourceException].
 	
-	playsOfO remove: aPosition.
-	playsOfO add: aPositionToSlide.
-	currentTurn := #X.! !
+	playsOfO remove: aSourcePosition.
+	playsOfO add: aDestinationPosition.
+	state := SlidingXState for: self.! !
 
-!TerniLapilli methodsFor: 'sliding' stamp: 'AMS 5/26/2019 19:42:24'!
-slideXFrom: aPosition to: aPositionToSlide 
-	
-	(#X = currentTurn) ifFalse: [^self raiseNotYourTurnException].
-	(playsOfX size < 3) ifTrue: [^self raiseCantSlideException].
+!TerniLapilli methodsFor: 'sliding - private' stamp: 'AMS 5/26/2019 20:44:12'!
+slideOWhenIsSlidingX
+
+	^self raiseNotYourTurnException ! !
+
+!TerniLapilli methodsFor: 'sliding - private' stamp: 'AMS 5/26/2019 20:43:33'!
+slideXWhenIsPuttingO
+
+	^self raiseCantSlideException ! !
+
+!TerniLapilli methodsFor: 'sliding - private' stamp: 'AMS 5/26/2019 20:43:18'!
+slideXWhenIsPuttingX
+
+	^self raiseCantSlideException ! !
+
+!TerniLapilli methodsFor: 'sliding - private' stamp: 'AMS 5/26/2019 20:44:08'!
+slideXWhenIsSlidingO
+
+	^self raiseNotYourTurnException ! !
+
+!TerniLapilli methodsFor: 'sliding - private' stamp: 'AMS 5/26/2019 20:47:41'!
+slideXWhenIsSlidingXFrom: aSourcePosition to: aDestinationPosition
+
 	(self hasWonO) ifTrue: [^self raiseCantSlideIfSomeoneWonException].
-	(playsOfX includes: aPositionToSlide) ifTrue: [^self raiseNonEmptyPositionException].
-	(playsOfO includes: aPositionToSlide) ifTrue: [^self raiseNonEmptyPositionException].
-	((playsOfX includes: aPosition) or: [playsOfO includes: aPosition]) ifFalse: [^self raiseEmptySourcePointException].
-	(playsOfX includes: aPosition) ifFalse: [^self raiseSourcePointIsOException].
-	(self isInvalidPosition: aPositionToSlide) ifTrue: [^self raiseInvalidPositionException].
-	(self aPosition: aPosition isMoreThan1LengthOf: aPositionToSlide) ifTrue: [^self raiseCantSlideToMoreThan1LengthOfSourceException].
+	(playsOfX includes: aDestinationPosition) ifTrue: [^self raiseNonEmptyPositionException].
+	(playsOfO includes: aDestinationPosition) ifTrue: [^self raiseNonEmptyPositionException].
+	((playsOfX includes: aSourcePosition) or: [playsOfO includes: aSourcePosition]) ifFalse: [^self raiseEmptySourcePointException].
+	(playsOfX includes: aSourcePosition) ifFalse: [^self raiseSourcePointIsOException].
+	(self isInvalidPosition: aDestinationPosition) ifTrue: [^self raiseInvalidPositionException].
+	(self aPosition: aSourcePosition isMoreThan1LengthOf: aDestinationPosition) ifTrue: [^self raiseCantSlideToMoreThan1LengthOfSourceException].
 
-	playsOfX remove: aPosition.
-	playsOfX add: aPositionToSlide.
-	currentTurn := #O.! !
+	playsOfX remove: aSourcePosition.
+	playsOfX add: aDestinationPosition.
+	state := SlidingOState for: self.! !
 
 
-!TerniLapilli methodsFor: 'putting' stamp: 'BA 5/26/2019 18:25:27'!
-putOAt: aPosition
+!TerniLapilli methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:44:40'!
+slideOFrom: aSourcePosition to: aDestinationPosition 
+	
+	^state slideOFrom: aSourcePosition to: aDestinationPosition ! !
 
-	(#O = currentTurn) ifFalse: [^self raiseNotYourTurnException].
+!TerniLapilli methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:47:32'!
+slideXFrom: aSourcePosition to: aDestinationPosition 
+	
+	state slideXFrom: aSourcePosition to: aDestinationPosition ! !
+
+
+!TerniLapilli methodsFor: 'putting - private' stamp: 'AMS 5/26/2019 20:53:27'!
+putOWhenIsPuttingOAt: aPosition
+
 	(self isInvalidPosition: aPosition) ifTrue: [^self raiseInvalidPositionException].
 	(playsOfX includes: aPosition) ifTrue: [^self raiseNonEmptyPositionException].
 	(playsOfO includes: aPosition) ifTrue: [^self raiseNonEmptyPositionException].
@@ -1441,25 +1477,55 @@ putOAt: aPosition
 	(self hasWonX) ifTrue:[^self raiseGameOverException].
 
 	playsOfO add: aPosition.
-	currentTurn := #X.! !
+	(playsOfX size = 3) ifTrue: [state := SlidingXState for: self] ifFalse: [state := PuttingXState for: self].! !
 
-!TerniLapilli methodsFor: 'putting' stamp: 'BA 5/26/2019 17:35:42'!
-putXAt: aPosition
+!TerniLapilli methodsFor: 'putting - private' stamp: 'AMS 5/26/2019 20:49:12'!
+putOWhenIsPuttingX
 
-	(#X = currentTurn) ifFalse: [^self raiseNotYourTurnException].
+	^self raiseNotYourTurnException ! !
+
+!TerniLapilli methodsFor: 'putting - private' stamp: 'AMS 5/26/2019 20:57:24'!
+putOWhenIsSlidingO
+
+	^self raiseMoreThanThreeTokensException ! !
+
+!TerniLapilli methodsFor: 'putting - private' stamp: 'AMS 5/26/2019 20:49:22'!
+putXWhenIsPuttingO
+
+	^self raiseNotYourTurnException ! !
+
+!TerniLapilli methodsFor: 'putting - private' stamp: 'AMS 5/26/2019 20:55:40'!
+putXWhenIsPuttingXAt: aPosition
+
 	(self isInvalidPosition: aPosition) ifTrue: [^self raiseInvalidPositionException].
 	(playsOfX includes: aPosition) ifTrue: [^self raiseNonEmptyPositionException].
 	(playsOfO includes: aPosition) ifTrue: [^self raiseNonEmptyPositionException].
 	(playsOfX size > 2) ifTrue: [^self raiseMoreThanThreeTokensException].
 
 	playsOfX add: aPosition.
-	currentTurn := #O.! !
+	state := PuttingOState for: self.! !
+
+!TerniLapilli methodsFor: 'putting - private' stamp: 'AMS 5/26/2019 20:57:16'!
+putXWhenIsSlidingX
+
+	^self raiseMoreThanThreeTokensException ! !
 
 
-!TerniLapilli methodsFor: 'accessing' stamp: 'AMS 5/20/2019 17:59:30'!
+!TerniLapilli methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:50:45'!
+putOAt: aPosition
+
+	state putOAt: aPosition! !
+
+!TerniLapilli methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:55:13'!
+putXAt: aPosition
+
+	^state putXAt: aPosition ! !
+
+
+!TerniLapilli methodsFor: 'accessing' stamp: 'AMS 5/26/2019 20:11:51'!
 currentTurn
 
-	^currentTurn! !
+	^state currentTurn.! !
 
 !TerniLapilli methodsFor: 'accessing' stamp: 'AMS 5/20/2019 20:22:14'!
 playsOfO
@@ -1531,3 +1597,247 @@ sourcePointIsOErrorDescription
 sourcePointIsXErrorDescription
 
 	^'you cant slide if the source point is a X token.'! !
+
+
+!classDefinition: #TerniLapilliState category: #TerniLapilli!
+Object subclass: #TerniLapilliState
+	instanceVariableNames: 'terniLapilli'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli'!
+
+!TerniLapilliState methodsFor: 'accessing' stamp: 'AMS 5/26/2019 20:11:14'!
+currentTurn
+
+	self subclassResponsibility.! !
+
+
+!TerniLapilliState methodsFor: 'initialization' stamp: 'AMS 5/26/2019 20:15:20'!
+initializeFor: aTerniLapilli
+
+	terniLapilli := aTerniLapilli ! !
+
+
+!TerniLapilliState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:15:49'!
+putOAt: aPosition
+
+	self subclassResponsibility ! !
+
+!TerniLapilliState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:15:47'!
+putXAt: aPosition
+
+	self subclassResponsibility ! !
+
+
+!TerniLapilliState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:34:30'!
+slideOFrom: aSourcePosition to: aDestinationPosition
+
+	self subclassResponsibility ! !
+
+!TerniLapilliState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:34:26'!
+slideXFrom: aSourcePosition to: aDestinationPosition
+
+	self subclassResponsibility ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TerniLapilliState class' category: #TerniLapilli!
+TerniLapilliState class
+	instanceVariableNames: ''!
+
+!TerniLapilliState class methodsFor: 'instance creation' stamp: 'AMS 5/26/2019 20:14:49'!
+for: aTerniLapilli
+
+	^self new initializeFor: aTerniLapilli ! !
+
+
+!classDefinition: #PlayingOState category: #TerniLapilli!
+TerniLapilliState subclass: #PlayingOState
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli'!
+
+!PlayingOState methodsFor: 'accessing' stamp: 'AMS 5/26/2019 20:26:42'!
+currentTurn
+
+	^#O! !
+
+
+!PlayingOState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:27:00'!
+putOAt: aPosition
+
+	self subclassResponsibility ! !
+
+!PlayingOState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:26:57'!
+putXAt: aPosition
+
+	self subclassResponsibility ! !
+
+
+!PlayingOState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:34:50'!
+slideOFrom: aSourcePosition to: aDestinationPosition
+
+	self subclassResponsibility ! !
+
+!PlayingOState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:34:48'!
+slideXFrom: aSourcePosition to: aDestinationPosition
+
+	self subclassResponsibility ! !
+
+
+!classDefinition: #PuttingOState category: #TerniLapilli!
+PlayingOState subclass: #PuttingOState
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli'!
+
+!PuttingOState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:33:44'!
+putOAt: aPosition
+
+	^terniLapilli putOWhenIsPuttingOAt: aPosition ! !
+
+!PuttingOState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:48:50'!
+putXAt: aPosition
+
+	^terniLapilli putXWhenIsPuttingO ! !
+
+
+!PuttingOState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:38:38'!
+slideOFrom: aSourcePosition to: aDestinationPosition
+
+	^terniLapilli slideOWhenIsPuttingO! !
+
+!PuttingOState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:38:45'!
+slideXFrom: aSourcePosition to: aDestinationPosition
+
+	^terniLapilli slideXWhenIsPuttingO! !
+
+
+!classDefinition: #SlidingOState category: #TerniLapilli!
+PlayingOState subclass: #SlidingOState
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli'!
+
+!SlidingOState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:38:25'!
+slideOFrom: aSourcePosition to: aDestinationPosition
+
+	^terniLapilli slideOWhenIsSlidingOFrom: aSourcePosition to: aDestinationPosition .! !
+
+!SlidingOState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:37:53'!
+slideXFrom: aSourcePosition to: aDestinationPosition
+
+	^terniLapilli slideXWhenIsSlidingO.! !
+
+
+!SlidingOState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:39:54'!
+putOAt: aPosition
+
+	^terniLapilli putOWhenIsSlidingO! !
+
+!SlidingOState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:39:49'!
+putXAt: aPosition
+
+	^terniLapilli putXWhenIsSlidingO! !
+
+
+!classDefinition: #PlayingXState category: #TerniLapilli!
+TerniLapilliState subclass: #PlayingXState
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli'!
+
+!PlayingXState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:27:29'!
+putOAt: aPosition
+
+	self subclassResponsibility ! !
+
+!PlayingXState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:27:26'!
+putXAt: aPosition
+
+	self subclassResponsibility ! !
+
+
+!PlayingXState methodsFor: 'accessing' stamp: 'AMS 5/26/2019 20:27:13'!
+currentTurn
+
+	^#X! !
+
+
+!PlayingXState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:35:11'!
+slideOFrom: aSourcePosition to: aDestinationPosition
+
+	self subclassResponsibility ! !
+
+!PlayingXState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:35:08'!
+slideXFrom: aSourcePosition to: aDestinationPosition
+
+	self subclassResponsibility ! !
+
+
+!classDefinition: #PuttingXState category: #TerniLapilli!
+PlayingXState subclass: #PuttingXState
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli'!
+
+!PuttingXState methodsFor: 'accessing' stamp: 'AMS 5/26/2019 20:11:37'!
+currentTurn
+
+	^#X! !
+
+
+!PuttingXState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:49:01'!
+putOAt: aPosition
+
+	^terniLapilli putOWhenIsPuttingX! !
+
+!PuttingXState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:33:49'!
+putXAt: aPosition
+
+	^terniLapilli putXWhenIsPuttingXAt: aPosition ! !
+
+
+!PuttingXState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:40:56'!
+slideOFrom: aSourcePosition to: aDestinationPosition
+
+	^terniLapilli slideOWhenIsPuttingX! !
+
+!PuttingXState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:40:48'!
+slideXFrom: aSourcePosition to: aDestinationPosition
+
+	^terniLapilli slideXWhenIsPuttingX! !
+
+
+!classDefinition: #SlidingXState category: #TerniLapilli!
+PlayingXState subclass: #SlidingXState
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli'!
+
+!SlidingXState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:41:31'!
+putOAt: aPosition
+
+	^terniLapilli putOWhenIsSlidingX! !
+
+!SlidingXState methodsFor: 'putting' stamp: 'AMS 5/26/2019 20:41:25'!
+putXAt: aPosition
+
+	^terniLapilli putXWhenIsSlidingX! !
+
+
+!SlidingXState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:42:32'!
+slideOFrom: aSourcePosition to: aDestinationPosition
+
+	^terniLapilli slideOWhenIsSlidingX! !
+
+!SlidingXState methodsFor: 'sliding' stamp: 'AMS 5/26/2019 20:42:19'!
+slideXFrom: aSourcePosition to: aDestinationPosition
+
+	^terniLapilli slideXWhenIsSlidingXFrom: aSourcePosition to: aDestinationPosition ! !
