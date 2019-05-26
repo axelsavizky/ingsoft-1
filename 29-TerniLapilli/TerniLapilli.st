@@ -711,6 +711,27 @@ test37
 	self assert: #X equals: terniLapilli currentTurn.
 	! !
 
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 19:06:25'!
+test371
+	"Como X y O terminaron de poner las 3 fichas y ninguno gano, O puede deslizar hacia abajo mientras sea valido"
+	| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli putXAt: 0@1.
+	terniLapilli putOAt: 0@2.
+	terniLapilli putXAt: 1@0.
+	terniLapilli putOAt: 2@1.
+	terniLapilli putXAt: 2@2.
+	terniLapilli putOAt: 1@1.
+	terniLapilli slideXFrom: 0@1 to: 0@0.
+	terniLapilli slideOFrom: 2@1 to: 2@0.
+
+	self assert: (OrderedCollection with: 1@0 with: 2@2 with: 0@0) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@2 with: 1@1 with: 2@0) equals: terniLapilli playsOfO.
+	self assert: #X equals: terniLapilli currentTurn.
+	! !
+
 !TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 16:10:53'!
 test38
 	"Si O gano, X no puede deslizar"
@@ -1105,13 +1126,128 @@ test53
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 17:36:09'!
-test999
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 18:24:11'!
+test54
+	"O no puede poner un token si cada uno ya puso tres tokens"
+	| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
 	
-	"testear que no haya mas de 3 (para O y para X)"
-	"can not slideX while playing (para O y para X)"
-	"can not slideX when is not my turn (para O y para X) "
-	"no hacer slides de posiciones vacias etc..."! !
+	terniLapilli putXAt: 0@0.
+	terniLapilli putOAt: 0@1.
+	terniLapilli putXAt: 0@2.
+	terniLapilli putOAt: 1@2.
+	terniLapilli putXAt: 1@0.
+	terniLapilli putOAt: 2@2.
+	terniLapilli slideXFrom: 1@0 to: 2@0.
+	
+	self should: [terniLapilli putOAt: 1@1.] 
+	raise: Error - MessageNotUnderstood
+	withMessageText: TerniLapilli moreThanThreeTokensErrorDescription.
+
+	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 2@0) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@1 with: 1@2 with: 2@2) equals: terniLapilli playsOfO.
+	self assert: #O equals: terniLapilli currentTurn.
+	self deny: terniLapilli someoneWon.
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 18:29:35'!
+test55
+	"X no puede deslizar un token en diagonal"
+	| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli putXAt: 0@0.
+	terniLapilli putOAt: 0@1.
+	terniLapilli putXAt: 0@2.
+	terniLapilli putOAt: 1@2.
+	terniLapilli putXAt: 1@0.
+	terniLapilli putOAt: 2@2.
+	
+	self should: [terniLapilli slideXFrom: 0@0 to: 1@1.] 
+	raise: Error - MessageNotUnderstood
+	withMessageText: TerniLapilli cantSlideDiagonallyErrorDescription.
+
+	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 1@0) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@1 with: 1@2 with: 2@2) equals: terniLapilli playsOfO.
+	self assert: #X equals: terniLapilli currentTurn.
+	self deny: terniLapilli someoneWon.
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 18:56:41'!
+test56
+	"O no puede deslizar un token en diagonal"
+	| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli putXAt: 0@0.
+	terniLapilli putOAt: 0@1.
+	terniLapilli putXAt: 0@2.
+	terniLapilli putOAt: 1@2.
+	terniLapilli putXAt: 1@0.
+	terniLapilli putOAt: 2@2.
+	terniLapilli slideXFrom: 1@0 to: 2@0.
+	
+	self should: [terniLapilli slideOFrom: 2@2 to: 1@1.] 
+	raise: Error - MessageNotUnderstood
+	withMessageText: TerniLapilli cantSlideDiagonallyErrorDescription.
+
+	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 2@0) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@1 with: 1@2 with: 2@2) equals: terniLapilli playsOfO.
+	self assert: #O equals: terniLapilli currentTurn.
+	self deny: terniLapilli someoneWon.
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 19:29:50'!
+test57
+	"X no puede deslizar un token a longitud 2 del origen"
+	| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli putXAt: 0@0.
+	terniLapilli putOAt: 0@1.
+	terniLapilli putXAt: 0@2.
+	terniLapilli putOAt: 1@2.
+	terniLapilli putXAt: 2@2.
+	terniLapilli putOAt: 1@0.
+	
+	self should: [terniLapilli slideXFrom: 2@2 to: 2@0.] 
+	raise: Error - MessageNotUnderstood
+	withMessageText: TerniLapilli cantSlideToMoreThan1LengthOfSourceErrorDescription.
+
+	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 2@2) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@1 with: 1@2 with: 1@0) equals: terniLapilli playsOfO.
+	self assert: #X equals: terniLapilli currentTurn.
+	self deny: terniLapilli someoneWon.
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 19:31:53'!
+test58
+	"O no puede deslizar un token a longitud 2 del origen"
+	| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli putXAt: 0@0.
+	terniLapilli putOAt: 0@1.
+	terniLapilli putXAt: 0@2.
+	terniLapilli putOAt: 2@2.
+	terniLapilli putXAt: 2@1.
+	terniLapilli putOAt: 1@0.
+	terniLapilli slideXFrom: 2@1 to: 2@0.
+	
+	self should: [terniLapilli slideOFrom: 1@0 to: 1@2.] 
+	raise: Error - MessageNotUnderstood
+	withMessageText: TerniLapilli cantSlideToMoreThan1LengthOfSourceErrorDescription.
+
+	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 2@0) equals: terniLapilli playsOfX.
+	self assert: (OrderedCollection with: 0@1 with: 2@2 with: 1@0) equals: terniLapilli playsOfO.
+	self assert: #O equals: terniLapilli currentTurn.
+	self deny: terniLapilli someoneWon.
+	! !
 
 
 !classDefinition: #TerniLapilli category: #TerniLapilli!
@@ -1120,6 +1256,11 @@ Object subclass: #TerniLapilli
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
+
+!TerniLapilli methodsFor: 'exceptions' stamp: 'BA 5/26/2019 18:29:57'!
+raiseCantSlideDiagonallyException
+
+	^self error: self class cantSlideDiagonallyErrorDescription ! !
 
 !TerniLapilli methodsFor: 'exceptions' stamp: 'BA 5/25/2019 21:06:07'!
 raiseCantSlideException
@@ -1130,6 +1271,11 @@ raiseCantSlideException
 raiseCantSlideIfSomeoneWonException
 
 	^self error: self class cantSlideIfSomeoneWonErrorDescription ! !
+
+!TerniLapilli methodsFor: 'exceptions' stamp: 'BA 5/26/2019 19:12:43'!
+raiseCantSlideToMoreThan1LengthOfSourceException
+
+	^self error: self class cantSlideToMoreThan1LengthOfSourceErrorDescription ! !
 
 !TerniLapilli methodsFor: 'exceptions' stamp: 'BA 5/26/2019 17:07:19'!
 raiseEmptySourcePointException
@@ -1172,12 +1318,6 @@ raiseSourcePointIsXException
 	^self error: self class sourcePointIsXErrorDescription ! !
 
 
-!TerniLapilli methodsFor: 'testing - private' stamp: 'BA 5/25/2019 17:01:11'!
-hasWonO
-
-	^playsOfO size = 3 and: [self hasWonOByHorizontalLine or: [self hasWonOByVerticalLine or: [self hasWonOByDiagonalLine]]]
-! !
-
 !TerniLapilli methodsFor: 'testing - private' stamp: 'BA 5/23/2019 20:01:20'!
 hasWonOByDiagonalLine
 
@@ -1197,11 +1337,6 @@ hasWonOByHorizontalLine
 hasWonOByVerticalLine
 
 	^(((playsOfO at: 1) x = (playsOfO at: 2) x) and: [(playsOfO at: 2) x = (playsOfO at: 3) x])! !
-
-!TerniLapilli methodsFor: 'testing - private' stamp: 'AMS 5/21/2019 20:39:07'!
-hasWonX
-
-	^playsOfX size = 3 and: [self hasWonXByHorizontalLine or: [self hasWonXByVerticalLine or: [self hasWonXByDiagonalLine]]]! !
 
 !TerniLapilli methodsFor: 'testing - private' stamp: 'AMS 5/21/2019 21:36:22'!
 hasWonXByDiagonalLine
@@ -1223,11 +1358,22 @@ hasWonXByVerticalLine
 
 	^((playsOfX at: 1) x = (playsOfX at: 2) x) and: [(playsOfX at: 2) x = (playsOfX at: 3) x]! !
 
-!TerniLapilli methodsFor: 'testing - private' stamp: 'BA 5/25/2019 18:01:35'!
+
+!TerniLapilli methodsFor: 'testing' stamp: 'BA 5/25/2019 17:01:11'!
+hasWonO
+
+	^playsOfO size = 3 and: [self hasWonOByHorizontalLine or: [self hasWonOByVerticalLine or: [self hasWonOByDiagonalLine]]]
+! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'AMS 5/21/2019 20:39:07'!
+hasWonX
+
+	^playsOfX size = 3 and: [self hasWonXByHorizontalLine or: [self hasWonXByVerticalLine or: [self hasWonXByDiagonalLine]]]! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'BA 5/25/2019 18:01:35'!
 someoneWon
 
 	^self hasWonO or: [self hasWonX]! !
-
 
 
 !TerniLapilli methodsFor: 'initialization' stamp: 'BA 5/25/2019 17:19:30'!
@@ -1238,25 +1384,86 @@ initialize
 	playsOfO := OrderedCollection new.! !
 
 
+!TerniLapilli methodsFor: 'playing - private' stamp: 'BA 5/26/2019 18:53:57'!
+aPosition: aPosition isDiagonalTo: anotherPosition
+
+	| upRightDiagonalPosition upLeftDiagonalPosition downRightDiagonalPosition downLeftDiagonalPosition | 
+	
+	upRightDiagonalPosition := (aPosition x+1)@(aPosition y+1).
+	upLeftDiagonalPosition := (aPosition x-1)@(aPosition y+1).
+	downRightDiagonalPosition := (aPosition x+1)@(aPosition y-1).
+	downLeftDiagonalPosition := (aPosition x-1)@(aPosition y-1).
+
+	^(upRightDiagonalPosition = anotherPosition) or: (upLeftDiagonalPosition = anotherPosition) or: (downRightDiagonalPosition = anotherPosition) or:
+	(downLeftDiagonalPosition = anotherPosition).! !
+
+!TerniLapilli methodsFor: 'playing - private' stamp: 'BA 5/26/2019 19:29:06'!
+aPosition: aPosition isMoreThan1LengthOf: anotherPosition
+	
+	| xDifference yDifference |
+	
+	xDifference := anotherPosition x - aPosition x.
+	yDifference := anotherPosition y - aPosition y.
+	
+	^(xDifference abs > 1) or: (yDifference abs > 1)! !
+
 !TerniLapilli methodsFor: 'playing - private' stamp: 'BA 5/26/2019 17:35:09'!
 isInvalidPosition: aPosition
 
 	^(aPosition x < 0) or: (aPosition x > 2) or: (aPosition y < 0) or: (aPosition y > 2)! !
 
 
-!TerniLapilli methodsFor: 'playing' stamp: 'BA 5/26/2019 17:35:38'!
+!TerniLapilli methodsFor: 'sliding' stamp: 'BA 5/26/2019 19:32:13'!
+slideOFrom: aPosition to: aPositionToSlide 
+	
+	(#O = currentTurn) ifFalse: [^self raiseNotYourTurnException].
+	(playsOfO size < 3) ifTrue: [^self raiseCantSlideException].
+	(self hasWonX) ifTrue: [^self raiseCantSlideIfSomeoneWonException].
+	(playsOfX includes: aPositionToSlide) ifTrue: [^self raiseNonEmptyPositionException].
+	(playsOfO includes: aPositionToSlide) ifTrue: [^self raiseNonEmptyPositionException].
+	((playsOfX includes: aPosition) or: [playsOfO includes: aPosition]) ifFalse: [^self raiseEmptySourcePointException].
+	(playsOfO includes: aPosition) ifFalse: [^self raiseSourcePointIsXException].
+	(self isInvalidPosition: aPositionToSlide) ifTrue: [^self raiseInvalidPositionException].
+	(self aPosition: aPosition isDiagonalTo: aPositionToSlide) ifTrue: [^self raiseCantSlideDiagonallyException].
+	(self aPosition: aPosition isMoreThan1LengthOf: aPositionToSlide) ifTrue: [^self raiseCantSlideToMoreThan1LengthOfSourceException].
+	
+	playsOfO remove: aPosition.
+	playsOfO add: aPositionToSlide.
+	currentTurn := #X.! !
+
+!TerniLapilli methodsFor: 'sliding' stamp: 'BA 5/26/2019 19:16:20'!
+slideXFrom: aPosition to: aPositionToSlide 
+	
+	(#X = currentTurn) ifFalse: [^self raiseNotYourTurnException].
+	(playsOfX size < 3) ifTrue: [^self raiseCantSlideException].
+	(self hasWonO) ifTrue: [^self raiseCantSlideIfSomeoneWonException].
+	(playsOfX includes: aPositionToSlide) ifTrue: [^self raiseNonEmptyPositionException].
+	(playsOfO includes: aPositionToSlide) ifTrue: [^self raiseNonEmptyPositionException].
+	((playsOfX includes: aPosition) or: [playsOfO includes: aPosition]) ifFalse: [^self raiseEmptySourcePointException].
+	(playsOfX includes: aPosition) ifFalse: [^self raiseSourcePointIsOException].
+	(self isInvalidPosition: aPositionToSlide) ifTrue: [^self raiseInvalidPositionException].
+	(self aPosition: aPosition isDiagonalTo: aPositionToSlide) ifTrue: [^self raiseCantSlideDiagonallyException].
+	(self aPosition: aPosition isMoreThan1LengthOf: aPositionToSlide) ifTrue: [^self raiseCantSlideToMoreThan1LengthOfSourceException].
+
+	playsOfX remove: aPosition.
+	playsOfX add: aPositionToSlide.
+	currentTurn := #O.! !
+
+
+!TerniLapilli methodsFor: 'puting' stamp: 'BA 5/26/2019 18:25:27'!
 putOAt: aPosition
 
 	(#O = currentTurn) ifFalse: [^self raiseNotYourTurnException].
 	(self isInvalidPosition: aPosition) ifTrue: [^self raiseInvalidPositionException].
 	(playsOfX includes: aPosition) ifTrue: [^self raiseNonEmptyPositionException].
 	(playsOfO includes: aPosition) ifTrue: [^self raiseNonEmptyPositionException].
+	(playsOfO size > 2) ifTrue: [^self raiseMoreThanThreeTokensException].
 	(self hasWonX) ifTrue:[^self raiseGameOverException].
 
 	playsOfO add: aPosition.
 	currentTurn := #X.! !
 
-!TerniLapilli methodsFor: 'playing' stamp: 'BA 5/26/2019 17:35:42'!
+!TerniLapilli methodsFor: 'puting' stamp: 'BA 5/26/2019 17:35:42'!
 putXAt: aPosition
 
 	(#X = currentTurn) ifFalse: [^self raiseNotYourTurnException].
@@ -1266,38 +1473,6 @@ putXAt: aPosition
 	(playsOfX size > 2) ifTrue: [^self raiseMoreThanThreeTokensException].
 
 	playsOfX add: aPosition.
-	currentTurn := #O.! !
-
-!TerniLapilli methodsFor: 'playing' stamp: 'BA 5/26/2019 17:38:50'!
-slideOFrom: aPoint to: aPointToSlide 
-	
-	(#O = currentTurn) ifFalse: [^self raiseNotYourTurnException].
-	(playsOfO size < 3) ifTrue: [^self raiseCantSlideException].
-	(self hasWonX) ifTrue: [^self raiseCantSlideIfSomeoneWonException].
-	(playsOfX includes: aPointToSlide) ifTrue: [^self raiseNonEmptyPositionException].
-	(playsOfO includes: aPointToSlide) ifTrue: [^self raiseNonEmptyPositionException].
-	((playsOfX includes: aPoint) or: [playsOfO includes: aPoint]) ifFalse: [^self raiseEmptySourcePointException].
-	(playsOfO includes: aPoint) ifFalse: [^self raiseSourcePointIsXException].
-	(self isInvalidPosition: aPointToSlide) ifTrue: [^self raiseInvalidPositionException].
-	
-	playsOfO remove: aPoint.
-	playsOfO add: aPointToSlide.
-	currentTurn := #X.! !
-
-!TerniLapilli methodsFor: 'playing' stamp: 'BA 5/26/2019 17:35:48'!
-slideXFrom: aPoint to: aPointToSlide 
-	
-	(#X = currentTurn) ifFalse: [^self raiseNotYourTurnException].
-	(self hasWonO) ifTrue: [^self raiseCantSlideIfSomeoneWonException].
-	(playsOfX size < 3) ifTrue: [^self raiseCantSlideException].
-	(playsOfX includes: aPointToSlide) ifTrue: [^self raiseNonEmptyPositionException].
-	(playsOfO includes: aPointToSlide) ifTrue: [^self raiseNonEmptyPositionException].
-	((playsOfX includes: aPoint) or: [playsOfO includes: aPoint]) ifFalse: [^self raiseEmptySourcePointException].
-	(playsOfX includes: aPoint) ifFalse: [^self raiseSourcePointIsOException].
-	(self isInvalidPosition: aPointToSlide) ifTrue: [^self raiseInvalidPositionException].
-
-	playsOfX remove: aPoint.
-	playsOfX add: aPointToSlide.
 	currentTurn := #O.! !
 
 
@@ -1322,6 +1497,11 @@ playsOfX
 TerniLapilli class
 	instanceVariableNames: ''!
 
+!TerniLapilli class methodsFor: 'exceptions' stamp: 'BA 5/26/2019 18:29:26'!
+cantSlideDiagonallyErrorDescription
+
+	^'you cant slide diagonally'! !
+
 !TerniLapilli class methodsFor: 'exceptions' stamp: 'BA 5/25/2019 21:02:10'!
 cantSlideErrorDescription
 
@@ -1331,6 +1511,11 @@ cantSlideErrorDescription
 cantSlideIfSomeoneWonErrorDescription
 
 	^'you cant slide if someone won'! !
+
+!TerniLapilli class methodsFor: 'exceptions' stamp: 'BA 5/26/2019 19:12:20'!
+cantSlideToMoreThan1LengthOfSourceErrorDescription
+
+	^'you cant slide to more than 1 length of source position'! !
 
 !TerniLapilli class methodsFor: 'exceptions' stamp: 'BA 5/26/2019 17:06:29'!
 emptySourcePointErrorDescription
