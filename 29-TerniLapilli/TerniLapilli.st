@@ -5,42 +5,42 @@ TestCase subclass: #TerniLapilliTest
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:21:54'!
 test01XStartsPuttingATokenAtMiddle
 	
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 1@1.
+	positionsOfX := OrderedCollection with: 1@1.
+	positionsOfO := #().
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self assert: (OrderedCollection with: 1@1) equals: terniLapilli positionsOfX.
 	self assert: (terniLapilli positionsOfO) isEmpty.
 	self assert: #O equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:21:54'!
 test02XStartsPuttingATokenAtACorner
 	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
+	positionsOfX := OrderedCollection with: 0@0.
+	positionsOfO := #().
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self assert: (OrderedCollection with: 0@0) equals: terniLapilli positionsOfX.
 	self assert: (terniLapilli positionsOfO) isEmpty.
 	self assert: #O equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:21:54'!
 test03XCantPlayTwiceInARow
 	
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 1@1.
+	positionsOfX := OrderedCollection with: 1@1.
+	positionsOfO := #().
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli putXAt: 2@2.] 
 		raise: Error - MessageNotUnderstood 
@@ -51,30 +51,28 @@ test03XCantPlayTwiceInARow
 	self assert: #O equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:21:54'!
 test04OPlaysAfterX
 	
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 1@1.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 1@1.
+	positionsOfO := OrderedCollection with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self assert: (OrderedCollection with: 1@1) equals: terniLapilli positionsOfX .
 	self assert: (OrderedCollection with: 2@2) equals: terniLapilli positionsOfO .
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:21:54'!
 test05OPlaysAfterXInDifferentPosition
 	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 1@1.
-	terniLapilli putOAt: 0@2.
+	positionsOfX := OrderedCollection with: 1@1.
+	positionsOfO := OrderedCollection with: 0@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self assert: (OrderedCollection with: 1@1) equals: terniLapilli positionsOfX .
 	self assert: (OrderedCollection with: 0@2) equals: terniLapilli positionsOfO .
@@ -97,14 +95,14 @@ test06OCantStartPlaying
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:22:59'!
 test07OCantPlayOnAPositionOccupiedByX
 	
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@2.
+	positionsOfX := OrderedCollection with: 0@2.
+	positionsOfO := #().
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli putOAt: 0@2] 
 		raise: Error - MessageNotUnderstood
@@ -116,14 +114,14 @@ test07OCantPlayOnAPositionOccupiedByX
 	self deny: terniLapilli someoneWon.
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:24:14'!
 test08OCantPlayOnAnotherPositionOccupiedByX
 	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 2@0.
+	positionsOfX := OrderedCollection with: 2@0.
+	positionsOfO := #().
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli putOAt: 2@0] 
 		raise: Error - MessageNotUnderstood
@@ -135,16 +133,14 @@ test08OCantPlayOnAnotherPositionOccupiedByX
 	self deny: terniLapilli someoneWon.
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:24:49'!
 test09XPlaysAfterO
 	
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 2@0.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 2@2.
+	positionsOfX := OrderedCollection with: 2@0 with: 2@2.
+	positionsOfO := OrderedCollection with: 1@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 		
 	self assert: (OrderedCollection with: 2@0 with: 2@2) equals: terniLapilli positionsOfX.
 	self assert: (OrderedCollection with: 1@2) equals: terniLapilli positionsOfO.	
@@ -152,15 +148,14 @@ test09XPlaysAfterO
 	self deny: terniLapilli someoneWon.
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:25:10'!
 test10XCantPlayOnAPositionOccupiedByHimself
 	
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 2@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 2@0.
+	positionsOfO := OrderedCollection with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli putXAt: 2@0] 
 		raise: Error - MessageNotUnderstood
@@ -171,15 +166,14 @@ test10XCantPlayOnAPositionOccupiedByHimself
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:25:32'!
 test11XCantPlayOnAPositionOccupiedByO
 	
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 2@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 2@0.
+	positionsOfO := OrderedCollection with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli putXAt: 2@2] 
 		raise: Error - MessageNotUnderstood
@@ -190,16 +184,14 @@ test11XCantPlayOnAPositionOccupiedByO
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:26:23'!
 test12OCantPlayOnAPositionOccupiedByHimself
 	
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 2@0.
-	terniLapilli putOAt: 2@2.
-	terniLapilli putXAt: 1@1.
+	positionsOfX := OrderedCollection with: 2@0 with: 1@1.
+	positionsOfO := OrderedCollection with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli putOAt: 2@2] 
 		raise: Error - MessageNotUnderstood
@@ -244,14 +236,14 @@ test14XCantPlayOnAnotherInvalidPosition
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:28:29'!
 test15OCantPlayOnAnInvalidPosition
 	
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 1@1.
+	positionsOfX := OrderedCollection with: 1@1.
+	positionsOfO := OrderedCollection new.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli putOAt: -1@-1.] 
 		raise: Error - MessageNotUnderstood 
@@ -263,18 +255,14 @@ test15OCantPlayOnAnInvalidPosition
 	self deny: terniLapilli someoneWon.
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:29:06'!
 test16XWonWithALeftVerticalLine
-
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
 	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 2@2.
-	terniLapilli putXAt: 0@1.
-	terniLapilli putOAt: 2@1.
-	terniLapilli putXAt: 0@2.	
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@0 with: 0@1 with: 0@2.
+	positionsOfO := OrderedCollection with: 2@2 with: 2@1.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.	
 	
 	self assert: (OrderedCollection with: 0@0 with: 0@1 with: 0@2) equals: terniLapilli positionsOfX.
 	self assert: (OrderedCollection with: 2@2 with: 2@1) equals: terniLapilli positionsOfO.
@@ -282,91 +270,70 @@ test16XWonWithALeftVerticalLine
 	self deny: terniLapilli hasWonO.
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:29:45'!
 test17XWonWithAMiddleVerticalLine
-
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
 	
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
-	terniLapilli putXAt: 1@1.
-	terniLapilli putOAt: 2@1.
-	terniLapilli putXAt: 1@2.	
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 1@0 with: 1@1 with: 1@2.
+	positionsOfO := OrderedCollection with: 2@2 with: 2@1.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self assert: (OrderedCollection with: 1@0 with: 1@1 with: 1@2) equals: terniLapilli positionsOfX.
 	self assert: (OrderedCollection with: 2@2 with: 2@1) equals: terniLapilli positionsOfO.
 	self assert: terniLapilli hasWonX.
 	self deny: terniLapilli hasWonO.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:30:22'!
 test18XWonWithAnHorizontalLine
-
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
 	
-	terniLapilli putXAt: 0@1.
-	terniLapilli putOAt: 2@0.
-	terniLapilli putXAt: 1@1.
-	terniLapilli putOAt: 2@2.
-	terniLapilli putXAt: 2@1.	
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@1 with: 1@1 with: 2@1.
+	positionsOfO := OrderedCollection with: 2@0 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.	
 	
 	self assert: (OrderedCollection with: 0@1 with: 1@1 with: 2@1) equals: terniLapilli positionsOfX.
 	self assert: (OrderedCollection with: 2@0 with: 2@2) equals: terniLapilli positionsOfO.
 	self assert: terniLapilli hasWonX.
 	self deny: terniLapilli hasWonO.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:30:48'!
 test19XWonWithADiagonalLine
-
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
 	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 2@1.
-	terniLapilli putXAt: 1@1.
-	terniLapilli putOAt: 2@0.
-	terniLapilli putXAt: 2@2.	
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@0 with: 1@1 with: 2@2.
+	positionsOfO := OrderedCollection with: 2@1 with: 2@0.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.	
 	
 	self assert: (OrderedCollection with: 0@0 with: 1@1 with: 2@2) equals: terniLapilli positionsOfX.
 	self assert: (OrderedCollection with: 2@1 with: 2@0) equals: terniLapilli positionsOfO.
 	self assert: terniLapilli hasWonX.
 	self deny: terniLapilli hasWonO.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:31:10'!
 test20XWonWithAnotherDiagonalLine
-
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
 	
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 2@1.
-	terniLapilli putXAt: 1@1.
-	terniLapilli putOAt: 2@2.
-	terniLapilli putXAt: 2@0.	
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@2 with: 1@1 with: 2@0.
+	positionsOfO := OrderedCollection with: 2@1 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.	
 	
 	self assert: (OrderedCollection with: 0@2 with: 1@1 with: 2@0) equals: terniLapilli positionsOfX.
 	self assert: (OrderedCollection with: 2@1 with: 2@2) equals: terniLapilli positionsOfO.
 	self assert: terniLapilli hasWonX.
 	self deny: terniLapilli hasWonO.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:31:49'!
 test21OWonWithAVerticalLine
-
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
 	
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 0@0.
-	terniLapilli putXAt: 2@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 2@2.
-	terniLapilli putOAt: 0@2.	
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 1@0 with: 2@0 with: 2@2.
+	positionsOfO := OrderedCollection with: 0@0 with: 0@1 with: 0@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self assert: (OrderedCollection with: 1@0 with: 2@0 with: 2@2) equals: terniLapilli positionsOfX.
 	self assert: (OrderedCollection with: 0@0 with: 0@1 with: 0@2) equals: terniLapilli positionsOfO.
@@ -374,76 +341,56 @@ test21OWonWithAVerticalLine
 	self deny: terniLapilli hasWonX.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:32:23'!
 test22OWonWithAnHorizontalLine
-
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
 	
-	terniLapilli putXAt: 0@2. 
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 2@0.
-	terniLapilli putOAt: 1@1.
-	terniLapilli putXAt: 2@2.
-	terniLapilli putOAt: 2@1.	
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@2 with: 2@0 with: 2@2.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@1 with: 2@1.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.	
 	
 	self assert: (OrderedCollection with: 0@2 with: 2@0 with: 2@2) equals: terniLapilli positionsOfX.
 	self assert: (OrderedCollection with: 0@1 with: 1@1 with: 2@1) equals: terniLapilli positionsOfO.
 	self assert: terniLapilli hasWonO.
 	self deny: terniLapilli hasWonX.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:33:07'!
 test23OWonWithADiagonalLine
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 0@0.
-	terniLapilli putXAt: 2@1.
-	terniLapilli putOAt: 1@1.
-	terniLapilli putXAt: 2@0.
-	terniLapilli putOAt: 2@2.	
+	positionsOfX := OrderedCollection with: 0@2 with: 2@1 with: 2@0.
+	positionsOfO := OrderedCollection with: 0@0 with: 1@1 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self assert: (OrderedCollection with: 0@2 with: 2@1 with: 2@0) equals: terniLapilli positionsOfX.
 	self assert: (OrderedCollection with: 0@0 with: 1@1 with: 2@2) equals: terniLapilli positionsOfO.
 	self assert: terniLapilli hasWonO.
 	self deny: terniLapilli hasWonX.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:33:51'!
 test24OWonWithAnotherDiagonalLine
-
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
 	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@2.
-	terniLapilli putXAt: 2@1.
-	terniLapilli putOAt: 1@1.
-	terniLapilli putXAt: 2@2.
-	terniLapilli putOAt: 2@0.	
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@0 with: 2@1 with: 2@2.
+	positionsOfO := OrderedCollection with: 0@2 with: 1@1 with: 2@0.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.	
 	
 	self assert: (OrderedCollection with: 0@0 with: 2@1 with: 2@2) equals: terniLapilli positionsOfX.
 	self assert: (OrderedCollection with: 0@2 with: 1@1 with: 2@0) equals: terniLapilli positionsOfO.
 	self assert: terniLapilli hasWonO.
 	self deny: terniLapilli hasWonX.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:34:27'!
 test25XCantPutATokenIfHeAlreadyPut3Tokens
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.	
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli putXAt: 2@0.] 
 		raise: Error - MessageNotUnderstood 
@@ -454,18 +401,14 @@ test25XCantPutATokenIfHeAlreadyPut3Tokens
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:35:01'!
 test26OCantPutATokenIfXAlreadyWon
-
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
 	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 1@0.
-	terniLapilli putXAt: 0@1.
-	terniLapilli putOAt: 1@1.
-	terniLapilli putXAt: 0@2.
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@0 with: 0@1 with: 0@2.
+	positionsOfO := OrderedCollection with: 1@0 with: 1@1.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli putOAt: 2@1.] 
 		raise: Error - MessageNotUnderstood 
@@ -476,15 +419,14 @@ test26OCantPutATokenIfXAlreadyWon
 	self assert: terniLapilli hasWonX.
 	self deny: terniLapilli hasWonO.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:35:21'!
 test27XCantSlideIfHeOnlyPutOneToken
-
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
 	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@2.
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@0.
+	positionsOfO := OrderedCollection with: 0@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 		
 	self should: [terniLapilli slideXFrom: 0@0 to: 1@0.] 
 		raise: Error - MessageNotUnderstood
@@ -495,17 +437,14 @@ test27XCantSlideIfHeOnlyPutOneToken
 	self assert: #X equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:35:51'!
 test28XCantSlideIfHeOnlyPutTwoTokens
-
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
 	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@2.
-	terniLapilli putXAt: 2@1.
-	terniLapilli putOAt: 1@1.
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@0 with: 2@1.
+	positionsOfO := OrderedCollection with: 0@2 with: 1@1.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 		
 	self should: [terniLapilli slideXFrom: 2@1 to: 2@2.] 
 		raise: Error - MessageNotUnderstood
@@ -517,16 +456,14 @@ test28XCantSlideIfHeOnlyPutTwoTokens
 	self deny: terniLapilli hasWonO.
 	self deny: terniLapilli hasWonX.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:36:23'!
 test29OCantSlideIfHeOnlyPutOneToken
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@2.
-	terniLapilli putXAt: 2@1.
+	positionsOfX := OrderedCollection with: 0@0 with: 2@1.
+	positionsOfO := OrderedCollection with: 0@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 		
 	self should: [terniLapilli slideOFrom: 0@2 to: 0@1.] 
 		raise: Error - MessageNotUnderstood
@@ -537,18 +474,14 @@ test29OCantSlideIfHeOnlyPutOneToken
 	self assert: #O equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:36:59'!
 test30OCantSlideIfHeOnlyPutTwoTokens
-
-	| terniLapilli |
-
-	terniLapilli := TerniLapilli new.
 	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@2.
-	terniLapilli putXAt: 2@1.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@1.
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@0 with: 2@1 with: 1@1.
+	positionsOfO := OrderedCollection with: 0@2 with: 1@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 		
 	self should: [terniLapilli slideOFrom: 1@2 to: 2@2.] 
 		raise: Error - MessageNotUnderstood
@@ -559,19 +492,14 @@ test30OCantSlideIfHeOnlyPutTwoTokens
 	self assert: #O equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:37:39'!
 test31XCanSlideToThRightWhenHeAlreadyPut3Tokens
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 2@2.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 2@1.
-	terniLapilli putXAt: 1@1.
-	terniLapilli putOAt: 1@0.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@1.
+	positionsOfO := OrderedCollection with: 2@2 with: 2@1 with: 1@0.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 0@2 to: 1@2.
 
 	self assert: (OrderedCollection with: 0@0 with: 1@1 with: 1@2) equals: terniLapilli positionsOfX.
@@ -579,19 +507,14 @@ test31XCanSlideToThRightWhenHeAlreadyPut3Tokens
 	self assert: #O equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:38:36'!
 test32XCanSlideUpWheHeAlreadyPut3Tokens
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 1@0 to: 1@1.
 
 	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 1@1) equals: terniLapilli positionsOfX.
@@ -599,19 +522,14 @@ test32XCanSlideUpWheHeAlreadyPut3Tokens
 	self assert: #O equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:39:08'!
 test33XCanSlideDownWhenHeAlreadyPut3Tokens
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@1.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@1.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 1@1 to: 1@0.
 
 	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 1@0) equals: terniLapilli positionsOfX.
@@ -619,19 +537,14 @@ test33XCanSlideDownWhenHeAlreadyPut3Tokens
 	self assert: #O equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:39:32'!
 test34XCanSlideToTheLeftWhenHeAlreadyPut3Tokens
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 2@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 2@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 2@0 to: 1@0.
 
 	self assert: (OrderedCollection with: 0@0 with: 0@2 with: 1@0) equals: terniLapilli positionsOfX.
@@ -639,19 +552,14 @@ test34XCanSlideToTheLeftWhenHeAlreadyPut3Tokens
 	self assert: #O equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:40:12'!
 test35OCanSlideToThRightWhenHeAlreadyPut3Tokens
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@1.
-	terniLapilli putOAt: 0@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 2@2.
-	terniLapilli putOAt: 1@1.
+	positionsOfX := OrderedCollection with: 0@1 with: 1@0 with: 2@2.
+	positionsOfO := OrderedCollection with: 0@2 with: 1@2 with: 1@1.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 0@1 to: 0@0.
 	terniLapilli slideOFrom: 1@1 to: 2@1.
 
@@ -660,19 +568,14 @@ test35OCanSlideToThRightWhenHeAlreadyPut3Tokens
 	self assert: #X equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:40:40'!
 test36OCanSlideUpWheHeAlreadyPut3Tokens
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@1.
-	terniLapilli putOAt: 0@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@1.
-	terniLapilli putXAt: 2@2.
-	terniLapilli putOAt: 1@1.
+	positionsOfX := OrderedCollection with: 0@1 with: 1@0 with: 2@2.
+	positionsOfO := OrderedCollection with: 0@2 with: 2@1 with: 1@1.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 0@1 to: 0@0.
 	terniLapilli slideOFrom: 1@1 to: 1@2.
 
@@ -681,19 +584,14 @@ test36OCanSlideUpWheHeAlreadyPut3Tokens
 	self assert: #X equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:41:16'!
 test37OCanSlideToTheLeftWhenHeAlreadyPut3Tokens
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@1.
-	terniLapilli putOAt: 0@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@1.
-	terniLapilli putXAt: 2@2.
-	terniLapilli putOAt: 1@1.
+	positionsOfX := OrderedCollection with: 0@1 with: 1@0 with: 2@2.
+	positionsOfO := OrderedCollection with: 0@2 with: 2@1 with: 1@1.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 0@1 to: 0@0.
 	terniLapilli slideOFrom: 1@1 to: 0@1.
 
@@ -702,40 +600,30 @@ test37OCanSlideToTheLeftWhenHeAlreadyPut3Tokens
 	self assert: #X equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:46:48'!
 test38OCanSlideDownWhenHeAlreadyPut3Tokens
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@1.
-	terniLapilli putOAt: 0@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
-	terniLapilli putXAt: 1@2.
-	terniLapilli putOAt: 1@1.
-	terniLapilli slideXFrom: 0@1 to: 0@0.
+	positionsOfX := OrderedCollection with: 0@1 with: 1@0 with: 1@1.
+	positionsOfO := OrderedCollection with: 0@2 with: 2@2 with: 0@0.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
+	terniLapilli slideXFrom: 1@1 to: 1@2.
 	terniLapilli slideOFrom: 2@2 to: 2@1.
 
-	self assert: (OrderedCollection with: 1@0 with: 1@2 with: 0@0) equals: terniLapilli positionsOfX.
-	self assert: (OrderedCollection with: 0@2 with: 1@1 with: 2@1) equals: terniLapilli positionsOfO.
+	self assert: (OrderedCollection with: 0@1 with: 1@0 with: 1@2) equals: terniLapilli positionsOfX.
+	self assert: (OrderedCollection with: 0@2 with: 0@0 with: 2@1) equals: terniLapilli positionsOfO.
 	self assert: #X equals: terniLapilli currentTurn.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:47:37'!
 test39XCantSlideWhenOHasWon
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@2. 
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 2@0.
-	terniLapilli putOAt: 1@1.
-	terniLapilli putXAt: 2@2.
-	terniLapilli putOAt: 2@1.
+	positionsOfX := OrderedCollection with: 0@2 with: 2@0 with: 2@2.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@1 with: 2@1.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli slideXFrom: 0@2 to: 1@2.] 
 	raise: Error - MessageNotUnderstood
@@ -747,19 +635,14 @@ test39XCantSlideWhenOHasWon
 	self deny: terniLapilli hasWonX.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:48:11'!
 test40OCantSlideWhenXHasWon
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 2@2.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 2@1.
-	terniLapilli putXAt: 1@1.
-	terniLapilli putOAt: 1@0.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@1.
+	positionsOfO := OrderedCollection with: 2@2 with: 2@1 with: 1@0.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 1@1 to: 0@1.
 
 	self should: [terniLapilli slideOFrom: 1@0 to: 2@0.] 
@@ -772,19 +655,14 @@ test40OCantSlideWhenXHasWon
 	self deny: terniLapilli hasWonO.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:48:43'!
 test41XCantSlideWhenItsNotHisTurn
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 2@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 2@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 2@0 to: 1@0.
 	
 	self should: [terniLapilli slideXFrom: 1@0 to: 2@0.] 
@@ -797,19 +675,14 @@ test41XCantSlideWhenItsNotHisTurn
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:49:13'!
 test42OCantSlideWhenItsNotHisTurn
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 2@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 2@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 2@0 to: 1@0.
 	terniLapilli slideOFrom: 2@2 to: 2@1.
 	
@@ -823,19 +696,14 @@ test42OCantSlideWhenItsNotHisTurn
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:49:40'!
 test43XCantSlideToAPositionOccupiedByO
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 2@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 2@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli slideXFrom: 0@0 to: 0@1..] 
 	raise: Error - MessageNotUnderstood
@@ -847,19 +715,14 @@ test43XCantSlideToAPositionOccupiedByO
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:50:04'!
 test44XCantSlideToAPositionOccupiedByHimself
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli slideXFrom: 1@0 to: 0@0.] 
 	raise: Error - MessageNotUnderstood
@@ -871,19 +734,14 @@ test44XCantSlideToAPositionOccupiedByHimself
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:50:28'!
 test45OCantSlideToAPositionOccupiedByX
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 1@0 to: 1@1.
 	
 	self should: [terniLapilli slideOFrom: 0@1 to: 0@0.] 
@@ -896,19 +754,14 @@ test45OCantSlideToAPositionOccupiedByX
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:50:59'!
 test46OCantSlideToAPositionOccupiedByHimself
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 1@0 to: 1@1.
 	
 	self should: [terniLapilli slideOFrom: 2@2 to: 1@2.] 
@@ -921,19 +774,14 @@ test46OCantSlideToAPositionOccupiedByHimself
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:51:25'!
 test47XCantSlideFromAnEmptyPosition
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli slideXFrom: 1@1 to: 2@1.] 
 	raise: Error - MessageNotUnderstood
@@ -945,19 +793,14 @@ test47XCantSlideFromAnEmptyPosition
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:51:49'!
 test48OCantSlideFromAnEmptyPosition
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 1@0 to: 2@0.
 	
 	self should: [terniLapilli slideOFrom: 1@1 to: 2@1.] 
@@ -970,19 +813,14 @@ test48OCantSlideFromAnEmptyPosition
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:52:14'!
 test49XCantSlideFromAPositionOccupiedByO
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli slideXFrom: 2@2 to: 2@1.] 
 	raise: Error - MessageNotUnderstood
@@ -994,19 +832,14 @@ test49XCantSlideFromAPositionOccupiedByO
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:52:39'!
 test50OCantSlideFromAPositionOccupiedByX
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 1@0 to: 2@0.
 	
 	self should: [terniLapilli slideOFrom: 2@0 to: 2@1.] 
@@ -1019,19 +852,14 @@ test50OCantSlideFromAPositionOccupiedByX
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:53:03'!
 test51XCantSlideToAnInvalidPosition
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli slideXFrom: 0@0 to: -1@-6.] 
 	raise: Error - MessageNotUnderstood
@@ -1043,19 +871,15 @@ test51XCantSlideToAnInvalidPosition
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:53:27'!
 test52XCantSlideToAnotherInvalidPosition
 	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
-	| terniLapilli |
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli slideXFrom: 0@0 to: 4@2.] 
 	raise: Error - MessageNotUnderstood
@@ -1067,19 +891,14 @@ test52XCantSlideToAnotherInvalidPosition
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:54:04'!
 test53OCantSlideToAnInvalidPosition
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 1@0 to: 2@0.
 	
 	self should: [terniLapilli slideOFrom: 2@2 to: 2@3.] 
@@ -1092,19 +911,15 @@ test53OCantSlideToAnInvalidPosition
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:54:29'!
 test54OCantSlideToAnotherInvalidPosition
 	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
-	| terniLapilli |
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 1@0 to: 2@0.
 	
 	self should: [terniLapilli slideOFrom: 0@1 to: -1@1.] 
@@ -1117,19 +932,14 @@ test54OCantSlideToAnotherInvalidPosition
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:55:03'!
 test55OCantPutATokenIfHeAlreadyPutTokens
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 1@0 to: 2@0.
 	
 	self should: [terniLapilli putOAt: 1@1.] 
@@ -1142,19 +952,14 @@ test55OCantPutATokenIfHeAlreadyPutTokens
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:55:45'!
 test56XCantSlideToAPositionMoreThan1Length
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli slideXFrom: 0@0 to: 1@1.] 
 	raise: Error - MessageNotUnderstood
@@ -1166,19 +971,15 @@ test56XCantSlideToAPositionMoreThan1Length
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:56:15'!
 test57XCantSlideToAnotherPositionMoreThan1Length
 	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
-	| terniLapilli |
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 2@2.
-	terniLapilli putOAt: 1@0.
+	| terniLapilli positionsOfX positionsOfO|
+
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 2@2.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 1@0.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	
 	self should: [terniLapilli slideXFrom: 2@2 to: 2@0.] 
 	raise: Error - MessageNotUnderstood
@@ -1190,19 +991,14 @@ test57XCantSlideToAnotherPositionMoreThan1Length
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:06'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:56:46'!
 test58OCantSlideToAPositionMoreThan1Length
 
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 1@2.
-	terniLapilli putXAt: 1@0.
-	terniLapilli putOAt: 2@2.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 1@0.
+	positionsOfO := OrderedCollection with: 0@1 with: 1@2 with: 2@2.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 1@0 to: 2@0.
 	
 	self should: [terniLapilli slideOFrom: 2@2 to: 1@1.] 
@@ -1215,19 +1011,14 @@ test58OCantSlideToAPositionMoreThan1Length
 	self deny: terniLapilli someoneWon.
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'AMS 5/26/2019 22:30:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'BA 5/26/2019 23:57:20'!
 test59OCantSlideToAnotherPositionMoreThan1Length
 	"este test lo dejamos simplemente para 'mostrar la historia', pero podria ser sacado ya que testea el mismo caso con otro dato de prueba"
-	| terniLapilli |
+	| terniLapilli positionsOfX positionsOfO|
 
-	terniLapilli := TerniLapilli new.
-	
-	terniLapilli putXAt: 0@0.
-	terniLapilli putOAt: 0@1.
-	terniLapilli putXAt: 0@2.
-	terniLapilli putOAt: 2@2.
-	terniLapilli putXAt: 2@1.
-	terniLapilli putOAt: 1@0.
+	positionsOfX := OrderedCollection with: 0@0 with: 0@2 with: 2@1.
+	positionsOfO := OrderedCollection with: 0@1 with: 2@2 with: 1@0.
+	terniLapilli := self createTerniLapilliWithXPositions: positionsOfX andOPositions: positionsOfO.
 	terniLapilli slideXFrom: 2@1 to: 2@0.
 	
 	self should: [terniLapilli slideOFrom: 1@0 to: 1@2.] 
@@ -1239,6 +1030,21 @@ test59OCantSlideToAnotherPositionMoreThan1Length
 	self assert: #O equals: terniLapilli currentTurn.
 	self deny: terniLapilli someoneWon.
 	! !
+
+
+!TerniLapilliTest methodsFor: 'tests - private' stamp: 'BA 5/26/2019 23:21:54'!
+createTerniLapilliWithXPositions: positionsOfXTokens andOPositions: positionsOfOTokens
+	| terniLapilli |
+
+	terniLapilli := TerniLapilli new.
+	positionsOfXTokens do: [:posOfX |
+		terniLapilli putXAt: posOfX.
+		(positionsOfOTokens isEmpty) ifFalse: [
+				terniLapilli putOAt: (positionsOfOTokens removeFirst).
+		]
+	].
+
+	^terniLapilli! !
 
 
 !classDefinition: #TerniLapilli category: #TerniLapilli!
