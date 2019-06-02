@@ -5,7 +5,7 @@ TestCase subclass: #AccountReportingTest
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter'!
 
-!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/1/2019 19:16:55'!
+!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/2/2019 11:16:43'!
 test01TransferNetOnAnAccountWithDepositAndWithdrawIs0
 
 	| receptiveAccount accountReporting |
@@ -13,28 +13,30 @@ test01TransferNetOnAnAccountWithDepositAndWithdrawIs0
 	receptiveAccount := ReceptiveAccount new.
 	Deposit register: 100 on: receptiveAccount.
 	Withdraw register: 40 on: receptiveAccount.
-	accountReporting := AccountReporting new.
+	accountReporting := AccountReporting for: receptiveAccount .
 	
-	self assert: 0 equals: (accountReporting transferNetFor: receptiveAccount ).	
+	self assert: 0 equals: (accountReporting transferNet ).	
 	! !
 
-!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/1/2019 19:15:57'!
+!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/2/2019 11:19:31'!
 test02TransferNetOnAnAccountWithTransfersIsTheSumOfTheTransferBalanceImpact
 
-	| aReceptiveAccount anotherReceptiveAccount accountReporting |
+	| aReceptiveAccount anotherReceptiveAccount anAccountReporting anotherAccountReporting |
 	
 	aReceptiveAccount := ReceptiveAccount new.
 	anotherReceptiveAccount := ReceptiveAccount new.
 	Transfer register: 100 from: aReceptiveAccount to: anotherReceptiveAccount.
 	Transfer register: 40 from: anotherReceptiveAccount to: aReceptiveAccount.
-	accountReporting := AccountReporting new.
 	
-	self assert: -60 equals: (accountReporting transferNetFor: aReceptiveAccount).
-	self assert: 60 equals: (accountReporting transferNetFor: anotherReceptiveAccount ).
+	anAccountReporting := AccountReporting for: aReceptiveAccount .
+	anotherAccountReporting := AccountReporting for: anotherReceptiveAccount.
+	
+	self assert: -60 equals: (anAccountReporting transferNet).
+	self assert: 60 equals: (anotherAccountReporting transferNet).
 	
 	! !
 
-!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/1/2019 19:24:04'!
+!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/2/2019 11:17:12'!
 test03TransferNetOnAPortfolioWithTransfersIsTheSumOfTheTransferBalanceImpact
 
 	| aReceptiveAccount anotherReceptiveAccount aReceptiveAccountOutsideOfThePortfolio simplePortfolio composedPortfolio accountReporting |
@@ -49,35 +51,135 @@ test03TransferNetOnAPortfolioWithTransfersIsTheSumOfTheTransferBalanceImpact
 	simplePortfolio := Portfolio with: aReceptiveAccount.
 	composedPortfolio := Portfolio with: anotherReceptiveAccount with: simplePortfolio.
 	
-	accountReporting := AccountReporting new.
+	accountReporting := AccountReporting for: composedPortfolio .
 	
-	self assert: 10 equals: (accountReporting transferNetFor: composedPortfolio ).	
+	self assert: 10 equals: (accountReporting transferNet).	
 	! !
 
-!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/1/2019 19:36:27'!
+!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/2/2019 11:17:24'!
 test04AccountSummaryOnEmptyAccountPrintsTheCorrectReport
 
 	| aReceptiveAccount accountReporting |
 	
 	aReceptiveAccount := ReceptiveAccount new.
-	accountReporting := AccountReporting new.
+	accountReporting := AccountReporting for: aReceptiveAccount .
 	
-	self assert: 'Balance = 0' equals: (accountReporting accountSummaryFor: aReceptiveAccount ).	
+	self assert: 'Balance = 0' equals: (accountReporting accountSummary).	
 	! !
 
-!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/1/2019 19:38:29'!
+!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/2/2019 11:17:32'!
 test05AccountSummaryOnAnAccountWithDepositPrintsTheCorrectReport
 
 	| aReceptiveAccount accountReporting expectedReport |
 	
 	aReceptiveAccount := ReceptiveAccount new.
 	Deposit register: 50 on: aReceptiveAccount.
-	accountReporting := AccountReporting new.
+	accountReporting := AccountReporting for: aReceptiveAccount .
 	
 	expectedReport := 'Depósito por 50.
 Balance = 50'.
 	
-	self assert: expectedReport equals: (accountReporting accountSummaryFor: aReceptiveAccount ).	
+	self assert: expectedReport equals: (accountReporting accountSummary).	
+	! !
+
+!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/2/2019 11:17:40'!
+test06AccountSummaryOnAnAccountWithWithdrawPrintsTheCorrectReport
+
+	| aReceptiveAccount accountReporting expectedReport |
+	
+	aReceptiveAccount := ReceptiveAccount new.
+	Withdraw register: 50 on: aReceptiveAccount.
+	accountReporting := AccountReporting for: aReceptiveAccount .
+	
+	expectedReport := 'Extracción por 50.
+Balance = -50'.
+	
+	self assert: expectedReport equals: (accountReporting accountSummary).	
+	! !
+
+!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/2/2019 11:17:53'!
+test07AccountSummaryOnAnAccountWithDepositByTransferPrintsTheCorrectReport
+
+	| aReceptiveAccount anotherReceptiveAccount accountReporting expectedReport |
+	
+	aReceptiveAccount := ReceptiveAccount new.
+	anotherReceptiveAccount := ReceptiveAccount new.
+	Transfer register: 50 from: anotherReceptiveAccount to: aReceptiveAccount .
+	accountReporting := AccountReporting for: aReceptiveAccount .
+	
+	expectedReport := 'Entrada por transferencia de 50.
+Balance = 50'.
+	
+	self assert: expectedReport equals: (accountReporting accountSummary).	
+	! !
+
+!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/2/2019 11:18:04'!
+test08AccountSummaryOnAnAccountWithWithdrawByTransferPrintsTheCorrectReport
+
+	| aReceptiveAccount anotherReceptiveAccount accountReporting expectedReport |
+	
+	aReceptiveAccount := ReceptiveAccount new.
+	anotherReceptiveAccount := ReceptiveAccount new.
+	Transfer register: 50 from: aReceptiveAccount to: anotherReceptiveAccount .
+	accountReporting := AccountReporting for: aReceptiveAccount .
+	
+	expectedReport := 'Salida por transferencia de 50.
+Balance = -50'.
+	
+	self assert: expectedReport equals: (accountReporting accountSummary).	
+	! !
+
+!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/2/2019 11:18:15'!
+test09AccountSummaryOnAnAccountWithMoreThanOneTransactionsPrintsTheCorrectReport
+
+	| aReceptiveAccount anotherReceptiveAccount accountReporting expectedReport |
+	
+	aReceptiveAccount := ReceptiveAccount new.
+	anotherReceptiveAccount := ReceptiveAccount new.
+	
+	Deposit register: 100 on: aReceptiveAccount.
+	Withdraw register: 50 on: aReceptiveAccount.
+	Transfer register: 20 from: aReceptiveAccount to: anotherReceptiveAccount.
+	Transfer register: 30 from: anotherReceptiveAccount to: aReceptiveAccount .
+	
+	accountReporting := AccountReporting for: aReceptiveAccount .
+	
+	expectedReport := 'Depósito por 100.
+Extracción por 50.
+Salida por transferencia de 20.
+Entrada por transferencia de 30.
+Balance = 60'.
+	
+	self assert: expectedReport equals: (accountReporting accountSummary).	
+	! !
+
+!AccountReportingTest methodsFor: 'tests' stamp: 'AMS 6/2/2019 11:18:30'!
+test10AccountSummaryOnAPortfolioWithAccountsAndPortfoliosPrintsTheCorrectReport
+
+	| aReceptiveAccount anotherReceptiveAccount simplePortfolio composedPortfolio accountReporting expectedReport |
+	
+	aReceptiveAccount := ReceptiveAccount new.
+	anotherReceptiveAccount := ReceptiveAccount new.
+	
+	Deposit register: 100 on: aReceptiveAccount.
+	Withdraw register: 50 on: aReceptiveAccount.
+	Transfer register: 20 from: aReceptiveAccount to: anotherReceptiveAccount.
+	Transfer register: 30 from: anotherReceptiveAccount to: aReceptiveAccount .
+	
+	simplePortfolio := Portfolio with: aReceptiveAccount.
+	composedPortfolio := Portfolio with: simplePortfolio with: anotherReceptiveAccount.
+	
+	accountReporting := AccountReporting for: composedPortfolio .
+	
+	expectedReport := 'Depósito por 100.
+Extracción por 50.
+Salida por transferencia de 20.
+Entrada por transferencia de 30.
+Entrada por transferencia de 20.
+Salida por transferencia de 30.
+Balance = 50'.
+	
+	self assert: expectedReport equals: (accountReporting accountSummary).	
 	! !
 
 
@@ -707,26 +809,50 @@ addedTo: aPortfolio
 
 !classDefinition: #AccountReporting category: #PortfolioTreePrinter!
 Object subclass: #AccountReporting
-	instanceVariableNames: ''
+	instanceVariableNames: 'account'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter'!
 
-!AccountReporting methodsFor: 'reporting' stamp: 'AMS 6/1/2019 19:37:04'!
-accountSummaryFor: anAccount 
+!AccountReporting methodsFor: 'reporting' stamp: 'AMS 6/2/2019 12:04:08'!
+accountSummary
+	
+	| accountSummaryVisitor |
+	
+	accountSummaryVisitor := AccountSummaryVisitor new.
 	
 	^String streamContents: [:stream |
-		anAccount transactions do: [:aTransaction |
-			(aTransaction isKindOf: Deposit) ifTrue: [stream nextPutAll: 'Depósito por ', aTransaction value printString, '.' ].
+		account transactions do: [:aTransaction |
+			stream nextPutAll: (aTransaction accept: accountSummaryVisitor).
 			stream newLine.
 		].
-		stream nextPutAll: 'Balance = ', anAccount balance printString 
+		stream nextPutAll: 'Balance = ', account balance printString 
 	]! !
 
-!AccountReporting methodsFor: 'reporting' stamp: 'AMS 6/1/2019 19:15:33'!
-transferNetFor: anAccount 
+!AccountReporting methodsFor: 'reporting' stamp: 'AMS 6/2/2019 12:00:03'!
+transferNet
+	
+	| transferNetVisitor |
+	transferNetVisitor := TransferNetVisitor new.
 		
-	^(anAccount transactions select: [:aTransaction | aTransaction isKindOf: TransferTransaction ]) inject: 0 into: [:currentTransferNet :aTransferTransaction | aTransferTransaction affectBalance: currentTransferNet ].! !
+	^account transactions inject: 0 into: [:currentTransferNet :aTransaction | currentTransferNet + (aTransaction accept: transferNetVisitor) ].! !
+
+
+!AccountReporting methodsFor: 'initialization' stamp: 'AMS 6/2/2019 11:13:01'!
+initializeFor: anAccount
+
+	account := anAccount ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'AccountReporting class' category: #PortfolioTreePrinter!
+AccountReporting class
+	instanceVariableNames: ''!
+
+!AccountReporting class methodsFor: 'instance creation' stamp: 'AMS 6/2/2019 11:12:17'!
+for: anAccount
+
+	^self new initializeFor: anAccount ! !
 
 
 !classDefinition: #AccountTransaction category: #PortfolioTreePrinter!
@@ -746,6 +872,12 @@ value
 affectBalance: aBalance
 
 	self subclassResponsibility ! !
+
+
+!AccountTransaction methodsFor: 'testing' stamp: 'AMS 6/2/2019 11:44:46'!
+accept: aVisitor
+
+	^self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -787,6 +919,12 @@ value
 affectBalance: aBalance
 
 	^aBalance + self value ! !
+
+
+!Deposit methodsFor: 'testing' stamp: 'AMS 6/2/2019 11:45:17'!
+accept: aVisitor
+
+	^aVisitor visitDeposit: self! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -837,6 +975,12 @@ affectBalance: aBalance
 
 	^aBalance + self value ! !
 
+
+!DepositByTransfer methodsFor: 'testing' stamp: 'AMS 6/2/2019 11:45:42'!
+accept: aVisitor
+
+	^aVisitor visitDepositByTransfer: self! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'DepositByTransfer class' category: #PortfolioTreePrinter!
@@ -860,6 +1004,12 @@ TransferTransaction subclass: #WithdrawByTransfer
 affectBalance: aBalance
 
 	^aBalance - self value ! !
+
+
+!WithdrawByTransfer methodsFor: 'testing' stamp: 'AMS 6/2/2019 11:46:03'!
+accept: aVisitor
+
+	^aVisitor visitWithdrawByTransfer: self! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -897,6 +1047,12 @@ affectBalance: aBalance
 
 	^aBalance - self value! !
 
+
+!Withdraw methodsFor: 'testing' stamp: 'AMS 6/2/2019 11:46:25'!
+accept: aVisitor
+
+	^aVisitor visitWithdraw: self! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Withdraw class' category: #PortfolioTreePrinter!
@@ -907,6 +1063,90 @@ Withdraw class
 for: aValue
 
 	^ self new initializeFor: aValue ! !
+
+
+!classDefinition: #AccountTransactionVisitor category: #PortfolioTreePrinter!
+Object subclass: #AccountTransactionVisitor
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'PortfolioTreePrinter'!
+
+!AccountTransactionVisitor methodsFor: 'visiting' stamp: 'AMS 6/2/2019 11:47:24'!
+visitDeposit: aDeposit
+
+	^self subclassResponsibility ! !
+
+!AccountTransactionVisitor methodsFor: 'visiting' stamp: 'AMS 6/2/2019 11:47:42'!
+visitDepositByTransfer: aDepositByTransfer
+
+	^self subclassResponsibility ! !
+
+!AccountTransactionVisitor methodsFor: 'visiting' stamp: 'AMS 6/2/2019 11:47:32'!
+visitWithdraw: aWithdraw
+
+	^self subclassResponsibility ! !
+
+!AccountTransactionVisitor methodsFor: 'visiting' stamp: 'AMS 6/2/2019 11:47:51'!
+visitWithdrawByTransfer: aWithdrawByTransfer
+
+	^self subclassResponsibility ! !
+
+
+!classDefinition: #AccountSummaryVisitor category: #PortfolioTreePrinter!
+AccountTransactionVisitor subclass: #AccountSummaryVisitor
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'PortfolioTreePrinter'!
+
+!AccountSummaryVisitor methodsFor: 'visiting' stamp: 'AMS 6/2/2019 12:01:45'!
+visitDeposit: aDeposit
+
+	^'Depósito por ', aDeposit value printString, '.'! !
+
+!AccountSummaryVisitor methodsFor: 'visiting' stamp: 'AMS 6/2/2019 12:02:09'!
+visitDepositByTransfer: aDepositByTransfer
+
+	^'Entrada por transferencia de ', aDepositByTransfer value printString, '.'! !
+
+!AccountSummaryVisitor methodsFor: 'visiting' stamp: 'AMS 6/2/2019 12:01:26'!
+visitWithdraw: aWithdraw
+
+	^'Extracción por ', aWithdraw value printString, '.'! !
+
+!AccountSummaryVisitor methodsFor: 'visiting' stamp: 'AMS 6/2/2019 12:02:33'!
+visitWithdrawByTransfer: aWithdrawByTransfer
+
+	^'Salida por transferencia de ', aWithdrawByTransfer value printString, '.'! !
+
+
+!classDefinition: #TransferNetVisitor category: #PortfolioTreePrinter!
+AccountTransactionVisitor subclass: #TransferNetVisitor
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'PortfolioTreePrinter'!
+
+!TransferNetVisitor methodsFor: 'visiting' stamp: 'AMS 6/2/2019 11:50:09'!
+visitDeposit: aDeposit
+
+	^0! !
+
+!TransferNetVisitor methodsFor: 'visiting' stamp: 'AMS 6/2/2019 11:56:52'!
+visitDepositByTransfer: aDepositByTransfer
+
+	^aDepositByTransfer value ! !
+
+!TransferNetVisitor methodsFor: 'visiting' stamp: 'AMS 6/2/2019 11:50:17'!
+visitWithdraw: aWithdraw
+
+	^0! !
+
+!TransferNetVisitor methodsFor: 'visiting' stamp: 'AMS 6/2/2019 11:57:09'!
+visitWithdrawByTransfer: aWithdrawByTransfer
+
+	^aWithdrawByTransfer value negated! !
 
 
 !classDefinition: #Transfer category: #PortfolioTreePrinter!
