@@ -879,22 +879,6 @@ accept: aVisitor
 
 	^self subclassResponsibility ! !
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'AccountTransaction class' category: #PortfolioTreePrinter!
-AccountTransaction class
-	instanceVariableNames: ''!
-
-!AccountTransaction class methodsFor: 'instance creation' stamp: 'HernanWilkinson 7/13/2011 18:38'!
-register: aValue on: account
-
-	| withdraw |
-	
-	withdraw := self for: aValue.
-	account register: withdraw.
-		
-	^ withdraw! !
-
 
 !classDefinition: #Deposit category: #PortfolioTreePrinter!
 AccountTransaction subclass: #Deposit
@@ -936,6 +920,16 @@ Deposit class
 for: aValue
 
 	^ self new initializeFor: aValue ! !
+
+!Deposit class methodsFor: 'instance creation' stamp: 'AMS 6/3/2019 00:30:48'!
+register: aValue on: account
+
+	| deposit |
+	
+	deposit := self for: aValue.
+	account register: deposit.
+		
+	^ deposit! !
 
 
 !classDefinition: #TransferTransaction category: #PortfolioTreePrinter!
@@ -1063,6 +1057,16 @@ Withdraw class
 for: aValue
 
 	^ self new initializeFor: aValue ! !
+
+!Withdraw class methodsFor: 'instance creation' stamp: 'AMS 6/3/2019 00:30:53'!
+register: aValue on: account
+
+	| withdraw |
+	
+	withdraw := self for: aValue.
+	account register: withdraw.
+		
+	^ withdraw! !
 
 
 !classDefinition: #AccountTransactionVisitor category: #PortfolioTreePrinter!
