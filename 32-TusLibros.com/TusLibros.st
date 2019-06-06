@@ -1,11 +1,53 @@
-!classDefinition: #ShoppingCartTests category: #TusLibros!
-TestCase subclass: #ShoppingCartTests
+!classDefinition: #CashierTest category: #TusLibros!
+TestCase subclass: #CashierTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!ShoppingCartTests methodsFor: 'tests' stamp: 'BA 6/2/2019 21:20:39'!
+!CashierTest methodsFor: 'tests' stamp: 'AMS 6/6/2019 02:15:27'!
+test01CantCheckoutAnEmptyCart
+
+	| aCashier aCart aCatalog |
+	
+	aCatalog := OrderedCollection new.
+	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	
+	aCashier := Cashier withAPriceList: Dictionary new.
+	
+	self should: [aCashier checkout: aCart] 
+		raise: Error - MessageNotUnderstood 
+		withMessageText: Cashier cantCheckoutAnEmptyCart
+	! !
+
+!CashierTest methodsFor: 'tests' stamp: 'AMS 6/6/2019 02:21:30'!
+test02CantCheckoutAProductThatIsNotInThePriceList
+
+	| aCashier aCart aCatalog aProduct |
+	
+	aProduct := 'Product 1'.
+	
+	aCatalog := OrderedCollection with: aProduct .
+	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	
+	aCart add: aProduct.
+	
+	aCashier := Cashier withAPriceList: Dictionary new.
+	
+	self should: [aCashier checkout: aCart] 
+		raise: Error - MessageNotUnderstood 
+		withMessageText: Cashier cantCheckoutAProductThatIsNotInThePriceList
+	! !
+
+
+!classDefinition: #ShoppingCartTest category: #TusLibros!
+TestCase subclass: #ShoppingCartTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/6/2019 01:35:08'!
 test01WhenCreateAnEmptyCartItIsEmpty
 
 	| aCart aCatalog |
@@ -14,9 +56,9 @@ test01WhenCreateAnEmptyCartItIsEmpty
 	aCart := ShoppingCart withAProductsCatalog: aCatalog.
 	
 	self assert:aCart isEmpty.
-	self assert:aCart productsAmount equals: 0.! !
+	self assert:aCart productsQuantity equals: 0.! !
 
-!ShoppingCartTests methodsFor: 'tests' stamp: 'BA 6/2/2019 21:26:08'!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/6/2019 01:48:18'!
 test02AddAValidProductToAnEmptyCartAndThenTheCartIsNotEmpty
 
 	| aCart aProduct aCatalog|
@@ -29,10 +71,10 @@ test02AddAValidProductToAnEmptyCartAndThenTheCartIsNotEmpty
 	aCart add: aProduct.
 	
 	self deny: aCart isEmpty.
-	self assert: aCart productsAmount equals: 1.
+	self assert: aCart productsQuantity equals: 1.
 	self assert: (aCart hasProduct: aProduct).! !
 
-!ShoppingCartTests methodsFor: 'tests' stamp: 'BA 6/2/2019 21:26:02'!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/6/2019 01:48:11'!
 test03AddAValidProductToACartAndThenTheProductIsInTheCart
 
 	| aCart aProduct anotherProduct aCatalog|
@@ -47,13 +89,13 @@ test03AddAValidProductToACartAndThenTheProductIsInTheCart
 	aCart add: anotherProduct.
 	
 	self deny: aCart isEmpty.
-	self assert: aCart productsAmount equals: 2.
+	self assert: aCart productsQuantity equals: 2.
 	self assert: (aCart hasProduct: aProduct).! !
 
-!ShoppingCartTests methodsFor: 'tests' stamp: 'BA 6/2/2019 21:27:49'!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/6/2019 01:48:07'!
 test04RemoveTheOnlyProductFromTheCartAndThenIsEmpty
 
-	| aCart aProduct anotherProduct aCatalog|
+	| aCart aProduct aCatalog|
 	
 	aProduct := 'Product 1'.
 	aCatalog := OrderedCollection with: aProduct.
@@ -65,7 +107,7 @@ test04RemoveTheOnlyProductFromTheCartAndThenIsEmpty
 	self assert: aCart isEmpty.
 	self deny: (aCart hasProduct: aProduct).! !
 
-!ShoppingCartTests methodsFor: 'tests' stamp: 'BA 6/2/2019 21:28:59'!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/6/2019 01:48:00'!
 test05RemoveAProductFromTheCartAndThenIsNotInTheCart
 
 	| aCart aProduct anotherProduct aCatalog|
@@ -83,9 +125,9 @@ test05RemoveAProductFromTheCartAndThenIsNotInTheCart
 	self deny: aCart isEmpty.
 	self deny: (aCart hasProduct: anotherProduct).
 	self assert: (aCart hasProduct: aProduct).
-	self assert: aCart productsAmount equals: 1.! !
+	self assert: aCart productsQuantity equals: 1.! !
 
-!ShoppingCartTests methodsFor: 'tests' stamp: 'BA 6/2/2019 21:29:58'!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/2/2019 21:29:58'!
 test06CanNotRemoveProductsFromAnEmptyCart
 
 	| aCart aProduct aCatalog |
@@ -101,7 +143,7 @@ test06CanNotRemoveProductsFromAnEmptyCart
 	
 	self assert: aCart isEmpty.! !
 
-!ShoppingCartTests methodsFor: 'tests' stamp: 'BA 6/2/2019 21:36:00'!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/6/2019 01:47:51'!
 test07CanNotRemoveProductsThatAreNotInTheCart
 
 	| aCart aProduct anotherProduct aCatalog |
@@ -121,9 +163,9 @@ test07CanNotRemoveProductsThatAreNotInTheCart
 	self deny: aCart isEmpty.
 	self deny: (aCart hasProduct: anotherProduct).
 	self assert: (aCart hasProduct: aProduct).
-	self assert: aCart productsAmount equals: 1.! !
+	self assert: aCart productsQuantity equals: 1.! !
 
-!ShoppingCartTests methodsFor: 'tests' stamp: 'BA 6/2/2019 21:41:23'!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/2/2019 21:41:23'!
 test08CantPutsProductsInACartWithEmptyCatalog
 
 	| aCart aProduct |
@@ -139,7 +181,7 @@ test08CantPutsProductsInACartWithEmptyCatalog
 	self assert: aCart isEmpty.
 	self deny: (aCart hasProduct: aProduct).! !
 
-!ShoppingCartTests methodsFor: 'tests' stamp: 'BA 6/2/2019 21:43:11'!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/6/2019 01:47:45'!
 test09CantPutInTheCartProductsThatAreNotInTheCatalog
 
 	| aCart aProduct anotherProduct aCatalog |
@@ -156,9 +198,129 @@ test09CantPutInTheCartProductsThatAreNotInTheCatalog
 		raise: Error - MessageNotUnderstood 
 		withMessageText: ShoppingCart cantAddAProductThatAreNotInTheCatalogErrorDescription.
 	
-	self assert: aCart productsAmount equals: 1.
 	self assert: (aCart hasProduct: aProduct).
 	self deny: (aCart hasProduct: anotherProduct) ! !
+
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/6/2019 01:49:54'!
+test10AddMoreThanOneValidProductAndTheCartRememberTheNumberOfAddedItems
+
+	| aCart aProduct aCatalog|
+	
+	aProduct := 'Product 1'.
+
+	aCatalog := OrderedCollection with: aProduct.
+	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+
+	aCart add: 2 of: aProduct.
+	
+	self deny: aCart isEmpty.
+	self assert: aCart productsQuantity equals: 2.
+	self assert: (aCart hasProduct: aProduct).
+	self assert: (aCart quantityOf: aProduct) equals: 2.! !
+
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/6/2019 01:53:00'!
+test11CanNotAddNonPositiveNumberOfItems
+
+	| aCart aProduct aCatalog|
+	
+	aProduct := 'Product 1'.
+
+	aCatalog := OrderedCollection with: aProduct.
+	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+
+
+	self should: [aCart add: 0 of: aProduct.] 
+		raise: Error - MessageNotUnderstood 
+		withMessageText: ShoppingCart cantAddNonPositiveQuantityOfProducts.
+	
+	
+	self assert: aCart isEmpty.
+	self assert: aCart productsQuantity equals: 0.
+	self deny: (aCart hasProduct: aProduct).
+	self assert: (aCart quantityOf: aProduct) equals: 0.! !
+
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/6/2019 02:02:33'!
+test12CanNotAddNonIntegerNumberOfItems
+
+	| aCart aProduct aCatalog|
+	
+	aProduct := 'Product 1'.
+
+	aCatalog := OrderedCollection with: aProduct.
+	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+
+
+	self should: [aCart add: 1.5 of: aProduct.] 
+		raise: Error - MessageNotUnderstood 
+		withMessageText: ShoppingCart cantAddNonIntegerQuantityOfProducts.
+	
+	
+	self assert: aCart isEmpty.
+	self assert: aCart productsQuantity equals: 0.
+	self deny: (aCart hasProduct: aProduct).
+	self assert: (aCart quantityOf: aProduct) equals: 0.! !
+
+
+!classDefinition: #Cashier category: #TusLibros!
+Object subclass: #Cashier
+	instanceVariableNames: 'priceList'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!Cashier methodsFor: 'initialization' stamp: 'AMS 6/6/2019 02:16:41'!
+initializeWithAPriceList: aPriceList
+
+	priceList := aPriceList ! !
+
+
+!Cashier methodsFor: 'assertions' stamp: 'AMS 6/6/2019 02:19:04'!
+isAValidCart: aCart
+
+	aCart isEmpty ifTrue: [self raiseCantCheckoutAnEmptyCart ] ! !
+
+
+!Cashier methodsFor: 'checkout' stamp: 'AMS 6/6/2019 02:25:49'!
+checkout: aCart
+
+	self isAValidCart: aCart.
+	
+	aCart products do: [:aProduct |
+		priceList at: aProduct ifAbsent: [self raiseCantCheckoutAProductThatIsNotInThePriceList ].
+	]! !
+
+
+!Cashier methodsFor: 'exceptions' stamp: 'AMS 6/6/2019 02:25:44'!
+raiseCantCheckoutAProductThatIsNotInThePriceList
+
+	^self error: self class cantCheckoutAProductThatIsNotInThePriceList ! !
+
+!Cashier methodsFor: 'exceptions' stamp: 'AMS 6/6/2019 02:17:48'!
+raiseCantCheckoutAnEmptyCart
+
+	^self error: self class cantCheckoutAnEmptyCart ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Cashier class' category: #TusLibros!
+Cashier class
+	instanceVariableNames: ''!
+
+!Cashier class methodsFor: 'exceptions messages' stamp: 'AMS 6/6/2019 02:20:17'!
+cantCheckoutAProductThatIsNotInThePriceList
+
+	^'You cant checkout a product that is not in the price list'! !
+
+!Cashier class methodsFor: 'exceptions messages' stamp: 'AMS 6/6/2019 02:17:27'!
+cantCheckoutAnEmptyCart
+
+	^'You cant checkout an empty cart'! !
+
+
+!Cashier class methodsFor: 'instance creation' stamp: 'AMS 6/6/2019 02:16:13'!
+withAPriceList: aPriceList
+
+	^self new initializeWithAPriceList: aPriceList ! !
 
 
 !classDefinition: #ShoppingCart category: #TusLibros!
@@ -168,21 +330,34 @@ Object subclass: #ShoppingCart
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!ShoppingCart methodsFor: 'accesing' stamp: 'BA 6/2/2019 17:43:30'!
-hasProduct: aProduct 
+!ShoppingCart methodsFor: 'accessing products' stamp: 'AMS 6/6/2019 02:24:14'!
+products
 
-	^ products includes: aProduct! !
+	^products asSet ! !
 
-!ShoppingCart methodsFor: 'accesing' stamp: 'BA 6/2/2019 18:05:07'!
-isEmpty
-	^ (self productsAmount = 0)! !
-
-!ShoppingCart methodsFor: 'accesing' stamp: 'BA 6/2/2019 18:05:45'!
-productsAmount
+!ShoppingCart methodsFor: 'accessing products' stamp: 'AMS 6/6/2019 01:35:08'!
+productsQuantity
 
 	^ products size
 	
 		! !
+
+!ShoppingCart methodsFor: 'accessing products' stamp: 'AMS 6/6/2019 01:36:03'!
+quantityOf: aProduct
+
+	^ products occurrencesOf: aProduct 
+	
+		! !
+
+
+!ShoppingCart methodsFor: 'testing' stamp: 'BA 6/2/2019 17:43:30'!
+hasProduct: aProduct 
+
+	^ products includes: aProduct! !
+
+!ShoppingCart methodsFor: 'testing' stamp: 'AMS 6/6/2019 01:35:08'!
+isEmpty
+	^ (self productsQuantity = 0)! !
 
 
 !ShoppingCart methodsFor: 'initialization' stamp: 'BA 6/2/2019 19:08:05'!
@@ -202,6 +377,18 @@ initializeWithACatalog: aCatalog
 ! !
 
 
+!ShoppingCart methodsFor: 'exceptions' stamp: 'AMS 6/6/2019 02:03:01'!
+raiseCantAddANonIntegerQuantityOfProducts
+
+	^self error: self class cantAddNonIntegerQuantityOfProducts 
+! !
+
+!ShoppingCart methodsFor: 'exceptions' stamp: 'AMS 6/6/2019 02:01:57'!
+raiseCantAddANonPositiveQuantityOfProducts
+
+	^self error: self class cantAddNonPositiveQuantityOfProducts 
+! !
+
 !ShoppingCart methodsFor: 'exceptions' stamp: 'BA 6/2/2019 19:07:30'!
 raiseCantAddAProductThatAreNotInTheCatalogException
 
@@ -215,18 +402,45 @@ raiseCantRemoveProductsThatAreNotInTheCartException
 ! !
 
 
-!ShoppingCart methodsFor: 'actions' stamp: 'BA 6/2/2019 21:46:16'!
-add: aProduct
-	
-	| aCatalogProduct |
-
-	aCatalogProduct := catalog detect: [:aCataloguedProduct | aCataloguedProduct = aProduct] ifNone: [ ^self raiseCantAddAProductThatAreNotInTheCatalogException ].
-	products add: aCatalogProduct.! !
-
-!ShoppingCart methodsFor: 'actions' stamp: 'BA 6/2/2019 21:46:08'!
+!ShoppingCart methodsFor: 'removing' stamp: 'BA 6/2/2019 21:46:08'!
 remove: aProduct
 
 	products remove: aProduct ifAbsent: [ ^self raiseCantRemoveProductsThatAreNotInTheCartException ].! !
+
+
+!ShoppingCart methodsFor: 'assertions' stamp: 'AMS 6/6/2019 02:02:10'!
+assertIsAPositiveQuantity: aQuantity
+
+	aQuantity strictlyPositive ifFalse: [self raiseCantAddANonPositiveQuantityOfProducts ]! !
+
+!ShoppingCart methodsFor: 'assertions' stamp: 'AMS 6/6/2019 02:05:33'!
+assertIsAnIntegerQuantity: aQuantity
+
+	aQuantity isInteger ifFalse: [self raiseCantAddANonIntegerQuantityOfProducts ]! !
+
+!ShoppingCart methodsFor: 'assertions' stamp: 'AMS 6/6/2019 02:03:19'!
+assertIsValidQuantity: aQuantity
+
+	self assertIsAPositiveQuantity: aQuantity.
+	self assertIsAnIntegerQuantity: aQuantity ! !
+
+!ShoppingCart methodsFor: 'assertions' stamp: 'AMS 6/6/2019 01:44:47'!
+assertItemIsInTheCatalog: aProduct
+
+	(catalog includes: aProduct) ifFalse: [ ^self raiseCantAddAProductThatAreNotInTheCatalogException ].! !
+
+
+!ShoppingCart methodsFor: 'adding' stamp: 'AMS 6/6/2019 01:42:22'!
+add: aProduct
+	
+	^self add: 1 of: aProduct ! !
+
+!ShoppingCart methodsFor: 'adding' stamp: 'AMS 6/6/2019 01:57:02'!
+add: aQuantity of: aProduct
+
+	self assertItemIsInTheCatalog: aProduct.
+	self assertIsValidQuantity: aQuantity.
+	aQuantity timesRepeat: [products add: aProduct ].! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -237,6 +451,14 @@ ShoppingCart class
 !ShoppingCart class methodsFor: 'exceptions messages' stamp: 'BA 6/2/2019 19:00:08'!
 cantAddAProductThatAreNotInTheCatalogErrorDescription
 	^ 'You cant add a product in the cart that are not in the catalog'! !
+
+!ShoppingCart class methodsFor: 'exceptions messages' stamp: 'AMS 6/6/2019 02:02:48'!
+cantAddNonIntegerQuantityOfProducts
+	^ 'You cant add a non integer quantity of products to the cart'! !
+
+!ShoppingCart class methodsFor: 'exceptions messages' stamp: 'AMS 6/6/2019 01:55:15'!
+cantAddNonPositiveQuantityOfProducts
+	^ 'You cant add a non positive quantity of products to the cart'! !
 
 !ShoppingCart class methodsFor: 'exceptions messages' stamp: 'BA 6/2/2019 18:51:02'!
 cantRemoveProductsThatAreNotInTheCartErrorDescription
