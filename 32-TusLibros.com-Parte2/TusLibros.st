@@ -5,25 +5,24 @@ TestCase subclass: #CashierTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CashierTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:59:24'!
-test01CantCheckoutAnEmptyCart
+!CashierTest methodsFor: 'clock' stamp: 'AMS 6/9/2019 03:57:37'!
+current
 
-	| aCashier aCart aCatalog |
-	
-	aCatalog := Dictionary new.
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
-	
-	aCashier := Cashier withAPriceList: Dictionary new.
-	
-	self should: [aCashier checkout: aCart] 
+	^June of: 2019! !
+
+
+!CashierTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 03:57:01'!
+test01CantCreateACashierWithAnEmptyCart
+
+	self should: [Cashier withACart: ShoppingCart new aCreditCard: CreditCard new andAClock: self] 
 		raise: Error - MessageNotUnderstood 
-		withMessageText: Cashier cantCheckoutAnEmptyCart
+		withMessageText: Cashier cantCheckoutAnEmptyCart 
 	! !
 
-!CashierTest methodsFor: 'tests' stamp: 'BA 6/8/2019 19:01:00'!
-test02CantCheckoutAProductThatIsNotInThePriceList
-	"REFORMULAR ESTE TEST"
-	| aCashier aCart aCatalog aProduct |
+!CashierTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 03:58:36'!
+test02CantCreateACashierWithAnExpiredCreditCard
+
+	| aCart aCatalog aProduct aCreditCard |
 	
 	aProduct := 'Product 1'.
 	
@@ -32,11 +31,12 @@ test02CantCheckoutAProductThatIsNotInThePriceList
 	aCart := ShoppingCart withAProductsCatalog: aCatalog.
 	
 	aCart add: aProduct.
-		aCashier := Cashier withAPriceList: Dictionary new.
 	
-	self should: [aCashier checkout: aCart] 
+	aCreditCard := CreditCard expiringOn: (January of: 2019).
+	
+	self should: [Cashier withACart: aCart aCreditCard: aCreditCard andAClock: self.] 
 		raise: Error - MessageNotUnderstood 
-		withMessageText: Cashier cantCheckoutAProductThatIsNotInThePriceList
+		withMessageText: Cashier cantCreateACashierWithAnExpiredCreditCard 
 	! !
 
 
@@ -175,14 +175,14 @@ test07CanNotRemoveProductsThatAreNotInTheCart
 	self assert: (aCart hasProduct: aProduct).
 	self assert: aCart productsQuantity equals: 1.! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/2/2019 21:41:23'!
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 04:03:21'!
 test08CantPutsProductsInACartWithEmptyCatalog
 
 	| aCart aProduct |
 	
 	aProduct := 'Product 1'.
 
-	aCart := ShoppingCart new.
+	aCart := ShoppingCart withAProductsCatalog: Dictionary new.
 	
 	self should: [aCart add: aProduct.] 
 		raise: Error - MessageNotUnderstood 
@@ -275,9 +275,9 @@ test12CanNotAddNonIntegerNumberOfItems
 	self deny: (aCart hasProduct: aProduct).
 	self assert: (aCart quantityOf: aProduct) equals: 0.! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:56:45'!
-test13
-	"El value de un carrito vacio es 0"
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 03:11:37'!
+test13ValueOfEmptyCartIs0
+
 	| aCart aProduct aCatalog|
 	
 	aProduct := 'Product 1'.
@@ -289,9 +289,23 @@ test13
 
 	self assert: (aCart value) equals: 0.! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:56:58'!
-test14
-	"Si agrega 2 productos iguales , el value es la suma del precio de los dos productos"
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 03:12:36'!
+test14ValueOfACartWithOneProductIsThePriceOfThatProduct
+	| aCart aProduct aCatalog|
+	
+	aProduct := 'Product 1'.
+
+	aCatalog := Dictionary new.
+	aCatalog add: aProduct -> 10.
+
+	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	aCart add: aProduct.
+
+	self assert: (aCart quantityOf: aProduct) equals: 1.
+	self assert: (aCart value) equals: 10.! !
+
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 03:13:06'!
+test15ValueOfACartWithTwoEqualsProductsIsTheSumOfThePriceOfThatProduct
 	| aCart aProduct aCatalog|
 	
 	aProduct := 'Product 1'.
@@ -305,9 +319,9 @@ test14
 	self assert: (aCart quantityOf: aProduct) equals: 2.
 	self assert: (aCart value) equals: 20.! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:57:11'!
-test15
-	"Si agrega 2 productos iguales y 1 distinto, el value es la suma del precio de los tres productos"
+!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 03:13:56'!
+test16ValueOfACartWithManyDifferentProductsIsTheSumeOfThePriceOfEachProduct
+
 	| aCart aProduct anotherProduct aCatalog|
 	
 	aProduct := 'Product 1'.
@@ -327,15 +341,17 @@ test15
 
 !classDefinition: #Cashier category: #TusLibros!
 Object subclass: #Cashier
-	instanceVariableNames: 'priceList'
+	instanceVariableNames: 'cart creditCard clock'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Cashier methodsFor: 'initialization' stamp: 'AMS 6/6/2019 02:16:41'!
-initializeWithAPriceList: aPriceList
+!Cashier methodsFor: 'initialization' stamp: 'AMS 6/9/2019 03:54:37'!
+initializeWithACart: aCart aCreditCard: aCreditCard andAClock: aClock
 
-	priceList := aPriceList ! !
+	cart := aCart.
+	creditCard := aCreditCard.
+	clock:= aClock! !
 
 
 !Cashier methodsFor: 'assertions' stamp: 'AMS 6/6/2019 02:19:04'!
@@ -365,23 +381,56 @@ raiseCantCheckoutAnEmptyCart
 
 !classDefinition: 'Cashier class' category: #TusLibros!
 Cashier class
-	instanceVariableNames: ''!
-
-!Cashier class methodsFor: 'exceptions messages' stamp: 'AMS 6/6/2019 02:20:17'!
-cantCheckoutAProductThatIsNotInThePriceList
-
-	^'You cant checkout a product that is not in the price list'! !
+	instanceVariableNames: 'clock'!
 
 !Cashier class methodsFor: 'exceptions messages' stamp: 'AMS 6/6/2019 02:17:27'!
 cantCheckoutAnEmptyCart
 
 	^'You cant checkout an empty cart'! !
 
+!Cashier class methodsFor: 'exceptions messages' stamp: 'AMS 6/9/2019 03:48:55'!
+cantCreateACashierWithAnExpiredCreditCard
 
-!Cashier class methodsFor: 'instance creation' stamp: 'AMS 6/6/2019 02:16:13'!
-withAPriceList: aPriceList
+	^'You cant create a cashier with an expired credit card'! !
 
-	^self new initializeWithAPriceList: aPriceList ! !
+
+!Cashier class methodsFor: 'instance creation' stamp: 'AMS 6/9/2019 04:05:44'!
+withACart: aCart aCreditCard: aCreditCard andAClock: aClock
+
+	aCart isEmpty ifTrue: [self error: self cantCheckoutAnEmptyCart ].
+	(aCreditCard hasExpiredOn: aClock current) ifTrue: [self error: self cantCreateACashierWithAnExpiredCreditCard ].
+
+	^self new initializeWithACart: aCart aCreditCard: aCreditCard andAClock: aClock ! !
+
+
+!classDefinition: #CreditCard category: #TusLibros!
+Object subclass: #CreditCard
+	instanceVariableNames: 'expiringDate'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!CreditCard methodsFor: 'initialization' stamp: 'AMS 6/9/2019 03:54:55'!
+initializeExpiringOn: anExpirationDate
+
+	expiringDate := anExpirationDate.! !
+
+
+!CreditCard methodsFor: 'testing' stamp: 'AMS 6/9/2019 04:01:30'!
+hasExpiredOn: aDate 
+	
+	^expiringDate < aDate ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CreditCard class' category: #TusLibros!
+CreditCard class
+	instanceVariableNames: ''!
+
+!CreditCard class methodsFor: 'instance creation' stamp: 'AMS 6/9/2019 03:56:23'!
+expiringOn: anExpirationDate
+
+	^self new initializeExpiringOn: anExpirationDate.! !
 
 
 !classDefinition: #ShoppingCart category: #TusLibros!
@@ -390,6 +439,13 @@ Object subclass: #ShoppingCart
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
+
+!ShoppingCart methodsFor: 'evaluating' stamp: 'AMS 6/9/2019 03:10:57'!
+value
+
+	^products sum: [:aProduct | catalog at: aProduct] ifEmpty: [0].
+	! !
+
 
 !ShoppingCart methodsFor: 'accessing products' stamp: 'AMS 6/6/2019 02:24:14'!
 products
@@ -410,15 +466,6 @@ quantityOf: aProduct
 	
 		! !
 
-!ShoppingCart methodsFor: 'accessing products' stamp: 'BA 6/8/2019 18:49:41'!
-value
-	| totalPriceOfProducts |
-
-	totalPriceOfProducts _ products inject: 0 into: [:countPrice :aProduct | countPrice + catalog at: aProduct].
-	
-	^ totalPriceOfProducts
-	! !
-
 
 !ShoppingCart methodsFor: 'testing' stamp: 'BA 6/2/2019 17:43:30'!
 hasProduct: aProduct 
@@ -430,19 +477,24 @@ isEmpty
 	^ (self productsQuantity = 0)! !
 
 
-!ShoppingCart methodsFor: 'initialization' stamp: 'BA 6/8/2019 18:38:58'!
+!ShoppingCart methodsFor: 'initialization' stamp: 'AMS 6/9/2019 03:15:15'!
 initialize
 
 	products := OrderedCollection new.
-	catalog := Dictionary new.
-
 ! !
 
-!ShoppingCart methodsFor: 'initialization' stamp: 'BA 6/2/2019 21:19:03'!
+!ShoppingCart methodsFor: 'initialization' stamp: 'AMS 6/9/2019 03:17:43'!
 initializeWithACatalog: aCatalog
 
-	products := OrderedCollection new.
-	catalog := aCatalog.
+	self initialize.
+	"we make a copy of the catalog in order to prevent removing or adding element from the reference.
+	i.e.:
+	aCatalog := Dictionary new.
+	aCatalog add: 'aProduct' -> 10.
+	aCart withAProductsCatalog: aCatalog.
+	aCatalog removeKey: 'aProduct'
+	"
+	catalog := aCatalog copy.
 
 ! !
 
