@@ -1,64 +1,22 @@
-!classDefinition: #CashierTest category: #TusLibros!
-TestCase subclass: #CashierTest
+!classDefinition: #CartTest category: #TusLibros!
+TestCase subclass: #CartTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CashierTest methodsFor: 'clock' stamp: 'AMS 6/9/2019 03:57:37'!
-current
-
-	^June of: 2019! !
-
-
-!CashierTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 03:57:01'!
-test01CantCreateACashierWithAnEmptyCart
-
-	self should: [Cashier withACart: ShoppingCart new aCreditCard: CreditCard new andAClock: self] 
-		raise: Error - MessageNotUnderstood 
-		withMessageText: Cashier cantCheckoutAnEmptyCart 
-	! !
-
-!CashierTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 03:58:36'!
-test02CantCreateACashierWithAnExpiredCreditCard
-
-	| aCart aCatalog aProduct aCreditCard |
-	
-	aProduct := 'Product 1'.
-	
-	aCatalog := Dictionary new.
-	aCatalog add: aProduct->5.
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
-	
-	aCart add: aProduct.
-	
-	aCreditCard := CreditCard expiringOn: (January of: 2019).
-	
-	self should: [Cashier withACart: aCart aCreditCard: aCreditCard andAClock: self.] 
-		raise: Error - MessageNotUnderstood 
-		withMessageText: Cashier cantCreateACashierWithAnExpiredCreditCard 
-	! !
-
-
-!classDefinition: #ShoppingCartTest category: #TusLibros!
-TestCase subclass: #ShoppingCartTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:17:20'!
+!CartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:12:34'!
 test01WhenCreateAnEmptyCartItIsEmpty
 
 	| aCart aCatalog |
 	
 	aCatalog := Dictionary new.
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	aCart := Cart withAProductsCatalog: aCatalog.
 	
 	self assert:aCart isEmpty.
 	self assert:aCart productsQuantity equals: 0.! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:43:44'!
+!CartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:12:34'!
 test02AddAValidProductToAnEmptyCartAndThenTheCartIsNotEmpty
 
 	| aCart aProduct aCatalog|
@@ -67,7 +25,7 @@ test02AddAValidProductToAnEmptyCartAndThenTheCartIsNotEmpty
 
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct->1.
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	aCart := Cart withAProductsCatalog: aCatalog.
 
 	aCart add: aProduct.
 	
@@ -75,7 +33,7 @@ test02AddAValidProductToAnEmptyCartAndThenTheCartIsNotEmpty
 	self assert: aCart productsQuantity equals: 1.
 	self assert: (aCart hasProduct: aProduct).! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:43:37'!
+!CartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:12:34'!
 test03AddAValidProductToACartAndThenTheProductIsInTheCart
 
 	| aCart aProduct anotherProduct aCatalog|
@@ -86,7 +44,7 @@ test03AddAValidProductToACartAndThenTheProductIsInTheCart
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct->5; add: anotherProduct->10.
 
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	aCart := Cart withAProductsCatalog: aCatalog.
 
 	aCart add: aProduct.
 	aCart add: anotherProduct.
@@ -95,104 +53,24 @@ test03AddAValidProductToACartAndThenTheProductIsInTheCart
 	self assert: aCart productsQuantity equals: 2.
 	self assert: (aCart hasProduct: aProduct).! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:43:13'!
-test04RemoveTheOnlyProductFromTheCartAndThenIsEmpty
-
-	| aCart aProduct aCatalog|
-	
-	aProduct := 'Product 1'.
-
-	aCatalog := Dictionary new.
-	aCatalog add: aProduct->1.
-	
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
-
-	aCart add: aProduct.
-	aCart remove: aProduct.
-	
-	self assert: aCart isEmpty.
-	self deny: (aCart hasProduct: aProduct).! !
-
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:33:22'!
-test05RemoveAProductFromTheCartAndThenIsNotInTheCart
-
-	| aCart aProduct anotherProduct aCatalog|
-	
-	aProduct := 'Product 1'.
-	anotherProduct := 'Product 2'.
-	
-	aCatalog := Dictionary new.
-	aCatalog add: aProduct->1; add: anotherProduct->1.
-
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
-
-	aCart add: aProduct.
-	aCart add: anotherProduct.
-	aCart remove: anotherProduct.
-	
-	self deny: aCart isEmpty.
-	self deny: (aCart hasProduct: anotherProduct).
-	self assert: (aCart hasProduct: aProduct).
-	self assert: aCart productsQuantity equals: 1.! !
-
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:34:46'!
-test06CanNotRemoveProductsFromAnEmptyCart
-
-	| aCart aProduct aCatalog |
-	
-	aProduct := 'Product 1'.
-
-	aCatalog := Dictionary new.
-	aCatalog add: aProduct->1.
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
-	
-	self should: [aCart remove: aProduct.] 
-		raise: Error - MessageNotUnderstood 
-		withMessageText: ShoppingCart cantRemoveProductsThatAreNotInTheCartErrorDescription.
-	
-	self assert: aCart isEmpty.! !
-
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:35:27'!
-test07CanNotRemoveProductsThatAreNotInTheCart
-
-	| aCart aProduct anotherProduct aCatalog |
-	
-	aProduct := 'Product 1'.
-	anotherProduct := 'Product 2'.
-
-	aCatalog := Dictionary new.
-	aCatalog add: aProduct->1; add: anotherProduct->1.
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
-
-	aCart add: aProduct.
-	
-	self should: [aCart remove: anotherProduct.] 
-		raise: Error - MessageNotUnderstood 
-		withMessageText: ShoppingCart cantRemoveProductsThatAreNotInTheCartErrorDescription.
-	
-	self deny: aCart isEmpty.
-	self deny: (aCart hasProduct: anotherProduct).
-	self assert: (aCart hasProduct: aProduct).
-	self assert: aCart productsQuantity equals: 1.! !
-
-!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 04:03:21'!
-test08CantPutsProductsInACartWithEmptyCatalog
+!CartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:53:31'!
+test04CantPutsProductsInACartWithEmptyCatalog
 
 	| aCart aProduct |
 	
 	aProduct := 'Product 1'.
 
-	aCart := ShoppingCart withAProductsCatalog: Dictionary new.
+	aCart := Cart withAProductsCatalog: Dictionary new.
 	
 	self should: [aCart add: aProduct.] 
 		raise: Error - MessageNotUnderstood 
-		withMessageText: ShoppingCart cantAddAProductThatAreNotInTheCatalogErrorDescription.
+		withMessageText: Cart cantAddAProductThatAreNotInTheCatalogErrorDescription.
 	
 	self assert: aCart isEmpty.
 	self deny: (aCart hasProduct: aProduct).! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:42:53'!
-test09CantPutInTheCartProductsThatAreNotInTheCatalog
+!CartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:53:37'!
+test05CantPutInTheCartProductsThatAreNotInTheCatalog
 
 	| aCart aProduct anotherProduct aCatalog |
 	
@@ -201,19 +79,19 @@ test09CantPutInTheCartProductsThatAreNotInTheCatalog
 
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct->1.
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	aCart := Cart withAProductsCatalog: aCatalog.
 	
 	aCart add: aProduct.
 	
 	self should: [aCart add: anotherProduct.] 
 		raise: Error - MessageNotUnderstood 
-		withMessageText: ShoppingCart cantAddAProductThatAreNotInTheCatalogErrorDescription.
+		withMessageText: Cart cantAddAProductThatAreNotInTheCatalogErrorDescription.
 	
 	self assert: (aCart hasProduct: aProduct).
 	self deny: (aCart hasProduct: anotherProduct) ! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:42:38'!
-test10AddMoreThanOneValidProductAndTheCartRememberTheNumberOfAddedItems
+!CartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:53:42'!
+test06AddMoreThanOneValidProductAndTheCartRememberTheNumberOfAddedItems
 
 	| aCart aProduct aCatalog|
 	
@@ -222,8 +100,7 @@ test10AddMoreThanOneValidProductAndTheCartRememberTheNumberOfAddedItems
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct->1.
 
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
-
+	aCart := Cart withAProductsCatalog: aCatalog.
 	aCart add: 2 of: aProduct.
 	
 	self deny: aCart isEmpty.
@@ -231,8 +108,8 @@ test10AddMoreThanOneValidProductAndTheCartRememberTheNumberOfAddedItems
 	self assert: (aCart hasProduct: aProduct).
 	self assert: (aCart quantityOf: aProduct) equals: 2.! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:44:29'!
-test11CanNotAddNonPositiveNumberOfItems
+!CartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:53:47'!
+test07CanNotAddNonPositiveNumberOfItems
 
 	| aCart aProduct aCatalog|
 	
@@ -240,12 +117,12 @@ test11CanNotAddNonPositiveNumberOfItems
 
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct -> 1.
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	aCart := Cart withAProductsCatalog: aCatalog.
 
 
 	self should: [aCart add: 0 of: aProduct.] 
 		raise: Error - MessageNotUnderstood 
-		withMessageText: ShoppingCart cantAddNonPositiveQuantityOfProducts.
+		withMessageText: Cart cantAddNonPositiveQuantityOfProducts.
 	
 	
 	self assert: aCart isEmpty.
@@ -253,8 +130,8 @@ test11CanNotAddNonPositiveNumberOfItems
 	self deny: (aCart hasProduct: aProduct).
 	self assert: (aCart quantityOf: aProduct) equals: 0.! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'BA 6/8/2019 18:44:43'!
-test12CanNotAddNonIntegerNumberOfItems
+!CartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:54:00'!
+test08CanNotAddNonIntegerNumberOfItems
 
 	| aCart aProduct aCatalog|
 	
@@ -262,12 +139,12 @@ test12CanNotAddNonIntegerNumberOfItems
 
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct -> 1.
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	aCart := Cart withAProductsCatalog: aCatalog.
 
 
 	self should: [aCart add: 1.5 of: aProduct.] 
 		raise: Error - MessageNotUnderstood 
-		withMessageText: ShoppingCart cantAddNonIntegerQuantityOfProducts.
+		withMessageText: Cart cantAddNonIntegerQuantityOfProducts.
 	
 	
 	self assert: aCart isEmpty.
@@ -275,8 +152,8 @@ test12CanNotAddNonIntegerNumberOfItems
 	self deny: (aCart hasProduct: aProduct).
 	self assert: (aCart quantityOf: aProduct) equals: 0.! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 03:11:37'!
-test13ValueOfEmptyCartIs0
+!CartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:54:05'!
+test09ValueOfEmptyCartIs0
 
 	| aCart aProduct aCatalog|
 	
@@ -285,12 +162,12 @@ test13ValueOfEmptyCartIs0
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct -> 10.
 
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	aCart := Cart withAProductsCatalog: aCatalog.
 
 	self assert: (aCart value) equals: 0.! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 03:12:36'!
-test14ValueOfACartWithOneProductIsThePriceOfThatProduct
+!CartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:54:10'!
+test10ValueOfACartWithOneProductIsThePriceOfThatProduct
 	| aCart aProduct aCatalog|
 	
 	aProduct := 'Product 1'.
@@ -298,14 +175,14 @@ test14ValueOfACartWithOneProductIsThePriceOfThatProduct
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct -> 10.
 
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	aCart := Cart withAProductsCatalog: aCatalog.
 	aCart add: aProduct.
 
 	self assert: (aCart quantityOf: aProduct) equals: 1.
 	self assert: (aCart value) equals: 10.! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 03:13:06'!
-test15ValueOfACartWithTwoEqualsProductsIsTheSumOfThePriceOfThatProduct
+!CartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:54:15'!
+test11ValueOfACartWithTwoEqualsProductsIsTheSumOfThePriceOfThatProduct
 	| aCart aProduct aCatalog|
 	
 	aProduct := 'Product 1'.
@@ -313,14 +190,14 @@ test15ValueOfACartWithTwoEqualsProductsIsTheSumOfThePriceOfThatProduct
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct -> 10.
 
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	aCart := Cart withAProductsCatalog: aCatalog.
 	aCart add: 2 of: aProduct.
 
 	self assert: (aCart quantityOf: aProduct) equals: 2.
 	self assert: (aCart value) equals: 20.! !
 
-!ShoppingCartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 03:13:56'!
-test16ValueOfACartWithManyDifferentProductsIsTheSumeOfThePriceOfEachProduct
+!CartTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:54:19'!
+test12ValueOfACartWithManyDifferentProductsIsTheSumeOfThePriceOfEachProduct
 
 	| aCart aProduct anotherProduct aCatalog|
 	
@@ -330,7 +207,7 @@ test16ValueOfACartWithManyDifferentProductsIsTheSumeOfThePriceOfEachProduct
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct -> 10; add: anotherProduct->5.
 
-	aCart := ShoppingCart withAProductsCatalog: aCatalog.
+	aCart := Cart withAProductsCatalog: aCatalog.
 	aCart add: 2 of: aProduct.
 	aCart add: 1 of: anotherProduct.
 
@@ -339,151 +216,191 @@ test16ValueOfACartWithManyDifferentProductsIsTheSumeOfThePriceOfEachProduct
 	self assert: (aCart value) equals: 25.! !
 
 
-!classDefinition: #Cashier category: #TusLibros!
-Object subclass: #Cashier
-	instanceVariableNames: 'cart creditCard clock'
+!classDefinition: #CashierTest category: #TusLibros!
+TestCase subclass: #CashierTest
+	instanceVariableNames: 'defaultCartWithOneProduct expiredCreditCard nonExpiredCreditCard'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Cashier methodsFor: 'initialization' stamp: 'AMS 6/9/2019 03:54:37'!
-initializeWithACart: aCart aCreditCard: aCreditCard andAClock: aClock
+!CashierTest methodsFor: 'clock' stamp: 'AMS 6/9/2019 03:57:37'!
+current
 
-	cart := aCart.
-	creditCard := aCreditCard.
-	clock:= aClock! !
+	^June of: 2019! !
 
 
-!Cashier methodsFor: 'assertions' stamp: 'AMS 6/6/2019 02:19:04'!
-isAValidCart: aCart
+!CashierTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 17:12:34'!
+test01CantCreateACashierWithAnEmptyCart
 
-	aCart isEmpty ifTrue: [self raiseCantCheckoutAnEmptyCart ] ! !
+	self should: [Cashier for: Cart new payedBy: CreditCard new using: MerchantProcessorInterfaceSimulator new andAClock: self] 
+		raise: Error - MessageNotUnderstood 
+		withMessageText: Cashier cantCreateACashierWithAnEmptyCart 
+	! !
 
+!CashierTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 18:05:12'!
+test02CantCreateACashierWithAnExpiredCreditCard
 
-!Cashier methodsFor: 'checkout' stamp: 'BA 6/8/2019 18:58:47'!
-checkout: aCart
+	self should: [Cashier for: defaultCartWithOneProduct payedBy: expiredCreditCard using: MerchantProcessorInterfaceSimulator new andAClock: self.] 
+		raise: Error - MessageNotUnderstood 
+		withMessageText: Cashier cantCreateACashierWithAnExpiredCreditCard 
+	! !
 
-	self isAValidCart: aCart.
-	^aCart value.! !
+!CashierTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 18:06:04'!
+test03CanCheckoutANonEmptyCart
 
-
-!Cashier methodsFor: 'exceptions' stamp: 'AMS 6/6/2019 02:25:44'!
-raiseCantCheckoutAProductThatIsNotInThePriceList
-
-	^self error: self class cantCheckoutAProductThatIsNotInThePriceList ! !
-
-!Cashier methodsFor: 'exceptions' stamp: 'AMS 6/6/2019 02:17:48'!
-raiseCantCheckoutAnEmptyCart
-
-	^self error: self class cantCheckoutAnEmptyCart ! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'Cashier class' category: #TusLibros!
-Cashier class
-	instanceVariableNames: 'clock'!
-
-!Cashier class methodsFor: 'exceptions messages' stamp: 'AMS 6/6/2019 02:17:27'!
-cantCheckoutAnEmptyCart
-
-	^'You cant checkout an empty cart'! !
-
-!Cashier class methodsFor: 'exceptions messages' stamp: 'AMS 6/9/2019 03:48:55'!
-cantCreateACashierWithAnExpiredCreditCard
-
-	^'You cant create a cashier with an expired credit card'! !
-
-
-!Cashier class methodsFor: 'instance creation' stamp: 'AMS 6/9/2019 04:05:44'!
-withACart: aCart aCreditCard: aCreditCard andAClock: aClock
-
-	aCart isEmpty ifTrue: [self error: self cantCheckoutAnEmptyCart ].
-	(aCreditCard hasExpiredOn: aClock current) ifTrue: [self error: self cantCreateACashierWithAnExpiredCreditCard ].
-
-	^self new initializeWithACart: aCart aCreditCard: aCreditCard andAClock: aClock ! !
-
-
-!classDefinition: #CreditCard category: #TusLibros!
-Object subclass: #CreditCard
-	instanceVariableNames: 'expiringDate'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!CreditCard methodsFor: 'initialization' stamp: 'AMS 6/9/2019 03:54:55'!
-initializeExpiringOn: anExpirationDate
-
-	expiringDate := anExpirationDate.! !
-
-
-!CreditCard methodsFor: 'testing' stamp: 'AMS 6/9/2019 04:01:30'!
-hasExpiredOn: aDate 
+	| aCashier merchantProcessorSimulator |
+		
+	merchantProcessorSimulator := MerchantProcessorInterfaceSimulator whenHasToDebit: 5 from: nonExpiredCreditCard thenResponse: [5].
 	
-	^expiringDate < aDate ! !
+	aCashier := Cashier for: defaultCartWithOneProduct payedBy: nonExpiredCreditCard using: merchantProcessorSimulator andAClock: self.
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+	self assert: aCashier checkout equals: defaultCartWithOneProduct value.
+	! !
 
-!classDefinition: 'CreditCard class' category: #TusLibros!
-CreditCard class
-	instanceVariableNames: ''!
+!CashierTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 18:06:17'!
+test04RaiseAnInvalidCardExeptionWhenMerchantProcessorRaiseIt
 
-!CreditCard class methodsFor: 'instance creation' stamp: 'AMS 6/9/2019 03:56:23'!
-expiringOn: anExpirationDate
+	| aCashier merchantProcessorSimulator |
+		
+	merchantProcessorSimulator := MerchantProcessorInterfaceSimulator whenHasToDebit: 5 from: nonExpiredCreditCard thenResponse: [MerchantProcessorInterfaceSimulator simulateInvalidCardException ].
+	
+	aCashier := Cashier for: defaultCartWithOneProduct payedBy: nonExpiredCreditCard using: merchantProcessorSimulator andAClock: self.
 
-	^self new initializeExpiringOn: anExpirationDate.! !
+	self should: [aCashier checkout]
+		raise: Error - MessageNotUnderstood 
+		withMessageText: MerchantProcessorInterfaceSimulator invalidCardExceptionMessage .
+	! !
 
-
-!classDefinition: #ShoppingCart category: #TusLibros!
-Object subclass: #ShoppingCart
-	instanceVariableNames: 'products catalog'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
+!CashierTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 18:06:34'!
+test05RaiseAnErrorWhenMerchantProcessorRaisesAnError
 
-!ShoppingCart methodsFor: 'evaluating' stamp: 'AMS 6/9/2019 03:10:57'!
-value
+	"Este test es el mismo que el test04 solo que con otro dato de prueba. Dejamos los 2 tests para mostrar 'la historia' de tdd"
+	| aCashier merchantProcessorSimulator |
+		
+	merchantProcessorSimulator := MerchantProcessorInterfaceSimulator whenHasToDebit: 5 from: nonExpiredCreditCard thenResponse: [MerchantProcessorInterfaceSimulator simulateNotEnoughLimitException ].
+	
+	aCashier := Cashier for: defaultCartWithOneProduct payedBy: nonExpiredCreditCard using: merchantProcessorSimulator andAClock: self.
 
-	^products sum: [:aProduct | catalog at: aProduct] ifEmpty: [0].
+	self should: [aCashier checkout]
+		raise: Error - MessageNotUnderstood 
+		withMessageText: MerchantProcessorInterfaceSimulator notEnoughLimitExceptionmessage .
 	! !
 
 
-!ShoppingCart methodsFor: 'accessing products' stamp: 'AMS 6/6/2019 02:24:14'!
+!CashierTest methodsFor: 'setup' stamp: 'AMS 6/9/2019 18:05:43'!
+setUp
+
+	| aCatalog aProduct |
+	
+	aProduct := 'Product 1'.
+	
+	aCatalog := Dictionary new.
+	aCatalog add: aProduct->5.
+	defaultCartWithOneProduct := Cart withAProductsCatalog: aCatalog.
+	defaultCartWithOneProduct add: aProduct.
+
+	expiredCreditCard := CreditCard withNumber: '1234567890123456' ownedBy: 'aPerson' expiringOn: (January of: 2019).
+	nonExpiredCreditCard := CreditCard withNumber: '1234567890123456' ownedBy: 'aPerson' expiringOn: (July of: 2019).! !
+
+
+!classDefinition: #CreditCardTest category: #TusLibros!
+TestCase subclass: #CreditCardTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!CreditCardTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 15:44:21'!
+test01CanNotCreateACardWithAnEmptyName
+
+	self should: [CreditCard withNumber: '1234567890123456' ownedBy: '' expiringOn: (June of: 2019) ]
+		raise: Error - MessageNotUnderstood
+		withMessageText: CreditCard canNotCreateACreditCardWithEmptyName 
+	! !
+
+!CreditCardTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 15:47:31'!
+test02CanNotCreateACardWithANumbersLengthLessThan16
+
+	self should: [CreditCard withNumber: '1' ownedBy: 'aPerson surname' expiringOn: (June of: 2019) ]
+		raise: Error - MessageNotUnderstood
+		withMessageText: CreditCard canNotCreateACreditCardWithANumbersLengthDifferentThan16 
+	! !
+
+!CreditCardTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 15:48:18'!
+test03CanNotCreateACardWithACreditCardNumberWithLengthDifferentThan16
+
+	"este test es otro dato de prueba del test02. lo dejamos simplemente para mostrar la 'historia' que hicimos al hacer TDD"
+	
+	self should: [CreditCard withNumber: '12345678901234567' ownedBy: 'aPerson surname' expiringOn: (June of: 2019) ]
+		raise: Error - MessageNotUnderstood
+		withMessageText: CreditCard canNotCreateACreditCardWithANumbersLengthDifferentThan16 
+	! !
+
+!CreditCardTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 15:51:24'!
+test04CanCreateACard
+
+	| aCreditCardNumber aCreditCardOwner aCreditCardExpiringDate aCreditCard |
+
+	aCreditCardNumber := '1234567890123456'.
+	aCreditCardOwner := 'aPerson surname'.
+	aCreditCardExpiringDate := (June of: 2019).
+	
+	aCreditCard := CreditCard withNumber: aCreditCardNumber ownedBy: aCreditCardOwner expiringOn: aCreditCardExpiringDate.
+	
+	self assert: aCreditCard number equals: aCreditCardNumber.
+	self assert: aCreditCard owner equals: aCreditCardOwner.
+	self assert: aCreditCard expiringDate equals: aCreditCardExpiringDate.! !
+
+
+!classDefinition: #Cart category: #TusLibros!
+Object subclass: #Cart
+	instanceVariableNames: 'state catalog'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!Cart methodsFor: 'evaluating' stamp: 'AMS 6/9/2019 17:47:46'!
+value
+
+	^state valueWith: catalog 
+	! !
+
+
+!Cart methodsFor: 'products' stamp: 'AMS 6/9/2019 17:36:19'!
 products
 
-	^products asSet ! !
+	^state products! !
 
-!ShoppingCart methodsFor: 'accessing products' stamp: 'AMS 6/6/2019 01:35:08'!
+!Cart methodsFor: 'products' stamp: 'AMS 6/9/2019 17:37:20'!
 productsQuantity
 
-	^ products size
-	
+	^state productsQuantity
 		! !
 
-!ShoppingCart methodsFor: 'accessing products' stamp: 'AMS 6/6/2019 01:36:03'!
+!Cart methodsFor: 'products' stamp: 'AMS 6/9/2019 17:37:57'!
 quantityOf: aProduct
 
-	^ products occurrencesOf: aProduct 
+	^state quantityOf: aProduct 
 	
 		! !
 
 
-!ShoppingCart methodsFor: 'testing' stamp: 'BA 6/2/2019 17:43:30'!
+!Cart methodsFor: 'testing' stamp: 'AMS 6/9/2019 17:40:35'!
 hasProduct: aProduct 
 
-	^ products includes: aProduct! !
+	^state hasProduct: aProduct! !
 
-!ShoppingCart methodsFor: 'testing' stamp: 'AMS 6/6/2019 01:35:08'!
+!Cart methodsFor: 'testing' stamp: 'AMS 6/6/2019 01:35:08'!
 isEmpty
 	^ (self productsQuantity = 0)! !
 
 
-!ShoppingCart methodsFor: 'initialization' stamp: 'AMS 6/9/2019 03:15:15'!
+!Cart methodsFor: 'initialization' stamp: 'AMS 6/9/2019 17:47:21'!
 initialize
 
-	products := OrderedCollection new.
-! !
+	state := EmptyCartState new.! !
 
-!ShoppingCart methodsFor: 'initialization' stamp: 'AMS 6/9/2019 03:17:43'!
+!Cart methodsFor: 'initialization' stamp: 'AMS 6/9/2019 17:46:59'!
 initializeWithACatalog: aCatalog
 
 	self initialize.
@@ -499,94 +416,417 @@ initializeWithACatalog: aCatalog
 ! !
 
 
-!ShoppingCart methodsFor: 'exceptions' stamp: 'AMS 6/6/2019 02:03:01'!
+!Cart methodsFor: 'exceptions' stamp: 'AMS 6/6/2019 02:03:01'!
 raiseCantAddANonIntegerQuantityOfProducts
 
 	^self error: self class cantAddNonIntegerQuantityOfProducts 
 ! !
 
-!ShoppingCart methodsFor: 'exceptions' stamp: 'AMS 6/6/2019 02:01:57'!
+!Cart methodsFor: 'exceptions' stamp: 'AMS 6/6/2019 02:01:57'!
 raiseCantAddANonPositiveQuantityOfProducts
 
 	^self error: self class cantAddNonPositiveQuantityOfProducts 
 ! !
 
-!ShoppingCart methodsFor: 'exceptions' stamp: 'BA 6/2/2019 19:07:30'!
+!Cart methodsFor: 'exceptions' stamp: 'BA 6/2/2019 19:07:30'!
 raiseCantAddAProductThatAreNotInTheCatalogException
 
 	^self error: self class cantAddAProductThatAreNotInTheCatalogErrorDescription 
 ! !
 
-!ShoppingCart methodsFor: 'exceptions' stamp: 'BA 6/2/2019 18:51:55'!
+!Cart methodsFor: 'exceptions' stamp: 'BA 6/2/2019 18:51:55'!
 raiseCantRemoveProductsThatAreNotInTheCartException
 
 	^self error: self class cantRemoveProductsThatAreNotInTheCartErrorDescription 
 ! !
 
 
-!ShoppingCart methodsFor: 'removing' stamp: 'BA 6/2/2019 21:46:08'!
-remove: aProduct
-
-	products remove: aProduct ifAbsent: [ ^self raiseCantRemoveProductsThatAreNotInTheCartException ].! !
-
-
-!ShoppingCart methodsFor: 'assertions' stamp: 'AMS 6/6/2019 02:02:10'!
+!Cart methodsFor: 'assertions' stamp: 'AMS 6/6/2019 02:02:10'!
 assertIsAPositiveQuantity: aQuantity
 
 	aQuantity strictlyPositive ifFalse: [self raiseCantAddANonPositiveQuantityOfProducts ]! !
 
-!ShoppingCart methodsFor: 'assertions' stamp: 'AMS 6/6/2019 02:05:33'!
+!Cart methodsFor: 'assertions' stamp: 'AMS 6/6/2019 02:05:33'!
 assertIsAnIntegerQuantity: aQuantity
 
 	aQuantity isInteger ifFalse: [self raiseCantAddANonIntegerQuantityOfProducts ]! !
 
-!ShoppingCart methodsFor: 'assertions' stamp: 'AMS 6/6/2019 02:03:19'!
+!Cart methodsFor: 'assertions' stamp: 'AMS 6/6/2019 02:03:19'!
 assertIsValidQuantity: aQuantity
 
 	self assertIsAPositiveQuantity: aQuantity.
 	self assertIsAnIntegerQuantity: aQuantity ! !
 
-!ShoppingCart methodsFor: 'assertions' stamp: 'BA 6/8/2019 18:27:02'!
+!Cart methodsFor: 'assertions' stamp: 'BA 6/8/2019 18:27:02'!
 assertItemIsInTheCatalog: aProduct
 
 	(catalog keys includes: aProduct) ifFalse: [ ^self raiseCantAddAProductThatAreNotInTheCatalogException ].! !
 
 
-!ShoppingCart methodsFor: 'adding' stamp: 'AMS 6/6/2019 01:42:22'!
+!Cart methodsFor: 'adding' stamp: 'AMS 6/6/2019 01:42:22'!
 add: aProduct
 	
 	^self add: 1 of: aProduct ! !
 
-!ShoppingCart methodsFor: 'adding' stamp: 'AMS 6/6/2019 01:57:02'!
+!Cart methodsFor: 'adding' stamp: 'AMS 6/9/2019 17:51:13'!
 add: aQuantity of: aProduct
 
 	self assertItemIsInTheCatalog: aProduct.
 	self assertIsValidQuantity: aQuantity.
-	aQuantity timesRepeat: [products add: aProduct ].! !
+	
+	aQuantity timesRepeat: [state := state add: aProduct ].! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'ShoppingCart class' category: #TusLibros!
-ShoppingCart class
+!classDefinition: 'Cart class' category: #TusLibros!
+Cart class
 	instanceVariableNames: ''!
 
-!ShoppingCart class methodsFor: 'exceptions messages' stamp: 'BA 6/2/2019 19:00:08'!
+!Cart class methodsFor: 'exceptions messages' stamp: 'BA 6/2/2019 19:00:08'!
 cantAddAProductThatAreNotInTheCatalogErrorDescription
 	^ 'You cant add a product in the cart that are not in the catalog'! !
 
-!ShoppingCart class methodsFor: 'exceptions messages' stamp: 'AMS 6/6/2019 02:02:48'!
+!Cart class methodsFor: 'exceptions messages' stamp: 'AMS 6/6/2019 02:02:48'!
 cantAddNonIntegerQuantityOfProducts
 	^ 'You cant add a non integer quantity of products to the cart'! !
 
-!ShoppingCart class methodsFor: 'exceptions messages' stamp: 'AMS 6/6/2019 01:55:15'!
+!Cart class methodsFor: 'exceptions messages' stamp: 'AMS 6/6/2019 01:55:15'!
 cantAddNonPositiveQuantityOfProducts
 	^ 'You cant add a non positive quantity of products to the cart'! !
 
-!ShoppingCart class methodsFor: 'exceptions messages' stamp: 'BA 6/2/2019 18:51:02'!
+!Cart class methodsFor: 'exceptions messages' stamp: 'BA 6/2/2019 18:51:02'!
 cantRemoveProductsThatAreNotInTheCartErrorDescription
 	^'You cant remove products that are not in the cart'! !
 
 
-!ShoppingCart class methodsFor: 'instance creation' stamp: 'BA 6/2/2019 21:18:33'!
+!Cart class methodsFor: 'instance creation' stamp: 'BA 6/2/2019 21:18:33'!
 withAProductsCatalog: aCatalog
 	^ self new initializeWithACatalog: aCatalog! !
+
+
+!classDefinition: #CartState category: #TusLibros!
+Object subclass: #CartState
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!CartState methodsFor: 'evaluating' stamp: 'AMS 6/9/2019 17:29:54'!
+valueWith: aCatalog
+	
+	self subclassResponsibility ! !
+
+
+!CartState methodsFor: 'testing' stamp: 'AMS 6/9/2019 17:40:55'!
+hasProduct: aProduct
+
+	self subclassResponsibility ! !
+
+!CartState methodsFor: 'testing' stamp: 'AMS 6/9/2019 17:40:58'!
+isEmpty
+
+	self subclassResponsibility ! !
+
+
+!CartState methodsFor: 'products' stamp: 'AMS 6/9/2019 17:36:54'!
+products
+
+	self subclassResponsibility ! !
+
+!CartState methodsFor: 'products' stamp: 'AMS 6/9/2019 17:37:31'!
+productsQuantity
+
+	self subclassResponsibility ! !
+
+!CartState methodsFor: 'products' stamp: 'AMS 6/9/2019 17:38:33'!
+quantityOf: aProduct
+
+	self subclassResponsibility ! !
+
+
+!CartState methodsFor: 'adding' stamp: 'AMS 6/9/2019 17:51:24'!
+add: aProduct
+
+	self subclassResponsibility ! !
+
+
+!classDefinition: #EmptyCartState category: #TusLibros!
+CartState subclass: #EmptyCartState
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!EmptyCartState methodsFor: 'evaluating' stamp: 'AMS 6/9/2019 17:47:59'!
+valueWith: aCatalog
+
+	^0! !
+
+
+!EmptyCartState methodsFor: 'products' stamp: 'AMS 6/9/2019 17:37:01'!
+products
+
+	^Set new! !
+
+!EmptyCartState methodsFor: 'products' stamp: 'AMS 6/9/2019 17:37:39'!
+productsQuantity
+
+	^0! !
+
+!EmptyCartState methodsFor: 'products' stamp: 'AMS 6/9/2019 17:38:43'!
+quantityOf: aProduct
+
+	^0! !
+
+
+!EmptyCartState methodsFor: 'testing' stamp: 'AMS 6/9/2019 17:41:16'!
+hasProduct: aProduct
+
+	^false! !
+
+!EmptyCartState methodsFor: 'testing' stamp: 'AMS 6/9/2019 17:41:21'!
+isEmpty
+
+	^true! !
+
+
+!EmptyCartState methodsFor: 'adding' stamp: 'AMS 6/9/2019 17:52:02'!
+add: aProduct
+
+	| newState|
+	
+	newState := NonEmptyCartState new.
+	newState add: aProduct.
+	
+	^newState ! !
+
+
+!classDefinition: #NonEmptyCartState category: #TusLibros!
+CartState subclass: #NonEmptyCartState
+	instanceVariableNames: 'products'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!NonEmptyCartState methodsFor: 'evaluating' stamp: 'AMS 6/9/2019 17:52:48'!
+valueWith: aCatalog
+
+	^products sum: [:aProduct | aCatalog at: aProduct ]! !
+
+
+!NonEmptyCartState methodsFor: 'products' stamp: 'AMS 6/9/2019 17:37:09'!
+products
+
+	^products ! !
+
+!NonEmptyCartState methodsFor: 'products' stamp: 'AMS 6/9/2019 17:37:47'!
+productsQuantity
+
+	^products size! !
+
+!NonEmptyCartState methodsFor: 'products' stamp: 'AMS 6/9/2019 17:40:18'!
+quantityOf: aProduct
+
+	^products occurrencesOf: aProduct ! !
+
+
+!NonEmptyCartState methodsFor: 'testing' stamp: 'AMS 6/9/2019 17:41:43'!
+hasProduct: aProduct
+	
+	^products includes: aProduct! !
+
+!NonEmptyCartState methodsFor: 'testing' stamp: 'AMS 6/9/2019 17:41:36'!
+isEmpty
+	
+	^false! !
+
+
+!NonEmptyCartState methodsFor: 'initializing' stamp: 'AMS 6/9/2019 17:49:17'!
+initialize
+
+	products := OrderedCollection new.! !
+
+
+!NonEmptyCartState methodsFor: 'adding' stamp: 'AMS 6/9/2019 17:42:56'!
+add: aProduct
+
+	products add: aProduct ! !
+
+
+!classDefinition: #Cashier category: #TusLibros!
+Object subclass: #Cashier
+	instanceVariableNames: 'cart creditCard clock merchantProcessor'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!Cashier methodsFor: 'initialization' stamp: 'AMS 6/9/2019 16:24:13'!
+initializeFor: aCart payedBy: aCreditCard using: aMerchantProcessor andAClock: aClock
+
+	cart := aCart.
+	creditCard := aCreditCard.
+	merchantProcessor := aMerchantProcessor.
+	clock:= aClock! !
+
+
+
+!Cashier methodsFor: 'checkout' stamp: 'AMS 6/9/2019 16:43:48'!
+checkout
+
+	^merchantProcessor debit: cart value from: creditCard.! !
+
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Cashier class' category: #TusLibros!
+Cashier class
+	instanceVariableNames: 'clock'!
+
+!Cashier class methodsFor: 'exceptions messages' stamp: 'AMS 6/9/2019 15:28:25'!
+cantCreateACashierWithAnEmptyCart
+
+	^'You cant create a cashier with an empty cart'! !
+
+!Cashier class methodsFor: 'exceptions messages' stamp: 'AMS 6/9/2019 03:48:55'!
+cantCreateACashierWithAnExpiredCreditCard
+
+	^'You cant create a cashier with an expired credit card'! !
+
+
+!Cashier class methodsFor: 'instance creation' stamp: 'AMS 6/9/2019 16:23:49'!
+for: aCart payedBy: aCreditCard using: aMerchantProcessor andAClock: aClock
+
+	aCart isEmpty ifTrue: [self error: self cantCreateACashierWithAnEmptyCart ].
+	(aCreditCard hasExpiredOn: aClock current) ifTrue: [self error: self cantCreateACashierWithAnExpiredCreditCard ].
+
+	^self new initializeFor: aCart payedBy: aCreditCard using: aMerchantProcessor andAClock: aClock ! !
+
+
+!classDefinition: #CreditCard category: #TusLibros!
+Object subclass: #CreditCard
+	instanceVariableNames: 'number owner expiringDate'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!CreditCard methodsFor: 'initialization' stamp: 'AMS 6/9/2019 15:46:25'!
+initializeWithNumber: creditCardNumber ownedBy: aPersonName expiringOn: anExpirationDate
+
+	number := creditCardNumber.
+	owner := aPersonName.
+	expiringDate := anExpirationDate.! !
+
+
+!CreditCard methodsFor: 'testing' stamp: 'AMS 6/9/2019 04:01:30'!
+hasExpiredOn: aDate 
+	
+	^expiringDate < aDate ! !
+
+
+!CreditCard methodsFor: 'accessing' stamp: 'AMS 6/9/2019 15:45:42'!
+expiringDate
+
+	^expiringDate ! !
+
+!CreditCard methodsFor: 'accessing' stamp: 'AMS 6/9/2019 15:45:30'!
+number
+
+	^number! !
+
+!CreditCard methodsFor: 'accessing' stamp: 'AMS 6/9/2019 15:45:35'!
+owner
+
+	^owner ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CreditCard class' category: #TusLibros!
+CreditCard class
+	instanceVariableNames: ''!
+
+!CreditCard class methodsFor: 'exception messages' stamp: 'AMS 6/9/2019 15:42:53'!
+canNotCreateACreditCardWithANumbersLengthDifferentThan16
+
+	^'Can not create a credit card with a number length different than 16'! !
+
+!CreditCard class methodsFor: 'exception messages' stamp: 'AMS 6/9/2019 15:38:37'!
+canNotCreateACreditCardWithEmptyName
+
+	^'Can not create a credit card with empty name'! !
+
+
+!CreditCard class methodsFor: 'instance creation' stamp: 'AMS 6/9/2019 15:45:04'!
+withNumber: creditCardNumber ownedBy: aPersonName expiringOn: anExpirationDate
+
+	aPersonName isEmpty ifTrue: [self error: self canNotCreateACreditCardWithEmptyName].
+	(creditCardNumber size = 16) ifFalse: [self error: self canNotCreateACreditCardWithANumbersLengthDifferentThan16 ].
+
+	^self new initializeWithNumber: creditCardNumber ownedBy: aPersonName expiringOn: anExpirationDate.! !
+
+
+!classDefinition: #MerchantProcessorInterfaceSimulator category: #TusLibros!
+Object subclass: #MerchantProcessorInterfaceSimulator
+	instanceVariableNames: 'simulatedResponses'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!MerchantProcessorInterfaceSimulator methodsFor: 'key generator - private' stamp: 'AMS 6/9/2019 16:39:18'!
+generateRequestKeyFor: anAmount and: aCreditCard
+
+	^anAmount printString,'-',aCreditCard number printString,'-',aCreditCard owner printString,'-',aCreditCard expiringDate printString! !
+
+
+!MerchantProcessorInterfaceSimulator methodsFor: 'debiting' stamp: 'AMS 6/9/2019 16:45:45'!
+debit: anAmount from: aCreditCard
+
+	| simulatedResponse |
+	simulatedResponse := simulatedResponses at: (self generateRequestKeyFor: anAmount and: aCreditCard) ifAbsent: [MessageNotUnderstood new signal].
+	
+	^simulatedResponse value! !
+
+
+!MerchantProcessorInterfaceSimulator methodsFor: 'initialization' stamp: 'AMS 6/9/2019 16:34:22'!
+initialize
+
+	simulatedResponses := Dictionary new.! !
+
+!MerchantProcessorInterfaceSimulator methodsFor: 'initialization' stamp: 'AMS 6/9/2019 16:39:42'!
+initializeSimulating: aSimualtedResponse whenDebit: anAmount from: aCreditCard
+
+	self initialize.
+	
+	simulatedResponses at: (self generateRequestKeyFor: anAmount and: aCreditCard) put: aSimualtedResponse ! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MerchantProcessorInterfaceSimulator class' category: #TusLibros!
+MerchantProcessorInterfaceSimulator class
+	instanceVariableNames: ''!
+
+!MerchantProcessorInterfaceSimulator class methodsFor: 'instance creation' stamp: 'AMS 6/9/2019 16:33:35'!
+whenHasToDebit: anAmount from: aCreditCard thenResponse: aSimualtedResponse
+
+	^self new initializeSimulating: aSimualtedResponse whenDebit: anAmount from: aCreditCard ! !
+
+
+!MerchantProcessorInterfaceSimulator class methodsFor: 'exception messages' stamp: 'AMS 6/9/2019 16:49:30'!
+invalidCardExceptionMessage
+
+	^'Invalid card'! !
+
+!MerchantProcessorInterfaceSimulator class methodsFor: 'exception messages' stamp: 'AMS 6/9/2019 16:54:29'!
+notEnoughLimitExceptionmessage
+
+	^'Not enough limit'! !
+
+
+!MerchantProcessorInterfaceSimulator class methodsFor: 'simulated exceptions' stamp: 'AMS 6/9/2019 16:49:46'!
+simulateInvalidCardException
+
+	^self error: self invalidCardExceptionMessage ! !
+
+!MerchantProcessorInterfaceSimulator class methodsFor: 'simulated exceptions' stamp: 'AMS 6/9/2019 16:54:29'!
+simulateNotEnoughLimitException
+
+	^self error: self notEnoughLimitExceptionmessage ! !
