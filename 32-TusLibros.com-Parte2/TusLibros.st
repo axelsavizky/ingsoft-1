@@ -476,6 +476,12 @@ add: aQuantity of: aProduct
 	
 	aQuantity timesRepeat: [state := state add: aProduct ].! !
 
+
+!Cart methodsFor: 'checkout' stamp: 'AMS 6/9/2019 23:33:35'!
+beCheckoutedBy: cashier
+
+	^state beCheckoutedBy: cashier! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Cart class' category: #TusLibros!
@@ -549,6 +555,12 @@ add: aProduct
 
 	self subclassResponsibility ! !
 
+
+!CartState methodsFor: 'checkout' stamp: 'AMS 6/9/2019 23:33:53'!
+beCheckoutedBy: cashier
+
+	self subclassResponsibility ! !
+
 
 !classDefinition: #EmptyCartState category: #TusLibros!
 CartState subclass: #EmptyCartState
@@ -599,6 +611,12 @@ add: aProduct
 	newState add: aProduct.
 	
 	^newState ! !
+
+
+!EmptyCartState methodsFor: 'checkout' stamp: 'AMS 6/9/2019 23:35:01'!
+beCheckoutedBy: cashier
+
+	^cashier validateEmptyCart! !
 
 
 !classDefinition: #NonEmptyCartState category: #TusLibros!
@@ -652,6 +670,12 @@ add: aProduct
 
 	products add: aProduct ! !
 
+
+!NonEmptyCartState methodsFor: 'checkout' stamp: 'AMS 6/9/2019 23:35:08'!
+beCheckoutedBy: cashier
+
+	^cashier validateNonEmptyCart! !
+
 
 !classDefinition: #Cashier category: #TusLibros!
 Object subclass: #Cashier
@@ -693,13 +717,24 @@ cantCreateACashierWithAnExpiredCreditCard
 	^'You cant create a cashier with an expired credit card'! !
 
 
-!Cashier class methodsFor: 'instance creation' stamp: 'AMS 6/9/2019 16:23:49'!
+!Cashier class methodsFor: 'instance creation' stamp: 'AMS 6/9/2019 23:32:57'!
 for: aCart payedBy: aCreditCard using: aMerchantProcessor andAClock: aClock
 
-	aCart isEmpty ifTrue: [self error: self cantCreateACashierWithAnEmptyCart ].
+	aCart beCheckoutedBy: self.
 	(aCreditCard hasExpiredOn: aClock current) ifTrue: [self error: self cantCreateACashierWithAnExpiredCreditCard ].
 
 	^self new initializeFor: aCart payedBy: aCreditCard using: aMerchantProcessor andAClock: aClock ! !
+
+
+!Cashier class methodsFor: 'validations' stamp: 'AMS 6/9/2019 23:35:48'!
+validateEmptyCart
+
+	^self error: self cantCreateACashierWithAnEmptyCart ! !
+
+!Cashier class methodsFor: 'validations' stamp: 'AMS 6/9/2019 23:36:20'!
+validateNonEmptyCart
+
+	"this message remains empty because there is no validations to do on a non empty cart"! !
 
 
 !classDefinition: #CreditCard category: #TusLibros!
