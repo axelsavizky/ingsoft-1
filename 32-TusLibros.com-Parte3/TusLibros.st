@@ -218,7 +218,7 @@ test12ValueOfACartWithManyDifferentProductsIsTheSumeOfThePriceOfEachProduct
 
 !classDefinition: #CashierTest category: #TusLibros!
 TestCase subclass: #CashierTest
-	instanceVariableNames: 'defaultCartWithOneProduct expiredCreditCard nonExpiredCreditCard'
+	instanceVariableNames: 'defaultCartWithOneProduct expiredCreditCard nonExpiredCreditCard defaultProduct defaultProductPrice'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
@@ -245,7 +245,7 @@ test02CantCreateACashierWithAnExpiredCreditCard
 		withMessageText: Cashier cantCreateACashierWithAnExpiredCreditCard 
 	! !
 
-!CashierTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 18:06:04'!
+!CashierTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:16:35'!
 test03CanCheckoutANonEmptyCart
 
 	| aCashier merchantProcessorSimulator |
@@ -254,8 +254,7 @@ test03CanCheckoutANonEmptyCart
 	
 	aCashier := Cashier for: defaultCartWithOneProduct payedBy: nonExpiredCreditCard using: merchantProcessorSimulator andAClock: self.
 
-	self assert: aCashier checkout equals: defaultCartWithOneProduct value.
-	! !
+	self assert: aCashier checkout equals: defaultProductPrice .! !
 
 !CashierTest methodsFor: 'tests' stamp: 'AMS 6/9/2019 18:06:17'!
 test04RaiseAnInvalidCardExeptionWhenMerchantProcessorRaiseIt
@@ -287,17 +286,18 @@ test05RaiseAnErrorWhenMerchantProcessorRaisesAnError
 	! !
 
 
-!CashierTest methodsFor: 'setup' stamp: 'AMS 6/9/2019 18:05:43'!
+!CashierTest methodsFor: 'setup' stamp: 'AMS 6/22/2019 18:53:05'!
 setUp
 
-	| aCatalog aProduct |
+	| aCatalog |
 	
-	aProduct := 'Product 1'.
+	defaultProduct := 'Product 1'.
+	defaultProductPrice := 5.
 	
 	aCatalog := Dictionary new.
-	aCatalog add: aProduct->5.
+	aCatalog add: defaultProduct->defaultProductPrice .
 	defaultCartWithOneProduct := Cart withAProductsCatalog: aCatalog.
-	defaultCartWithOneProduct add: aProduct.
+	defaultCartWithOneProduct add: defaultProduct.
 
 	expiredCreditCard := CreditCard withNumber: '1234567890123456' ownedBy: 'aPerson' expiringOn: (January of: 2019).
 	nonExpiredCreditCard := CreditCard withNumber: '1234567890123456' ownedBy: 'aPerson' expiringOn: (July of: 2019).! !
@@ -354,108 +354,101 @@ test04CanCreateACard
 
 !classDefinition: #StoreTest category: #TusLibros!
 TestCase subclass: #StoreTest
-	instanceVariableNames: 'clock nonExpiredCreditCard validMerchantProcessor expiredCreditCard'
+	instanceVariableNames: 'clock nonExpiredCreditCard validMerchantProcessor expiredCreditCard invalidClientAuthenticator validClientAuthenticator'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!StoreTest methodsFor: 'set up' stamp: 'AMS 6/17/2019 20:21:27'!
+!StoreTest methodsFor: 'set up' stamp: 'AMS 6/22/2019 19:30:55'!
 setUp
+
+	invalidClientAuthenticator := AuthenticatorSimulator withBehavior: [self error: 'client does not exist'].
+	validClientAuthenticator := AuthenticatorSimulator withBehavior: [].
 
 	clock := ManualClock now: DateAndTime now.
 	nonExpiredCreditCard := CreditCard withNumber: '1234567890123456' ownedBy: 'aPerson' expiringOn: clock current.
-	validMerchantProcessor := MerchantProcessorInterfaceSimulator whenHasToDebit: 10 from: nonExpiredCreditCard thenResponse: [10].
+	validMerchantProcessor := MerchantProcessorInterfaceSimulator whenHasToDebit: 20 from: nonExpiredCreditCard thenResponse: [20].
 	
 	clock backTime: 60 days.
 	expiredCreditCard := CreditCard withNumber: '1234567890123456' ownedBy: 'aPerson' expiringOn: clock current.
 	clock advanceTime: 60 days.! !
 
 
-!StoreTest methodsFor: 'tests' stamp: 'AMS 6/17/2019 19:49:58'!
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:31:53'!
 test01CanNotCreateCartWhenClientAuthenticationFails
 
 	| aStore |
 	
-	aStore := Store withClients: Dictionary new catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
+	aStore := Store withAuthenticator: invalidClientAuthenticator catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
 
 	self should: [ aStore createCartForClient: 'a client' andPassword: 'a password' ] 
-		raise: Error - MessageNotUnderstood 
-		withMessageText: Store clientDoesNotExist.! !
+		raise: Error - MessageNotUnderstood! !
 
-!StoreTest methodsFor: 'tests' stamp: 'AMS 6/17/2019 19:49:58'!
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:32:09'!
 test02AuthenticatedClientCanCreateACart
 
-	| aStore clients clientID clientPassword cartID |
+	| aStore clientID clientPassword cartID |
 	
 	clientID := 'a clientID'.
 	clientPassword := 'a client password'.
 	
-	clients := Dictionary new.
-	clients add: clientID -> clientPassword.
-	
-	aStore := Store withClients: clients catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
+	aStore := Store withAuthenticator: validClientAuthenticator catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
 
 	cartID := aStore createCartForClient: clientID andPassword: clientPassword.
 	
 	self assert: (aStore listCart: cartID) isEmpty! !
 
-!StoreTest methodsFor: 'tests' stamp: 'AMS 6/17/2019 19:49:58'!
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:26:39'!
 test03CanNotListAnInexistentCart
 
 	| aStore |
 	
-	aStore := Store withClients: Dictionary new catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
+	aStore := Store withAuthenticator: nil catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
 
 	self should: [aStore listCart: 0] 
 		raise: Error - MessageNotUnderstood 
 		withMessageText: Store cartDoesNotExist! !
 
-!StoreTest methodsFor: 'tests' stamp: 'AMS 6/17/2019 19:49:58'!
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:32:32'!
 test04CanNotListAnUnusedCartFor30Minutes
 
-	| aStore clients clientID clientPassword cartID |
+	| aStore clientID clientPassword cartID |
 	
 	clientID := 'a clientID'.
 	clientPassword := 'a client password'.
 	
-	clients := Dictionary new.
-	clients add: clientID -> clientPassword.
-	
-	aStore := Store withClients: clients catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
+	aStore := Store withAuthenticator: validClientAuthenticator catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
 
 	cartID := aStore createCartForClient: clientID andPassword: clientPassword.
 	clock advanceTime: 30 minutes.
 	
 	self should: [aStore listCart: cartID] 
 		raise: Error - MessageNotUnderstood 
-		withMessageText: Store cartDoesNotExist! !
+		withMessageText: Store unusedCart ! !
 
-!StoreTest methodsFor: 'tests' stamp: 'AMS 6/17/2019 19:49:58'!
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:26:39'!
 test05CanNotAddAProductToAnInexistentCart
 
 	| aStore cartID |
 
-	aStore := Store withClients: Dictionary new catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
+	aStore := Store withAuthenticator: nil catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
 	cartID := 5.
 	
 	self should: [aStore add: 1 of: 'a book' to: cartID]
 		raise: Error - MessageNotUnderstood 
 		withMessageText: Store cartDoesNotExist ! !
 
-!StoreTest methodsFor: 'tests' stamp: 'AMS 6/17/2019 19:49:58'!
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:32:50'!
 test06CanNotAddAnProductThatIsNotInTheCatalog
 
-	| aStore clients clientID clientPassword cartID aProduct |
+	| aStore clientID clientPassword cartID aProduct |
 	
 	clientID := 'a clientID'.
 	clientPassword := 'a client password'.
 	
-	clients := Dictionary new.
-	clients add: clientID -> clientPassword.
-	
 	aProduct := 'a product'.
 	
-	aStore := Store withClients: clients catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
+	aStore := Store withAuthenticator: validClientAuthenticator catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
 
 	cartID := aStore createCartForClient: clientID andPassword: clientPassword.
 	
@@ -465,22 +458,19 @@ test06CanNotAddAnProductThatIsNotInTheCatalog
 	
 	self assert: (aStore listCart: cartID) isEmpty.! !
 
-!StoreTest methodsFor: 'tests' stamp: 'AMS 6/17/2019 19:49:58'!
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:33:05'!
 test07CanAddAProductOfTheCatalogToAnExistentCart
 
-	| aStore clients clientID clientPassword cartID aCatalog aProduct |
+	| aStore clientID clientPassword cartID aCatalog aProduct |
 	
 	clientID := 'a clientID'.
 	clientPassword := 'a client password'.
-	
-	clients := Dictionary new.
-	clients add: clientID -> clientPassword.
-	
+
 	aProduct := 'a product'.
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct -> 10.
 	
-	aStore := Store withClients: clients catalog: aCatalog andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
+	aStore := Store withAuthenticator: validClientAuthenticator catalog: aCatalog andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
 
 	cartID := aStore createCartForClient: clientID andPassword: clientPassword.
 	
@@ -489,46 +479,40 @@ test07CanAddAProductOfTheCatalogToAnExistentCart
 	self assert: (aStore listCart: cartID) size equals: 2.
 	self assert: ((aStore listCart: cartID) occurrencesOf: aProduct ) equals: 2.! !
 
-!StoreTest methodsFor: 'tests' stamp: 'AMS 6/17/2019 19:49:58'!
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:33:22'!
 test08CanNotAddAProductToAnUnusedCartFor30Minutes
 
-	| aStore clients clientID clientPassword cartID aCatalog aProduct |
+	| aStore clientID clientPassword cartID aCatalog aProduct |
 	
 	clientID := 'a clientID'.
 	clientPassword := 'a client password'.
-	
-	clients := Dictionary new.
-	clients add: clientID -> clientPassword.
-	
+
 	aProduct := 'a product'.
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct -> 10.
 	
-	aStore := Store withClients: clients catalog: aCatalog andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
+	aStore := Store withAuthenticator: validClientAuthenticator catalog: aCatalog andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
 
 	cartID := aStore createCartForClient: clientID andPassword: clientPassword.
 	clock advanceTime: 30 minutes.
 	
 	self should: [aStore add: 2 of: aProduct to: cartID]
 		raise: Error - MessageNotUnderstood 
-		withMessageText: Store cartDoesNotExist .! !
+		withMessageText: Store unusedCart .! !
 
-!StoreTest methodsFor: 'tests' stamp: 'AMS 6/17/2019 19:49:58'!
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:33:30'!
 test09AddingAProductResetsTheLastTimeUsed
 
-	| aStore clients clientID clientPassword cartID aCatalog aProduct |
+	| aStore clientID clientPassword cartID aCatalog aProduct |
 	
 	clientID := 'a clientID'.
 	clientPassword := 'a client password'.
-	
-	clients := Dictionary new.
-	clients add: clientID -> clientPassword.
 	
 	aProduct := 'a product'.
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct -> 10.
 	
-	aStore := Store withClients: clients catalog: aCatalog andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
+	aStore := Store withAuthenticator: validClientAuthenticator catalog: aCatalog andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
 
 	cartID := aStore createCartForClient: clientID andPassword: clientPassword.
 	clock advanceTime: 29 minutes.
@@ -540,29 +524,26 @@ test09AddingAProductResetsTheLastTimeUsed
 	self assert: (aStore listCart: cartID) size equals: 2.
 	self assert: ((aStore listCart: cartID) occurrencesOf: aProduct ) equals: 2.! !
 
-!StoreTest methodsFor: 'tests' stamp: 'AMS 6/17/2019 19:49:58'!
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:26:39'!
 test10CanNotCheckoutAnInexistentCart
 
 	| aStore |
 	
-	aStore := Store withClients: Dictionary new catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
+	aStore := Store withAuthenticator: nil catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
 
 	self should: [aStore checkout: 0 payingWithCreditCardNumber: 123234567890123456 ownedBy: 'an owner' expiringOn: clock current ] 
 		raise: Error - MessageNotUnderstood 
 		withMessageText: Store cartDoesNotExist! !
 
-!StoreTest methodsFor: 'tests' stamp: 'AMS 6/17/2019 19:49:02'!
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:33:50'!
 test11CanNotCheckoutAnEmptyCart
 
-	| aStore clients clientID clientPassword cartID |
+	| aStore clientID clientPassword cartID |
 	
 	clientID := 'a clientID'.
 	clientPassword := 'a client password'.
 	
-	clients := Dictionary new.
-	clients add: clientID -> clientPassword.
-	
-	aStore := Store withClients: clients catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
+	aStore := Store withAuthenticator: validClientAuthenticator catalog: Dictionary new andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock.
 
 	cartID := aStore createCartForClient: clientID andPassword: clientPassword.
 
@@ -570,30 +551,142 @@ test11CanNotCheckoutAnEmptyCart
 		raise: Error - MessageNotUnderstood 
 		withMessageText: Cashier cantCreateACashierWithAnEmptyCart ! !
 
-!StoreTest methodsFor: 'tests' stamp: 'AMS 6/17/2019 20:25:08'!
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:34:00'!
 test12CanNotCheckoutWithAnExpiredCC
 
-	| aStore clients clientID clientPassword cartID aCatalog aProduct |
+	| aStore clientID clientPassword cartID aCatalog aProduct |
 	
 	clientID := 'a clientID'.
 	clientPassword := 'a client password'.
-	
-	clients := Dictionary new.
-	clients add: clientID -> clientPassword.
 	
 	aProduct := 'a product'.
 	aCatalog := Dictionary new.
 	aCatalog add: aProduct -> 10.
 	
-	aStore := Store withClients: clients catalog: aCatalog andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
+	aStore := Store withAuthenticator: validClientAuthenticator catalog: aCatalog andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
 
 	cartID := aStore createCartForClient: clientID andPassword: clientPassword.
 	
 	aStore add: 2 of: aProduct to: cartID.
 
-	self should: [aStore checkout: cartID payingWithCreditCardNumber: expiredCreditCard number ownedBy: expiredCreditCard owner expiringOn: expiredCreditCard expiringDate ] 
+	self should: [aStore checkout: cartID payingWithCreditCardNumber: expiredCreditCard number ownedBy: expiredCreditCard owner expiringOn: expiredCreditCard expiringDate ]
 		raise: Error - MessageNotUnderstood 
 		withMessageText: Cashier cantCreateACashierWithAnExpiredCreditCard ! !
+
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:34:11'!
+test13CanNotCheckoutAnUnusedCartFor30Minutes
+
+	| aStore clientID clientPassword cartID aCatalog aProduct |
+	
+	clientID := 'a clientID'.
+	clientPassword := 'a client password'.
+	
+	aProduct := 'a product'.
+	aCatalog := Dictionary new.
+	aCatalog add: aProduct -> 10.
+	
+	aStore := Store withAuthenticator: validClientAuthenticator catalog: aCatalog andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
+
+	cartID := aStore createCartForClient: clientID andPassword: clientPassword.
+	aStore add: 2 of: aProduct to: cartID.
+	
+	clock advanceTime: 30 minutes.
+	
+	self should: [aStore checkout: cartID payingWithCreditCardNumber: nonExpiredCreditCard number ownedBy: nonExpiredCreditCard owner expiringOn: nonExpiredCreditCard expiringDate ]
+		raise: Error - MessageNotUnderstood 
+		withMessageText: Store unusedCart .! !
+
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:34:23'!
+test14CanCheckoutACart
+
+	| aStore clientID clientPassword cartID aCatalog aProduct |
+	
+	clientID := 'a clientID'.
+	clientPassword := 'a client password'.
+	
+	aProduct := 'a product'.
+	aCatalog := Dictionary new.
+	aCatalog add: aProduct -> 10.
+	
+	aStore := Store withAuthenticator: validClientAuthenticator catalog: aCatalog andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
+
+	cartID := aStore createCartForClient: clientID andPassword: clientPassword.
+	aStore add: 2 of: aProduct to: cartID.
+		
+	aStore checkout: cartID payingWithCreditCardNumber: nonExpiredCreditCard number ownedBy: nonExpiredCreditCard owner expiringOn: nonExpiredCreditCard expiringDate.
+		
+	self assert: ((aStore listPurchasesForClient: clientID andPassword: clientPassword) size) equals: 2.
+	self assert: ((aStore listPurchasesForClient: clientID andPassword: clientPassword) occurrencesOf: aProduct) equals: 2.! !
+
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:34:32'!
+test15CanNotListCheckoutedCarts
+
+	| aStore clientID clientPassword cartID aCatalog aProduct |
+	
+	clientID := 'a clientID'.
+	clientPassword := 'a client password'.
+	
+	aProduct := 'a product'.
+	aCatalog := Dictionary new.
+	aCatalog add: aProduct -> 10.
+	
+	aStore := Store withAuthenticator: validClientAuthenticator catalog: aCatalog andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
+
+	cartID := aStore createCartForClient: clientID andPassword: clientPassword.
+	aStore add: 2 of: aProduct to: cartID.
+		
+	aStore checkout: cartID payingWithCreditCardNumber: nonExpiredCreditCard number ownedBy: nonExpiredCreditCard owner expiringOn: nonExpiredCreditCard expiringDate.
+		
+	self should: [aStore listCart: cartID]
+		raise: Error - MessageNotUnderstood
+		withMessageText: Store cartHasBeenCheckouted! !
+
+!StoreTest methodsFor: 'tests' stamp: 'AMS 6/22/2019 19:36:25'!
+test16CanNotListPurchasesWhenAuthenticationFails
+
+	| aStore clientID clientPassword aCatalog aProduct |
+	
+	clientID := 'a clientID'.
+	clientPassword := 'a client password'.
+	
+	aProduct := 'a product'.
+	aCatalog := Dictionary new.
+	aCatalog add: aProduct -> 10.
+	
+	aStore := Store withAuthenticator: invalidClientAuthenticator catalog: aCatalog andMerchantProcessor: validMerchantProcessor measuringTimeWith: clock .
+		
+	self should: [aStore listPurchasesForClient: clientID andPassword: clientPassword]
+		raise: Error - MessageNotUnderstood ! !
+
+
+!classDefinition: #AuthenticatorSimulator category: #TusLibros!
+Object subclass: #AuthenticatorSimulator
+	instanceVariableNames: 'authenticateBehavior'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!AuthenticatorSimulator methodsFor: 'initialization' stamp: 'AMS 6/22/2019 19:24:19'!
+initializeWithBehavior: anAuthenticateBehavior
+
+	authenticateBehavior := anAuthenticateBehavior ! !
+
+
+!AuthenticatorSimulator methodsFor: 'authenticator protocol' stamp: 'AMS 6/22/2019 19:23:51'!
+authenticate: clientID withPassword: clientPassword
+
+	^authenticateBehavior value! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'AuthenticatorSimulator class' category: #TusLibros!
+AuthenticatorSimulator class
+	instanceVariableNames: ''!
+
+!AuthenticatorSimulator class methodsFor: 'instance creation' stamp: 'AMS 6/22/2019 19:24:46'!
+withBehavior: authenticateBehavior
+
+	^self new initializeWithBehavior: authenticateBehavior ! !
 
 
 !classDefinition: #Cart category: #TusLibros!
@@ -937,7 +1030,7 @@ initializeFor: aCart payedBy: aCreditCard using: aMerchantProcessor andAClock: a
 	clock:= aClock! !
 
 
-!Cashier methodsFor: 'checkout' stamp: 'AMS 6/9/2019 16:43:48'!
+!Cashier methodsFor: 'checkout' stamp: 'AMS 6/22/2019 19:16:13'!
 checkout
 
 	^merchantProcessor debit: cart value from: creditCard.! !
@@ -1175,18 +1268,15 @@ simulateNotEnoughLimitException
 
 !classDefinition: #Store category: #TusLibros!
 Object subclass: #Store
-	instanceVariableNames: 'clients carts catalog nextCartID lastTimeUsed clock merchantProcessor'
+	instanceVariableNames: 'clientAuthenticator carts catalog nextCartID lastTimeUsed clock merchantProcessor checkoutedCarts clientByCartID purchasedItemsByClient'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Store methodsFor: 'authentication' stamp: 'AMS 6/12/2019 23:15:14'!
+!Store methodsFor: 'authentication' stamp: 'AMS 6/22/2019 19:29:22'!
 authenticateClient: clientID withPassword: clientPassword
 
-	| passwordForClientID |
-
-	passwordForClientID := clients at: clientID ifAbsent: [^self error: self class clientDoesNotExist ].
-	passwordForClientID = clientPassword ifFalse: [^self error: self class clientDoesNotExist ]! !
+	clientAuthenticator authenticate: clientID withPassword: clientPassword ! !
 
 
 !Store methodsFor: 'id generator - private' stamp: 'AMS 6/12/2019 23:25:09'!
@@ -1205,12 +1295,19 @@ createCart
 
 	^Cart withAProductsCatalog: catalog.! !
 
+!Store methodsFor: 'carts' stamp: 'AMS 6/22/2019 18:22:42'!
+removeCart: aCartID
+
+	carts removeKey: aCartID.
+	lastTimeUsed removeKey: aCartID.
+	clientByCartID removeKey: aCartID.! !
+
 !Store methodsFor: 'carts' stamp: 'AMS 6/17/2019 17:58:08'!
 resetLastTimeUsedFor: aCartID.
 	
 	lastTimeUsed at: aCartID put: clock now.! !
 
-!Store methodsFor: 'carts' stamp: 'AMS 6/17/2019 17:57:53'!
+!Store methodsFor: 'carts' stamp: 'AMS 6/22/2019 18:25:40'!
 saveCart: aCart for: clientID
 	
 	| cartID |
@@ -1218,45 +1315,75 @@ saveCart: aCart for: clientID
 	cartID := self generateCartID.
 	carts at: cartID put: aCart.
 	self resetLastTimeUsedFor: cartID.
+	clientByCartID at: cartID put: clientID.
 	
 	^cartID! !
 
 
-!Store methodsFor: 'initialization' stamp: 'AMS 6/17/2019 17:07:15'!
+!Store methodsFor: 'initialization' stamp: 'AMS 6/22/2019 18:36:52'!
 initialize
 	
 	carts := Dictionary new.
 	lastTimeUsed := Dictionary new.
-	nextCartID := 0! !
+	nextCartID := 0.
+	purchasedItemsByClient := Dictionary new.
+	checkoutedCarts := OrderedCollection new.
+ 	clientByCartID := Dictionary new.! !
 
-!Store methodsFor: 'initialization' stamp: 'AMS 6/17/2019 19:43:44'!
-initializeWithClients: existentClients catalog: aCatalog andMerchantProcessor: aMerchantProcessor measuringTimeWith: aClock 
+!Store methodsFor: 'initialization' stamp: 'AMS 6/22/2019 19:28:30'!
+initializeWithAuthenticator: anAuthenticator catalog: aCatalog andMerchantProcessor: aMerchantProcessor measuringTimeWith: aClock 
 
 	self initialize.
-	clients := existentClients.
+	clientAuthenticator := anAuthenticator.
 	catalog := aCatalog.
 	merchantProcessor := aMerchantProcessor.
 	clock := aClock.
 ! !
 
 
-!Store methodsFor: 'assertions' stamp: 'AMS 6/17/2019 17:14:17'!
+!Store methodsFor: 'assertions' stamp: 'AMS 6/22/2019 18:20:20'!
 assert: cartID hasBeenUsedInTheLast: aLimitDuration
 
 	| cartLastTimeUsed |
 	
 	cartLastTimeUsed := lastTimeUsed at: cartID ifAbsent: [^self error: self class cartDoesNotExist ].
 	
-	(clock now - cartLastTimeUsed) < aLimitDuration ifFalse: [^self error: self class cartDoesNotExist ]! !
+	(clock now - cartLastTimeUsed) < aLimitDuration ifFalse: [
+		self removeCart: cartID.
+		^self error: self class unusedCart ]! !
 
-!Store methodsFor: 'assertions' stamp: 'AMS 6/17/2019 17:19:11'!
+!Store methodsFor: 'assertions' stamp: 'AMS 6/22/2019 19:22:55'!
 assertIsValidCart: cartID
 	
 	| cart |
+	(checkoutedCarts includes: cartID) ifTrue: [self error: self class cartHasBeenCheckouted ].
 	cart := carts at: cartID ifAbsent: [self error: self class cartDoesNotExist].
 	self assert: cartID hasBeenUsedInTheLast: 30 minutes.
 	
 	^cart! !
+
+
+!Store methodsFor: 'checkouting' stamp: 'AMS 6/22/2019 19:04:16'!
+createCashierFor: aCart payedWithCreditCardNumber: ccNumber ownedBy: ccOwner expiringOn: ccExpiringDate
+
+	| aCreditCard |
+	
+	aCreditCard := CreditCard withNumber: ccNumber ownedBy: ccOwner expiringOn: ccExpiringDate.
+
+	^Cashier for: aCart payedBy: aCreditCard using: merchantProcessor andAClock: clock.! !
+
+!Store methodsFor: 'checkouting' stamp: 'AMS 6/22/2019 19:17:43'!
+saveSaleOf: aCartID
+
+	| currentPurchasedItemsByClient theClientID theCart |
+	
+	theClientID := clientByCartID at: aCartID.
+	theCart := carts at: aCartID.
+	
+	currentPurchasedItemsByClient := purchasedItemsByClient at: theClientID ifAbsent: [Bag new] .
+	currentPurchasedItemsByClient addAll: theCart products.
+	
+	purchasedItemsByClient at: theClientID put: currentPurchasedItemsByClient.! !
 
 
 !Store methodsFor: 'service interface' stamp: 'AMS 6/17/2019 17:58:24'!
@@ -1270,16 +1397,19 @@ add: aQuantity of: aProduct to: aCartID
 	
 	self resetLastTimeUsedFor: aCartID! !
 
-!Store methodsFor: 'service interface' stamp: 'AMS 6/17/2019 20:25:19'!
+!Store methodsFor: 'service interface' stamp: 'AMS 6/22/2019 19:18:48'!
 checkout: aCartID payingWithCreditCardNumber: ccNumber ownedBy: ccOwner expiringOn: ccExpiringDate 
 	
-	| aCart aCashier aCreditCard |
+	| aCart aCashier |
 	
 	aCart := self assertIsValidCart: aCartID.
+		
+	aCashier := self createCashierFor: aCart payedWithCreditCardNumber: ccNumber ownedBy: ccOwner expiringOn: ccExpiringDate.
+	aCashier checkout.
 	
-	aCreditCard := CreditCard withNumber: ccNumber ownedBy: ccOwner expiringOn: ccExpiringDate.
-
-	aCashier := Cashier for: aCart payedBy: aCreditCard using: merchantProcessor andAClock: clock.! !
+	self saveSaleOf: aCartID.
+	carts removeKey: aCartID.
+	checkoutedCarts add: aCartID.! !
 
 !Store methodsFor: 'service interface' stamp: 'AMS 6/17/2019 16:24:55'!
 createCartForClient: clientID andPassword: clientPassword
@@ -1303,16 +1433,25 @@ listCart: cartID
 	
 	^aCart products! !
 
+!Store methodsFor: 'service interface' stamp: 'AMS 6/22/2019 18:36:15'!
+listPurchasesForClient: clientID andPassword: clientPassword
+
+	| aCart cartID |
+
+	self authenticateClient: clientID withPassword: clientPassword.
+
+	^purchasedItemsByClient at: clientID! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Store class' category: #TusLibros!
 Store class
 	instanceVariableNames: ''!
 
-!Store class methodsFor: 'instance creation' stamp: 'AMS 6/17/2019 19:45:01'!
-withClients: clients catalog: aCatalog andMerchantProcessor: aMerchantProcessor measuringTimeWith: aClock 
+!Store class methodsFor: 'instance creation' stamp: 'AMS 6/22/2019 19:26:39'!
+withAuthenticator: anAuthenticator catalog: aCatalog andMerchantProcessor: aMerchantProcessor measuringTimeWith: aClock 
 
-	^self new initializeWithClients: clients catalog: aCatalog andMerchantProcessor: aMerchantProcessor measuringTimeWith: aClock! !
+	^self new initializeWithAuthenticator: anAuthenticator catalog: aCatalog andMerchantProcessor: aMerchantProcessor measuringTimeWith: aClock! !
 
 
 !Store class methodsFor: 'exception messages' stamp: 'AMS 6/12/2019 23:35:16'!
@@ -1320,7 +1459,12 @@ cartDoesNotExist
 
 	^'cart does not exist'! !
 
-!Store class methodsFor: 'exception messages' stamp: 'AMS 6/12/2019 23:02:38'!
-clientDoesNotExist
+!Store class methodsFor: 'exception messages' stamp: 'AMS 6/22/2019 19:21:05'!
+cartHasBeenCheckouted
 
-	^'client does not exist'! !
+	^'cart has been checkouted'! !
+
+!Store class methodsFor: 'exception messages' stamp: 'AMS 6/22/2019 18:19:53'!
+unusedCart
+
+	^'cart has been unused for more than 30 minutes'! !
