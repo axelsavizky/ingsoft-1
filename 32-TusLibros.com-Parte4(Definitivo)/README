@@ -1,7 +1,31 @@
 Aclaraciones antes de realizar pruebas:
--No se llego a implementar el mensaje que parsea el response del request listPurchases
--Se adjunta imagen con todos los packages cargados
--Si se quiere probar todo manualmente, en el initialize de TusLibrosServerController se instancia un Store de prueba.
-En caso de que no quieran probarlo de esta forma, se recomienda comentar la linea store := getTestingStore del dicho initialize
+-Debido a algunos contratiempos, no se llegó a implementar el mensaje que parsea el response del request listPurchases.
+-La falta del mensaje anterior no impide que se puedan crear carritos, agregar libros o realizar el check out.
+-Se adjunta imagen con todos los packages cargados.
 -Si bien no se agregaron test por falta de tiempo (igualmente están testeadas las iteraciones anteriores), resultó muy interesante
-la implementación de la interfaz, en conjunto con la API.
+la implementación de la interfaz, junto con la API.
+
+-SUGERENCIAS PARA REALIZAR PRUEBAS
+-Si se quiere probar todo manualmente, en el initialize de TusLibrosServerController se instancia un Store de prueba.
+En caso de que no quieran probarlo de esta forma, se recomienda comentar la linea store := self getTestingStore de dicho initialize.
+
+-En caso de que se testee con el store de "prueba", realizar lo siguiente:
+-Para probar la interfaz, ejecutar lo siguiente en el workspace:
+server := TusLibrosServerController new.
+client := TusLibrosClientWindow open.
+
+-Para darlo de baja: 
+server stopListening.
+server destroy.
+
+-Luego para realizar el checkout se deben ingresar los siguientes datos (esto es debido al simulador del mechantProcessor):
+ccn= 1234567890123456
+cco= aPerson
+cce= 062020
+
+Y además, la suma total de los costos de los productos del carrito debe ser igual a 20. Caso contrario la tarjeta será inválida debido al merchantProcessor.
+A continuación se listan los costos de los productos:
+aProduct1 -> 10.
+aProduct2 -> 5.
+aProduct3 -> 1.
+
