@@ -21,7 +21,7 @@ server destroy.
 -Luego para realizar el checkout se deben ingresar los siguientes datos (esto es debido al simulador del mechantProcessor):
 ccn= 1234567890123456
 cco= aPerson
-cce= 062020
+cced= 062020
 
 Y además, la suma total de los costos de los productos del carrito debe ser igual a 20. Caso contrario la tarjeta será inválida debido al merchantProcessor.
 A continuación se listan los costos de los productos:
