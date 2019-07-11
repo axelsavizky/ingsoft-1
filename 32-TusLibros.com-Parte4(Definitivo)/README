@@ -3,3 +3,5 @@ Aclaraciones antes de realizar pruebas:
 -Se adjunta imagen con todos los packages cargados
 -Si se quiere probar todo manualmente, en el initialize de TusLibrosServerController se instancia un Store de prueba.
 En caso de que no quieran probarlo de esta forma, se recomienda comentar la linea store := getTestingStore del dicho initialize
+-Si bien no se agregaron test por falta de tiempo (igualmente están testeadas las iteraciones anteriores), resultó muy interesante
+la implementación de la interfaz, en conjunto con la API.
