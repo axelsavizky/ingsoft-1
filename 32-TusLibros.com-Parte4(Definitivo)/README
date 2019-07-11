@@ -1,0 +1,5 @@
+Aclaraciones antes de realizar pruebas:
+-No se llego a implementar el mensaje que parsea el response del request listPurchases
+-Se adjunta imagen con todos los packages cargados
+-Si se quiere probar todo manualmente, en el initialize de TusLibrosServerController se instancia un Store de prueba.
+En caso de que no quieran probarlo de esta forma, se recomienda comentar la linea store := getTestingStore del dicho initialize
